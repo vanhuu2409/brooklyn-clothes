@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -8,13 +8,14 @@ const Header = () => {
   const [toggleMobileNav, setToggleMobileNav] = useState(false);
   const [toggleAccount, setToggleAccount] = useState(false);
   const [toggleSearch, setToggleSearch] = useState(false);
+  const searchInputRef = useRef();
   return (
     <header className='*:font-bold *:text-md *:drop-shadow-sm'>
       {/* top header */}
       <p className='bg-black-1 drop-shadow-md text-neutral-300 w-full py-2 text-sm subpixel-antialiased font-semibold leading-tight tracking-wide text-center uppercase shadow-md'>
         SALE UPDATE: NOW UP TO 60% OFF
       </p>
-      <nav className='xl:px-24 md:px-8 relative grid items-center grid-cols-7 px-2 bg-white'>
+      <nav className='xl:px-24 md:px-8 md:grid md:grid-cols-7 relative flex items-center justify-between px-2 bg-white'>
         {/* left side */}
         <div className='items-start col-span-3'>
           {/* desktop navbar */}
@@ -286,41 +287,31 @@ const Header = () => {
                 <div className='gap-14 flex flex-1 h-full max-h-full col-span-1 px-20 py-12'>
                   {/* left item */}
                   <ul className='flex flex-col gap-3'>
-                    <div className='p-2 text-2xl font-bold'>TopS</div>
+                    <div className='p-2 text-2xl font-bold'>Presets</div>
                     <ul className='flex flex-col justify-center gap-3 *:capitalize *:font-normal *:text-black-3'>
                       <li>
                         <Link className='hover:opacity-70 p-2 transition-all'>
-                          Hoodies
+                          Lifestyle
                         </Link>
                       </li>
                       <li>
                         <Link className='hover:opacity-70 p-2 transition-all'>
-                          T-Shirts
+                          North
                         </Link>
                       </li>
                       <li>
                         <Link className='hover:opacity-70 p-2 transition-all'>
-                          Jackets
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className='hover:opacity-70 p-2 font-bold transition-all'>
-                          View all
-                        </Link>
-                      </li>
-                    </ul>
-                  </ul>
-                  <ul className='flex flex-col gap-3'>
-                    <div className='p-2 text-2xl font-bold'>Bottoms</div>
-                    <ul className='flex flex-col justify-center gap-3 *:capitalize *:font-normal *:text-black-3'>
-                      <li>
-                        <Link className='hover:opacity-70 p-2 transition-all'>
-                          Pants
+                          Essential
                         </Link>
                       </li>
                       <li>
                         <Link className='hover:opacity-70 p-2 transition-all'>
-                          Shorts
+                          Marble
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className='hover:opacity-70 p-2 transition-all'>
+                          Resonance
                         </Link>
                       </li>
                       <li>
@@ -436,7 +427,7 @@ const Header = () => {
           <ul
             className={`top-full flex flex-col gap-4 md:px-10 lg:hidden px-4 absolute transition-all overflow-hidden ${
               toggleMobileNav ? "translate-x-0 w-full" : "-translate-x-full w-0"
-            } inset-x-0 bg-black-2 border-y border-neutral-100 divide-y divide-neutral-700 *:pt-4 *:text-xl *:text-white py-4`}
+            } inset-x-0 bg-black-2 border-y border-neutral-100 divide-y divide-neutral-700 *:pt-4 *:text-xl *:text-white pb-4`}
           >
             <li className=''>
               <button
@@ -636,17 +627,22 @@ const Header = () => {
                   </div>
                   {/* search main */}
                   <div className='flex flex-col gap-6 px-8 py-12'>
-                    <p className='text-black-3 text-xl font-normal normal-case'>
-                      Looks like you haven’t added anything yet, let’s get you
-                      started!
-                    </p>
+                    <input
+                      ref={searchInputRef}
+                      type='text'
+                      placeholder='Search something...'
+                      className='border-black-3 text-black-3 p-4 text-xl font-normal normal-case border rounded-sm'
+                    />
                     <Link
                       to='/'
-                      onClick={() => setToggleSearch(!toggleSearch)}
+                      onClick={() => {
+                        searchInputRef.current.value = "";
+                        setToggleSearch(!toggleSearch);
+                      }}
                       className='group/searchlink w-fit hover:bg-opacity-100 bg-opacity-80 inline-flex items-center gap-2 px-5 py-4 text-white transition-all bg-black'
                     >
                       <span className='text-sm font-medium tracking-tight'>
-                        start shopping
+                        Search
                       </span>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
