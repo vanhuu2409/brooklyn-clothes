@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "../components/layout/Layout";
 import Home from "../pages/views/home/Home";
-import AllProducts from "../pages/views/all-products/AllProducts";
 import NotFoundPage from "../pages/NotFoundPage";
 import Dashboard from "../pages/admin/Dashboard";
+import Checkouts from "../pages/views/checkouts/Checkouts";
+import Products from "../pages/views/products/Products";
+import Product from "../pages/views/product/Product";
 
 const AppRouter = () => {
   return (
@@ -12,7 +14,9 @@ const AppRouter = () => {
         {/* user page */}
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path='/all-products' element={<AllProducts />} />
+          <Route path='/product/:id' element={<Product />} />
+          <Route path='/products/:id' element={<Products />} />
+          <Route path='/checkouts' element={<Checkouts />} />
           <Route path='/*' element={<NotFoundPage />} />
         </Route>
         {/* admin page */}

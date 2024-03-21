@@ -1,5 +1,30 @@
+import { Link } from "react-router-dom";
+
 const NotFoundPage = () => {
-  return <div>404 Not Found...</div>;
+  return (
+    <main className='place-items-center sm:py-32 lg:px-8 grid min-h-full px-6 py-24 bg-white'>
+      <div className='text-center'>
+        <p className='text-neutral-600 text-base font-semibold'>404</p>
+        <h1 className='sm:text-5xl mt-4 text-3xl font-bold tracking-tight text-gray-900'>
+          Page not found
+        </h1>
+        <p className='mt-6 text-base leading-7 text-gray-600'>
+          Sorry, we couldn’t find the page you’re looking for.
+        </p>
+        <div className='gap-x-6 flex items-center justify-center mt-10'>
+          <Link
+            to='/'
+            className='rounded-md bg-neutral-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-600'
+          >
+            Go back home
+          </Link>
+          <Link to='/' className='text-sm font-semibold text-gray-900'>
+            Contact support <span aria-hidden='true'>&rarr;</span>
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
 };
 
 export default NotFoundPage;
