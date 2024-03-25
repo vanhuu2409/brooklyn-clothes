@@ -3,6 +3,7 @@ import { Logo } from "./../Logo";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
+  formatPrice,
   navbarCollectionsList,
   navbarPresetsList,
   presetsList,
@@ -28,14 +29,22 @@ const Header = () => {
 
   // bag/cart flow
   const cartData = useSelector((state) => state.cart.cart);
+  console.log(cartData);
 
   // bags count
-  const bagsCount = cartData.length;
-  // const bagsTotal = cartData;
+  const bagsCount = cartData.reduce((acc, curr) => {
+    return acc + curr.quantity;
+  }, 0);
+  const bagsTotal = cartData.reduce((acc, curr) => {
+    console.log(curr.price);
+    return acc + curr.quantity * curr.price;
+  }, 0);
+
+  const bagsTotalFormat = formatPrice(bagsTotal);
 
   return (
     <>
-      <header className='*:font-bold *:text-md *:drop-shadow-sm '>
+      <header className='*:font-bold *:text-md *:drop-shadow-sm'>
         {/* top header */}
         <div className='bg-black-1 drop-shadow-md text-neutral-300 w-full py-2 text-sm subpixel-antialiased font-semibold leading-tight tracking-wide text-center uppercase shadow-md select-none'>
           <Marquee autoFill={true} pauseOnHover={true}>
@@ -43,7 +52,7 @@ const Header = () => {
           </Marquee>
         </div>
 
-        <nav className='xl:px-24 md:px-8 md:grid md:grid-cols-7 relative flex items-center justify-between px-2 bg-white'>
+        <nav className='sm:px-6 lg:max-w-[90rem] lg:px-8 max-w-2xl md:max-w-4xl min-w-full px-4 mx-auto md:px-8 md:grid md:grid-cols-7 relative flex items-center justify-between bg-white'>
           {/* left side */}
           <div className='items-start col-span-3'>
             {/* desktop navbar */}
@@ -360,7 +369,7 @@ const Header = () => {
               className={`top-full z-50 flex flex-col gap-4 md:px-10 lg:hidden px-4 absolute transition-all overflow-hidden ${
                 toggleMobileNav
                   ? "translate-x-0 w-full"
-                  : "-translate-x-full w-0"
+                  : "-translate-x-[100%] w-0"
               } inset-x-0 inset-y-0 min-h-screen bg-black-1 border-y border-neutral-100 divide-y divide-neutral-700 *:pt-4 *:text-xl *:text-white pb-4`}
             >
               <li className=''>
@@ -550,14 +559,14 @@ const Header = () => {
         <div className={`overflow-hidden transition-all duration-300`}>
           <div
             onClick={() => setIsOpenSidePreview(null)}
-            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full min-h-[120vh] bg-black transition-all duration-300  ${
+            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full h-full min-h-[120vh] bg-black transition-all duration-300  ${
               isOpenSidePreview === "searchbar"
                 ? "translate-x-0 w-full opacity-100"
                 : "translate-x-full w-0 opacity-0"
             }`}
           ></div>
           <div
-            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 min-h-[120vh] text-black bg-white transition-all duration-300  ${
+            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 h-full min-h-[120vh] text-black bg-white transition-all duration-300  ${
               isOpenSidePreview === "searchbar"
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full w-0 opacity-0"
@@ -651,14 +660,14 @@ const Header = () => {
         <div className={`overflow-hidden`}>
           <div
             onClick={() => setIsOpenSidePreview(null)}
-            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full min-h-[120vh] bg-black transition-all duration-300  ${
+            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full h-full min-h-[120vh] bg-black transition-all duration-300  ${
               isOpenSidePreview === "accountbar"
                 ? "translate-x-0 w-full opacity-100"
                 : "translate-x-full w-0 opacity-0"
             }`}
           ></div>
           <div
-            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 min-h-[120vh] text-black bg-white transition-all duration-300  ${
+            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 h-full min-h-[120vh] text-black bg-white transition-all duration-300  ${
               isOpenSidePreview === "accountbar"
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full w-0 opacity-0"
@@ -769,14 +778,14 @@ const Header = () => {
         <div className={`overflow-hidden transition-all duration-300`}>
           <div
             onClick={() => setIsOpenSidePreview(null)}
-            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full min-h-[120vh] h-full bg-black transition-all duration-300  ${
+            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full h-full min-h-[120vh] bg-black transition-all duration-300  ${
               isOpenSidePreview === "bagsbar"
                 ? "translate-x-0 w-full opacity-100"
                 : "translate-x-full w-0 opacity-0"
             }`}
           ></div>
           <div
-            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 min-h-[120vh] text-black bg-white transition-all duration-300  ${
+            className={`fixed px-4 sm:px-8 py-10 top-0 bottom-0 right-0 w-full sm:max-w-[40rem] z-50 h-full min-h-[120vh] text-black bg-white transition-all duration-300  ${
               isOpenSidePreview === "bagsbar"
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full w-0 opacity-0"
@@ -809,7 +818,9 @@ const Header = () => {
               </button>
             </div>
             {/* main sidepreview */}
-            <div className='flex flex-col w-full h-full min-h-screen mt-4 overflow-y-auto'>
+            <div
+              className={`flex flex-col w-full h-auto max-h-[40rem] mt-4 overflow-y-auto`}
+            >
               {/* top */}
               <div className='flex-1 mb-8'>
                 {cartData.length > 0 && (
@@ -819,7 +830,7 @@ const Header = () => {
                     ))}
                   </div>
                 )}
-                {cartData.length === 0 ? (
+                {cartData.length === 0 && (
                   <>
                     <div>No item found...</div>
                     <div className='mt-6'>
@@ -839,68 +850,73 @@ const Header = () => {
                       </div>
                     </div>
                   </>
-                ) : (
-                  <>
-                    {/* Top Bags Total */}
-                    <div className='mt-6 *:flex *:justify-between *:flex-wrap *:mb-4'>
-                      <div>
-                        <p className='text-black-2 flex-1 text-lg font-bold'>
-                          Discount
-                        </p>
-                        <p className='text-black-4 text-base font-bold normal-case'>
-                          Calculated at checkout
-                        </p>
-                      </div>
-                      <div>
-                        <p className='text-black-2 flex-1 text-lg font-bold'>
-                          Shipping
-                        </p>
-                        <p className='text-black-4 text-base font-bold normal-case'>
-                          Calculated at checkout
-                        </p>
-                      </div>
-                      <div>
-                        <p className='text-black-2 flex-1 text-lg font-bold'>
-                          Subtotal
-                        </p>
-                        <p className='text-black-1 text-base font-bold'>0</p>
-                      </div>
-                    </div>
-                    {/* Bottom Bags Total */}
-                    <Link
-                      to='/cart'
-                      className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
-                    >
-                      <span className='text-sm font-bold tracking-tight'>
-                        Check out
-                      </span>
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth={3}
-                        stroke='currentColor'
-                        className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
-                        />
-                      </svg>
-                    </Link>
-                  </>
                 )}
               </div>
-              {/* bottom */}
-              {cartData.length === 0 && (
-                <div className='w-full'>
-                  {navbarCollectionsList.map((item) => (
-                    <NavbarCollectionItem key={item?.id} {...item} />
-                  ))}
-                </div>
-              )}
             </div>
+            {/* checkout btn */}
+            {cartData.length !== 0 && (
+              <>
+                {/* Top Bags Total */}
+                <div className='mt-6 *:flex *:justify-between *:flex-wrap *:mb-4'>
+                  <div>
+                    <p className='text-black-2 flex-1 text-lg font-bold'>
+                      Discount
+                    </p>
+                    <p className='text-black-4 text-base font-bold normal-case'>
+                      Calculated at checkout
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-black-2 flex-1 text-lg font-bold'>
+                      Shipping
+                    </p>
+                    <p className='text-black-4 text-base font-bold normal-case'>
+                      Calculated at checkout
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-black-2 flex-1 text-lg font-bold'>
+                      Subtotal
+                    </p>
+                    <p className='text-black-1 text-base font-bold'>
+                      {bagsTotalFormat}
+                    </p>
+                  </div>
+                </div>
+                {/* Bottom Bags Total */}
+                <Link
+                  to='/cart'
+                  className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
+                >
+                  <span className='text-sm font-bold tracking-tight'>
+                    Check out
+                  </span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={3}
+                    stroke='currentColor'
+                    className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                    />
+                  </svg>
+                </Link>
+              </>
+            )}
+            {/* collections preview */}
+            {/* bottom */}
+            {cartData.length === 0 && (
+              <div className='w-full'>
+                {navbarCollectionsList.map((item) => (
+                  <NavbarCollectionItem key={item?.id} {...item} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       }

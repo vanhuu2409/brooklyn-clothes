@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { addToCart } from "../../../features/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { formatPrice } from "../../../constants";
 
 export function ProductCard(props) {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ export function ProductCard(props) {
         <Link to={`/products/${props?.id}`}>
           <h3 className='mt-2 text-lg text-gray-700'>{props?.name}</h3>
           <p className='font-extralight inline-flex gap-2 mt-1 text-lg text-gray-900'>
-            {props?.price}
+            {formatPrice(props?.price)}
             <span className='text-neutral-400 line-through'>
               {props?.salePrice}
             </span>

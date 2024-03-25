@@ -6,9 +6,11 @@ import { Logo } from "../Logo";
 const Footer = () => {
   return (
     <footer className=' bg-white'>
-      <div className='container px-4 py-12 mx-auto'>
+      <div className='min-w-screen pt-12 pb-4 mx-auto'>
+        <hr className='md:my-8 my-6 border-gray-200' />
+
         {/* subscribe mail */}
-        <div className='sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-5 grid grid-cols-1 gap-6'>
+        <div className='sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-5 grid grid-cols-1 gap-6 sm:px-6 lg:max-w-[90rem] lg:px-8 max-w-2xl px-4 mx-auto'>
           <div className='sm:col-span-2'>
             <h1 className='xl:text-2xl max-w-lg text-xl font-bold tracking-tight text-gray-800'>
               Subscribe our newsletter to get update.
@@ -37,7 +39,7 @@ const Footer = () => {
         <hr className='md:my-8 my-6 border-gray-200' />
 
         {/* brand */}
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between sm:px-6 lg:max-w-[90rem] lg:px-8 max-w-2xl px-4 mx-auto'>
           <Logo textPosition='text-left' />
 
           {/* social link */}

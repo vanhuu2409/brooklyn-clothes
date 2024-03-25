@@ -70,7 +70,7 @@ const Carousel = () => {
                 {item?.subTitle}
               </p>
               <Link
-                to='/'
+                to='/products'
                 className='group/shopall w-fit hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
               >
                 <span className='text-sm font-bold tracking-tight'>

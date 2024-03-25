@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../../features/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
+import { formatPrice } from "../../../constants";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const ProductDetail = () => {
                 {product?.name}
               </h2>
               <p className='text-black-2 text-xl tracking-tight'>
-                {product?.price}
+                {formatPrice(product?.price)}
               </p>
 
               <div className='mt-10'>

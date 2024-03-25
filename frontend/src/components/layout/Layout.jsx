@@ -13,6 +13,7 @@ const Layout = () => {
       <div className='h-full'>
         <Outlet />
       </div>
+
       <Footer />
     </div>
   );
