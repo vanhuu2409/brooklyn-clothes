@@ -35,7 +35,7 @@ const ProductInCart = (props) => {
       {/* img */}
       <img
         src={props?.imageSrc}
-        className='aspect-square hover:scale-110 object-contain col-span-2 transition-transform duration-300'
+        className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
       />
       {/* body */}
       <div className='sm:py-4 flex flex-col w-full h-full col-span-4'>

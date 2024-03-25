@@ -35,7 +35,7 @@ const Header = () => {
 
   return (
     <>
-      <header className='*:font-bold *:text-md *:drop-shadow-sm overflow-hidden'>
+      <header className='*:font-bold *:text-md *:drop-shadow-sm '>
         {/* top header */}
         <div className='bg-black-1 drop-shadow-md text-neutral-300 w-full py-2 text-sm subpixel-antialiased font-semibold leading-tight tracking-wide text-center uppercase shadow-md select-none'>
           <Marquee autoFill={true} pauseOnHover={true}>
