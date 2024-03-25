@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 export function ProductCard(props) {
   const dispatch = useDispatch();
   return (
-    <div key={props?.id} className='group flex flex-col'>
+    <div key={props?.id} className='group flex flex-col w-full'>
       <div className=' relative flex-1 w-full overflow-hidden bg-gray-200'>
         <Link className='' to={`/products/${props?.id}`}>
           <img
@@ -31,7 +31,7 @@ export function ProductCard(props) {
             toast.success(`${props?.name} is added to Cart!`)
           }
           to='/'
-          className='group/shopall group-hover:translate-y-0 hover:bg-opacity-100 hover:border bg-opacity-60 sm:translate-y-full absolute inset-x-0 bottom-0 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
+          className='group/shopall group-hover:translate-y-0 hover:bg-opacity-100 hover:border bg-opacity-60 sm:translate-y-full absolute inset-x-0 bottom-[1px] inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
         >
           <span className=' text-sm font-bold tracking-tight'>add to cart</span>
           <svg

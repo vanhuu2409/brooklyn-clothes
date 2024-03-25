@@ -1,43 +1,52 @@
 import LayoutView from "../components/LayoutView";
-import Popular from "../components/Popular";
+import NewCollection from "../components/NewCollection";
 
 const SignInPage = () => {
   return (
     <LayoutView>
+      {/* form */}
+
       <div className='flex flex-col items-center justify-center'>
-        SignInPage
+        <h1 className='text-black-2 mb-6 text-6xl font-extrabold'>Sign In</h1>
         <form className='w-full max-w-lg'>
           <div className='flex flex-wrap mb-6 -mx-3'>
-            <div className='md:w-1/2 md:mb-0 w-full px-3 mb-6'>
+            <div className='md:mb-0 w-full px-3 mb-6'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
                 htmlFor='grid-first-name'
               >
-                First Name
+                Username
               </label>
               <input
-                className='focus:outline-none focus:bg-white block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-red-500 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-red-500 rounded appearance-none'
                 id='grid-first-name'
                 type='text'
-                placeholder='Jane'
+                name='username'
+                placeholder='username'
               />
               <p className='text-xs italic text-red-500'>
                 Please fill out this field.
               </p>
             </div>
-            <div className='md:w-1/2 w-full px-3'>
+          </div>
+          <div className='flex flex-wrap mb-6 -mx-3'>
+            <div className='md:mb-0 w-full px-3 mb-6'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
-                htmlFor='grid-last-name'
+                htmlFor='grid-gmail'
               >
-                Last Name
+                Gmail
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
-                id='grid-last-name'
+                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
+                id='grid-gmail'
                 type='text'
-                placeholder='Doe'
+                name='gmail'
+                placeholder='demo@gmail.com'
               />
+              {/* <p className='text-xs italic text-red-500'>
+                Please fill out this field.
+              </p> */}
             </div>
           </div>
           <div className='flex flex-wrap mb-6 -mx-3'>
@@ -52,6 +61,7 @@ const SignInPage = () => {
                 className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
                 id='grid-password'
                 type='password'
+                name='password'
                 placeholder='******************'
               />
               <p className='text-xs italic text-gray-600'>
@@ -59,66 +69,31 @@ const SignInPage = () => {
               </p>
             </div>
           </div>
-          <div className='flex flex-wrap mb-2 -mx-3'>
-            <div className='md:w-1/3 md:mb-0 w-full px-3 mb-6'>
-              <label
-                className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
-                htmlFor='grid-city'
-              >
-                City
-              </label>
-              <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
-                id='grid-city'
-                type='text'
-                placeholder='Albuquerque'
+          <button
+            type='submit'
+            className='hover:bg-opacity-100 group/signin hover:border bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
+          >
+            <span className=' text-sm font-bold tracking-tight'>Sign In</span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={3}
+              stroke='currentColor'
+              className='group-hover/signin:rotate-0 w-4 h-4 transition-all -rotate-45'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
               />
-            </div>
-            <div className='md:w-1/3 md:mb-0 w-full px-3 mb-6'>
-              <label
-                className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
-                htmlFor='grid-state'
-              >
-                State
-              </label>
-              <div className='relative'>
-                <select
-                  className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
-                  id='grid-state'
-                >
-                  <option>New Mexico</option>
-                  <option>Missouri</option>
-                  <option>Texas</option>
-                </select>
-                <div className='absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none'>
-                  <svg
-                    className='w-4 h-4 fill-current'
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 20 20'
-                  >
-                    <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div className='md:w-1/3 md:mb-0 w-full px-3 mb-6'>
-              <label
-                className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
-                htmlFor='grid-zip'
-              >
-                Zip
-              </label>
-              <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
-                id='grid-zip'
-                type='text'
-                placeholder='90210'
-              />
-            </div>
-          </div>
+            </svg>
+          </button>
         </form>
-        <Popular />
       </div>
+      {/* form */}
+
+      <NewCollection />
     </LayoutView>
   );
 };

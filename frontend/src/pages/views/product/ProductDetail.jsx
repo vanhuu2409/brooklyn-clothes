@@ -4,30 +4,34 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../features/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { useState } from "react";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  console.log(params);
 
   const product = products.find((i) => {
-    return i.id === params.id;
+    return i.id.toString() === params.id;
   });
 
-  const handleOnAddToBag = () => {
-    dispatch(addToCart(product)) &
-      toast.success(`${product?.name} is added to Cart!`);
-  };
+  const [size, setSize] = useState("M");
+  const [color, setColor] = useState(product.colors[0].name);
+  console.table(size, color);
 
+  const handleOnAddToBag = () => {
+    dispatch(
+      addToCart({ ...product, colorSelected: color, sizeSelected: size })
+    ) & toast.success(`${product?.name} is added to Cart!`);
+  };
   return (
     <LayoutView>
       <div className='bg-white'>
         <div className=''>
           {/* Image gallery */}
           <div className='sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8 max-w-2xl mx-auto'>
-            <div className='aspect-h-4 aspect-w-3 lg:block hidden overflow-hidden rounded-lg'>
+            <div className='aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg'>
               <img
-                src={product?.imageSrcs[0]}
+                src={product?.imageSrc}
                 alt={product?.imageAlt}
                 className='object-cover object-center w-full h-full'
               />
@@ -35,22 +39,22 @@ const ProductDetail = () => {
             <div className='lg:grid lg:grid-cols-1 lg:gap-y-8 hidden'>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.imageSrcs[1]}
+                  src={product?.imageSrc}
                   alt={product?.imageAlt}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.imageSrcs[2]}
+                  src={product?.imageSrc}
                   alt={product?.imageAlt}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
             </div>
-            <div className='aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg'>
+            <div className='aspect-h-4 aspect-w-3 lg:block hidden overflow-hidden rounded-lg'>
               <img
-                src={product?.imageSrcs[3]}
+                src={product?.imageSrc}
                 alt={product?.imageAlt}
                 className='object-cover object-center w-full h-full'
               />
@@ -78,7 +82,11 @@ const ProductDetail = () => {
                 {/* Colors */}
                 <div className='flex items-center gap-4'>
                   <h3 className='text-black-2 text-lg font-medium'>Colors</h3>
-                  <select className='border'>
+                  <select
+                    className='border'
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                  >
                     {product?.colors.map((color, i) => (
                       <option
                         key={color?.name + i}
@@ -96,7 +104,11 @@ const ProductDetail = () => {
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
                       <h3 className='text-black-2 text-lg font-medium'>Size</h3>
-                      <select className='border'>
+                      <select
+                        className='border'
+                        value={size}
+                        onChange={(e) => setSize(e.target.value)}
+                      >
                         {product?.sizes.map((size) => (
                           <option
                             key={size.name}

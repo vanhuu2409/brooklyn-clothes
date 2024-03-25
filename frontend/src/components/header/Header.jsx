@@ -1,6 +1,7 @@
+import ProductInCart from "./../ProductInCart";
 import { Logo } from "./../Logo";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   navbarCollectionsList,
   navbarPresetsList,
@@ -9,14 +10,7 @@ import {
 } from "../../constants";
 import Marquee from "react-fast-marquee";
 import NavbarCollectionItem from "../NavbarCollectionItem";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  decreaseQuantity,
-  increaseQuantity,
-  quantityByAmount,
-  removeFromCart,
-} from "../../features/cartSlice";
+import { useSelector } from "react-redux";
 const Header = () => {
   // mobile state
   const [toggleMobileNav, setToggleMobileNav] = useState(false);
@@ -26,34 +20,18 @@ const Header = () => {
   // desktop right side state
   const [isOpenSidePreview, setIsOpenSidePreview] = useState(null);
 
+  // handle onChange site turn off sidePreview
+  const { pathname } = useLocation();
+  useEffect(() => {
+    setIsOpenSidePreview(null);
+  }, [pathname]);
+
   // bag/cart flow
-  const dispatch = useDispatch();
   const cartData = useSelector((state) => state.cart.cart);
 
-  const handleOnChangeQuantity = (e, item) => {
-    let value = parseInt(e.target.value);
-    dispatch(quantityByAmount({ quantity: value, item })) &
-      toast.success(`${item?.name} is change quantity success!`);
-  };
-
-  const handleIncreaseQuantity = (item) => {
-    dispatch(increaseQuantity(item)) &
-      toast.success(`${item?.name} is increase quantity success!`);
-  };
-  const handleDecreaseQuantity = (item) => {
-    dispatch(decreaseQuantity(item)) &
-      toast.success(`${item?.name} is decrease quantity success!`);
-  };
-
-  const handleRemoveFromCart = (item) => {
-    dispatch(removeFromCart(item)) &
-      toast.success(`${item?.name} is remove success!`);
-  };
-
   // bags count
-  const bagsCount = cartData.reduce((prev, item) => {
-    return prev + item?.quantity;
-  }, 0);
+  const bagsCount = cartData.length;
+  // const bagsTotal = cartData;
 
   return (
     <>
@@ -75,7 +53,7 @@ const Header = () => {
                 {/* navlink */}
                 <Link
                   className='hover:text-black-4 flex items-center gap-1 px-2 py-5 transition-all'
-                  to='/'
+                  to='/products'
                 >
                   shop
                   {/* chevron icons */}
@@ -130,7 +108,7 @@ const Header = () => {
                         </li>
                         <li>
                           <Link className='hover:opacity-70 p-2 transition-all'>
-                            T-Shirts
+                            T Shirts
                           </Link>
                         </li>
                         <li>
@@ -383,7 +361,7 @@ const Header = () => {
                 toggleMobileNav
                   ? "translate-x-0 w-full"
                   : "-translate-x-full w-0"
-              } inset-x-0 bg-black-1 border-y border-neutral-100 divide-y divide-neutral-700 *:pt-4 *:text-xl *:text-white pb-4`}
+              } inset-x-0 inset-y-0 min-h-screen bg-black-1 border-y border-neutral-100 divide-y divide-neutral-700 *:pt-4 *:text-xl *:text-white pb-4`}
             >
               <li className=''>
                 <button
@@ -791,7 +769,7 @@ const Header = () => {
         <div className={`overflow-hidden transition-all duration-300`}>
           <div
             onClick={() => setIsOpenSidePreview(null)}
-            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full min-h-[120vh] bg-black transition-all duration-300  ${
+            className={`bg-opacity-35 fixed inset-0 top-0 z-40 w-full min-h-[120vh] h-full bg-black transition-all duration-300  ${
               isOpenSidePreview === "bagsbar"
                 ? "translate-x-0 w-full opacity-100"
                 : "translate-x-full w-0 opacity-0"
@@ -831,120 +809,97 @@ const Header = () => {
               </button>
             </div>
             {/* main sidepreview */}
-            <div className='flex flex-col w-full h-full mt-4 overflow-y-scroll'>
+            <div className='flex flex-col w-full h-full min-h-screen mt-4 overflow-y-auto'>
               {/* top */}
               <div className='flex-1 mb-8'>
                 {cartData.length > 0 && (
                   <div className='flex flex-col w-full border-t'>
                     {cartData.map((item) => (
-                      <div
-                        key={item?.id}
-                        className='grid grid-cols-6 grid-rows-1 gap-4 px-6 py-4 text-black border-b'
-                      >
-                        {/* img */}
-                        <img
-                          src={item?.imageSrc}
-                          className='aspect-square hover:scale-110 object-contain col-span-2 transition-transform duration-300'
-                        />
-                        {/* body */}
-                        <div className='sm:py-4 flex flex-col w-full h-full col-span-4'>
-                          {/* top body */}
-                          <div className='flex flex-col self-center flex-1 w-full'>
-                            <h4 className='text-[.625rem] sm:text-[.75rem] text-black-4 font-bold'>
-                              berlin lifestyle
-                            </h4>
-                            <h2 className='text-black-2 sm:text-xl text-lg font-extrabold'>
-                              {item?.name}
-                            </h2>
-                          </div>
-                          {/* center */}
-                          {/* size select */}
-                          <span className='text-black-3 flex-1 text-base font-extrabold'>
-                            M
-                          </span>
-                          {/* bottom body */}
-                          <div className='flex items-center justify-between'>
-                            {/* left bottom */}
-                            <p className='text-black-3 sm:text-base flex gap-1 text-sm font-bold'>
-                              {item?.price}
-                              <span className='text-black-4 font-light'>/</span>
-                            </p>
-                            {/* middle */}
-                            <div className='flex items-center border'>
-                              {/* increase quantity */}
-                              <button
-                                className='px-2 py-1'
-                                onClick={() => handleDecreaseQuantity(item)}
-                              >
-                                -
-                              </button>
-                              <input
-                                type='number'
-                                value={item.quantity}
-                                onChange={(e) =>
-                                  handleOnChangeQuantity(e, item)
-                                }
-                                // onBlur={(e) => handleOnBlurQuantity(e, item)}
-                                className='spin focus:border-x w-10 px-2 py-1 text-[.8rem] text-center rounded-none outline-none'
-                              />
-                              {/* increase quantity */}
-                              <button
-                                className='px-2 py-1'
-                                onClick={() => handleIncreaseQuantity(item)}
-                              >
-                                +
-                              </button>
-                            </div>
-                            {/* right */}
-                            <button
-                              className='p-2'
-                              onClick={() => handleRemoveFromCart(item)}
-                            >
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                fill='none'
-                                viewBox='0 0 24 24'
-                                strokeWidth={1.5}
-                                stroke='currentColor'
-                                className='sm:h-5 sm:w-5 w-4 h-4'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  d='m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <ProductInCart key={item.id} {...item} />
                     ))}
                   </div>
                 )}
-                {cartData.length === 0 && <div>No item found...</div>}
-                <div className='mt-6'>
-                  <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
-                    Categories
-                  </h3>
-                  <div className='sm:gap-x-4 gap-x-2 gap-y-0 sm:gap-y-2 flex flex-wrap *:font-bold *:text-2xl *:tracking-widest'>
-                    {navbarCollectionsList.map((item) => (
-                      <Link
-                        key={item?.id}
-                        to={item?.href}
-                        className='opacity-60 hover:opacity-100 hover:scale-110 block transition-all duration-300'
+                {cartData.length === 0 ? (
+                  <>
+                    <div>No item found...</div>
+                    <div className='mt-6'>
+                      <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
+                        Categories
+                      </h3>
+                      <div className='sm:gap-x-4 gap-x-2 gap-y-0 sm:gap-y-2 flex flex-wrap *:font-bold *:text-2xl *:tracking-widest'>
+                        {navbarCollectionsList.map((item) => (
+                          <Link
+                            key={item?.id}
+                            to={item?.href}
+                            className='opacity-60 hover:opacity-100 hover:scale-110 block transition-all duration-300'
+                          >
+                            {item?.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Top Bags Total */}
+                    <div className='mt-6 *:flex *:justify-between *:flex-wrap *:mb-4'>
+                      <div>
+                        <p className='text-black-2 flex-1 text-lg font-bold'>
+                          Discount
+                        </p>
+                        <p className='text-black-4 text-base font-bold normal-case'>
+                          Calculated at checkout
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-black-2 flex-1 text-lg font-bold'>
+                          Shipping
+                        </p>
+                        <p className='text-black-4 text-base font-bold normal-case'>
+                          Calculated at checkout
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-black-2 flex-1 text-lg font-bold'>
+                          Subtotal
+                        </p>
+                        <p className='text-black-1 text-base font-bold'>0</p>
+                      </div>
+                    </div>
+                    {/* Bottom Bags Total */}
+                    <Link
+                      to='/cart'
+                      className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
+                    >
+                      <span className='text-sm font-bold tracking-tight'>
+                        Check out
+                      </span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        strokeWidth={3}
+                        stroke='currentColor'
+                        className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
                       >
-                        {item?.title}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                        />
+                      </svg>
+                    </Link>
+                  </>
+                )}
               </div>
               {/* bottom */}
-              <div className=' w-full'>
-                {navbarCollectionsList.map((item) => (
-                  <NavbarCollectionItem key={item?.id} {...item} />
-                ))}
-              </div>
+              {cartData.length === 0 && (
+                <div className='w-full'>
+                  {navbarCollectionsList.map((item) => (
+                    <NavbarCollectionItem key={item?.id} {...item} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

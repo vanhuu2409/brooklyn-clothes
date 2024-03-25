@@ -1,12 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
-
 // products
 const products = [
   // shorts
   {
-    id: uuidv4(),
+    id: 1,
     name: "Cargo Shorts",
     category: "shorts",
+    collection: "",
     description:
       "The summer extension of our classic cargo pants, these shorts have great function and fashion featuring the side cargo pockets as well as a built in climbing inspired release buckle belt.",
     details: [
@@ -17,7 +16,7 @@ const products = [
       "97% cotton 3% spandex",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "2.527.000₫",
     salePrice: "",
     status: "sale",
@@ -59,9 +58,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 2,
     name: "Fleece Shorts",
     category: "shorts",
+    collection: "acid",
     description:
       "The warm weather cousin of our infamous fleece pants, the Fleece Shorts are the perfect option for heading out with a comfortable fit or just lounging around the house.",
     details: [
@@ -74,7 +74,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.895.000₫",
     salePrice: "",
     status: "sale",
@@ -121,9 +121,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 3,
     name: "Mesh Shorts",
     category: "shorts",
+    collection: "",
     description:
       "Introducing the Nylon Short, the most versatile pair in the line. Made from quick-drying unlined nylon, this shorts can go from the streets to the ocean and back without a blink.",
     details: [
@@ -136,7 +137,7 @@ const products = [
       "Quick-drying unlined 100% Nylon",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.769.000₫",
     salePrice: "",
     status: "sale",
@@ -183,9 +184,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 4,
     name: "Corduroy Shorts",
     category: "shorts",
+    collection: "",
     description:
       "The Corduroy Shorts provide a unique textural twist to your lineup of shorts, setting them apart from any other pair in your wardrobe.",
     details: [
@@ -199,7 +201,7 @@ const products = [
       "100% Cotton, lightly brushed corduroy",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "2.274.000₫",
     salePrice: "",
     status: "sale",
@@ -236,9 +238,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 5,
     name: "Classic Shorts",
     category: "shorts",
+    collection: "",
     description:
       "The Classic Shorts speak for themselves. With a timeless cut and length, this short is the perfect weight and fit for anything from everyday usage to travel and exploration.",
     details: [
@@ -251,7 +254,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.895.000₫",
     salePrice: "",
     status: "sale",
@@ -294,9 +297,10 @@ const products = [
   },
   // t-shirts
   {
-    id: uuidv4(),
+    id: 6,
     name: "Heavyweight S/S T Set",
     category: "t-shirts",
+    collection: "",
     description:
       "High quality tee with a perfect fit, created with custom heavyweight 280g garment dyed cotton. Straight up clean and to the point, a must have staple in any wardrobe to match any fit.",
     details: [
@@ -306,7 +310,7 @@ const products = [
       "Model Specs: Height is 5’11, weight is 155 lbs and waist 32” wearing size large mens (except t-shirt is Medium)",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "2.502.000₫",
     salePrice: "",
     status: "sale",
@@ -338,9 +342,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 7,
     name: "Heavyweight S/S T",
     category: "t-shirts",
+    collection: "",
     description:
       "High quality tee with a perfect fit, created with custom heavyweight 280g garment dyed cotton. Straight up clean and to the point, a must have staple in any wardrobe to match any fit.",
     details: [
@@ -350,7 +355,7 @@ const products = [
       "Model Specs: Height is 5’11, weight is 155 lbs and waist 32” wearing size large mens (except t-shirt is Medium)",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.390.000₫",
     salePrice: "",
     status: "sale",
@@ -402,9 +407,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 8,
     name: "Organic S/S T",
     category: "t-shirts",
+    collection: "",
     description:
       "Our GOTS certified (global organic textile standard) organic cotton blend tee is the perfect cross of comfort and function. This tee will allow breathability and comfort with every wear, finished with our signature Taikan flag label at side seam.",
     details: [
@@ -413,7 +419,7 @@ const products = [
       "90% Cotton 10% Polyester",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.264.000₫",
     salePrice: "",
     status: "sale",
@@ -450,9 +456,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 9,
     name: "Matt Gazzola Smoke S/S Tee",
     category: "t-shirts",
+    collection: "",
     description:
       "High quality tee with a perfect fit, created with custom heavyweight 280g garment dyed cotton. Graphics by Matt Gazzola.",
     details: [
@@ -461,7 +468,7 @@ const products = [
       "100% cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "1.643.000₫",
     salePrice: "",
     status: "sale",
@@ -499,9 +506,10 @@ const products = [
   },
   // hoodies
   {
-    id: uuidv4(),
+    id: 10,
     name: "Dip Dye Hoodie",
     category: "hoodies",
+    collection: "",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dip dyed colour treatments.",
     details: [
@@ -513,7 +521,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "3.032.000₫",
     salePrice: "",
     status: "sale",
@@ -545,9 +553,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 11,
     name: "Acid Hoodie",
     category: "hoodies",
+    collection: "acid",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dip dyed colour treatments.",
     details: [
@@ -559,7 +568,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "3.032.000₫",
     salePrice: "",
     status: "sale",
@@ -596,9 +605,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 12,
     name: "Black Contrast Stitch",
     category: "hoodies",
+    collection: "",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dip dyed colour treatments.",
     details: [
@@ -610,7 +620,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "2.653.000₫",
     salePrice: "",
     status: "sale",
@@ -642,9 +652,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 13,
     name: "Custom Hoodie",
     category: "hoodies",
+    collection: "",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dip dyed colour treatments.",
     details: [
@@ -656,7 +667,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "2.653.000₫",
     salePrice: "",
     status: "sale",
@@ -698,9 +709,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 14,
     name: "Custom Full-Zip Hoodie",
     category: "hoodies",
+    collection: "",
     description:
       "A new adaptation of our classic heavyweight hoodie brings ideal functionality with a two way YKK zipper and split external kangaroo pockets. The Custom Full-Zip Hoodie is the ideal layering piece for changing temperatures and showcasing your entire fit.",
     details: [
@@ -712,7 +724,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "3.159.000₫",
     salePrice: "",
     status: "sale",
@@ -749,9 +761,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 15,
     name: "Joshua Running Hoodie",
     category: "hoodies",
+    collection: "",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dyed colour treatments. Embroidered graphic by Joshua.",
     details: [
@@ -761,7 +774,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "3.032.000₫",
     salePrice: "",
     status: "sale",
@@ -798,9 +811,10 @@ const products = [
     ],
   },
   {
-    id: uuidv4(),
+    id: 16,
     name: "Stank Daddy Hoodie",
     category: "hoodies",
+    collection: "",
     description:
       "We created the perfect fitting custom heavyweight hoodie with a solid 360g weight. With removed drawstrings and a single branded flag label, this piece can be cleanly matched with any fit. Available in a variety of garment dyed solids and hand dyed colour treatments. Screened hood graphics by Stank Daddy.",
     details: [
@@ -810,7 +824,7 @@ const products = [
       "100% Cotton",
     ],
     // href: "productid1",
-    quantity: 1,
+    // quantity: 1,
     price: "3.032.000₫",
     salePrice: "",
     status: "sale",
