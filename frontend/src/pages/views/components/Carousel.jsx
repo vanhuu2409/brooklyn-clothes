@@ -35,7 +35,7 @@ const Carousel = () => {
   ];
   // hande slider
   const [slideView, setSlideView] = useState(0);
-
+  let slidePosition = `-translate-x-[${slideView}vw]`;
   const handlePrevSlide = () => {
     const itemView = slideView - 100;
     if (itemView < 0) return setSlideView((slides.length - 1) * 100);
@@ -51,9 +51,7 @@ const Carousel = () => {
     <div className='relative min-h-[15rem] w-full'>
       {/* slider */}
       <div
-        className={`flex w-[400vw] -translate-x-[${
-          slideView + "vw"
-        }] transition-all duration-500`}
+        className={`flex w-[400vw] ${slidePosition} transition-all overflow-hidden  duration-500`}
       >
         {/* slide item */}
         {slides.map((item) => (

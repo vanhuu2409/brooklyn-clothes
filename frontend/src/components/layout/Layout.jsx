@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Layout = () => {
   return (
-    <div className='relative'>
+    <div className='relative overflow-hidden'>
       <Headroom>
         <Header />
       </Headroom>
