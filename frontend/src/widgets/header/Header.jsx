@@ -8,7 +8,7 @@ import {
   navbarPresetsList,
   presetsList,
   shopListMobile,
-} from "../../constants";
+} from "../../data/custom";
 import Marquee from "react-fast-marquee";
 import NavbarCollectionItem from "../NavbarCollectionItem";
 import { useSelector } from "react-redux";
@@ -819,7 +819,7 @@ const Header = () => {
             </div>
             {/* main sidepreview */}
             <div
-              className={`flex flex-col w-full h-auto max-h-[40rem] mt-4 overflow-y-auto`}
+              className={`flex flex-col w-full h-auto max-h-[60%]  mt-4 overflow-y-auto`}
             >
               {/* top */}
               <div className='flex-1 mb-8'>

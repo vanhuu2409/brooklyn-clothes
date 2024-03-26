@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import FooterLinks from "./FooterLinks";
-import { presetsList, shopList, serviceList } from "../../constants";
+import { presetsList, shopList, serviceList } from "../../data/custom";
 import { Logo } from "../Logo";
 
 const Footer = () => {

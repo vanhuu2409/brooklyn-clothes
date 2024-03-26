@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Layout from "../components/layout/Layout";
+import { ToastContainer } from "react-toastify";
+import ScrollTop from "../widgets/ScrollTop";
+import Layout from "../widgets/layout/Layout";
 import Home from "../pages/views/home/Home";
-import NotFoundPage from "../pages/NotFoundPage";
-import Dashboard from "../pages/admin/Dashboard";
 import Products from "../pages/views/products/Products";
 import ProductDetail from "../pages/views/product/ProductDetail";
-import ScrollTop from "../components/ScrollTop";
 import LoginPage from "../pages/views/loginPage/LoginPage";
 import SignInPage from "../pages/views/signInPage/SignInPage";
-import { ToastContainer } from "react-toastify";
-import CartPage from "../pages/views/cartPage/CartPage";
 import LookBook from "../pages/views/lookBook/LookBook";
+import CartPage from "../pages/views/cartPage/CartPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import Dashboard from "../pages/admin/Dashboard";
+import ProtectedAdminPage from "./ProtectedAdminPage";
+import AdminAllProducts from "../pages/admin/AdminAllProducts";
 
 const AppRouter = () => {
   return (
@@ -31,7 +33,22 @@ const AppRouter = () => {
           <Route path='/*' element={<NotFoundPage />} />
         </Route>
         {/* admin page */}
-        <Route path='/admin/dashboard' element={<Dashboard />} />
+        <Route
+          path='/admin/dashboard'
+          element={
+            <ProtectedAdminPage role='admin'>
+              <Dashboard />
+            </ProtectedAdminPage>
+          }
+        />
+        <Route
+          path='/admin/allproducts'
+          element={
+            <ProtectedAdminPage role='admin'>
+              <AdminAllProducts />
+            </ProtectedAdminPage>
+          }
+        />
       </Routes>
       {/* Toast container */}
       <div className=' normal-case'>

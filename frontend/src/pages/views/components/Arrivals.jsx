@@ -1,6 +1,6 @@
 import { products } from "../../../services/data";
 import { ProductCard } from "../product/ProductCard";
-import LayoutView from "./LayoutView";
+import LayoutView from "../../../widgets/layout/LayoutView";
 import { Link } from "react-router-dom";
 const Arrivals = () => {
   // arrivals filter

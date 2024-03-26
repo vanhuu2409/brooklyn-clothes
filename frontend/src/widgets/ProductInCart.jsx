@@ -6,8 +6,8 @@ import {
   increaseQuantity,
   quantityByAmount,
   removeFromCart,
-} from "../features/cartSlice";
-import { formatPrice } from "../constants";
+} from "../redux/cartSlice";
+import { formatPrice } from "../data/custom";
 const ProductInCart = (props) => {
   console.log(props.isCartPage);
   const dispatch = useDispatch();

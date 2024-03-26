@@ -1,14 +1,48 @@
-import LayoutView from "../components/LayoutView";
+import { useState } from "react";
+import LayoutView from "../../../widgets/layout/LayoutView";
 import NewCollection from "../components/NewCollection";
 
 const SignInPage = () => {
+  const [userDetail, setUserDetail] = useState({
+    username: "",
+    password: "",
+    email: "",
+  });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetail((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+  const handleSubmitSignup = async (e) => {
+    e.preventDefault();
+    // Handle form submission (e.g., send data to the server)
+    try {
+      const response = await fetch("http://localhost:4000/signup", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userDetail),
+      }).then((res) => res.json());
+      if (response.success) {
+        console.log(response);
+        window.location.replace("/");
+        localStorage.setItem("auth-token", response.token);
+      } else alert("Cannot Sign Up");
+    } catch (error) {
+      // Handle fetch error (e.g., network issue)
+      console.error("Fetch error:", error.message);
+    }
+  };
   return (
     <LayoutView>
       {/* form */}
 
       <div className='flex flex-col items-center justify-center'>
         <h1 className='text-black-2 mb-6 text-6xl font-extrabold'>Sign In</h1>
-        <form className='w-full max-w-lg'>
+        <form onSubmit={handleSubmitSignup} className='w-full max-w-lg'>
           <div className='flex flex-wrap mb-6 -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
               <label
@@ -22,6 +56,7 @@ const SignInPage = () => {
                 id='grid-first-name'
                 type='text'
                 name='username'
+                onChange={handleInputChange}
                 placeholder='username'
               />
               <p className='text-xs italic text-red-500'>
@@ -35,13 +70,14 @@ const SignInPage = () => {
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
                 htmlFor='grid-gmail'
               >
-                Gmail
+                Email
               </label>
               <input
                 className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
                 id='grid-gmail'
                 type='text'
-                name='gmail'
+                onChange={handleInputChange}
+                name='email'
                 placeholder='demo@gmail.com'
               />
               {/* <p className='text-xs italic text-red-500'>
@@ -61,6 +97,7 @@ const SignInPage = () => {
                 className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
                 id='grid-password'
                 type='password'
+                onChange={handleInputChange}
                 name='password'
                 placeholder='******************'
               />

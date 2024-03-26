@@ -6,6 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+<<<<<<< HEAD
+=======
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+>>>>>>> 9fdc896c4a35315e268f409f4d98e71e96d284a9
 
 node_modules
 dist

@@ -1,5 +1,5 @@
 import { products } from "../../../services/data";
-import LayoutView from "./LayoutView";
+import LayoutView from "../../../widgets/layout/LayoutView";
 import { ProductCard } from "../product/ProductCard";
 import { Link } from "react-router-dom";
 

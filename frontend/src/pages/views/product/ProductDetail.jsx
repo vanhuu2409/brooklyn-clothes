@@ -1,11 +1,11 @@
-import LayoutView from "../components/LayoutView";
+import LayoutView from "../../../widgets/layout/LayoutView";
 import { products } from "../../../services/data";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../features/cartSlice";
+import { addToCart } from "../../../redux/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
-import { formatPrice } from "../../../constants";
+import { formatPrice } from "../../../data/custom";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();

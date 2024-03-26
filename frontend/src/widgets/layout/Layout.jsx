@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
-import Header from "../header/Header";
-import Footer from "../footer/Footer";
 import Headroom from "react-headroom";
 import "react-toastify/dist/ReactToastify.css";
+import Header from "../../widgets/header/Header";
+import Footer from "../../widgets/footer/Footer";
 
 const Layout = () => {
   return (
@@ -10,7 +10,7 @@ const Layout = () => {
       <Headroom>
         <Header />
       </Headroom>
-      <div className='h-full'>
+      <div className=' h-full'>
         <Outlet />
       </div>
 

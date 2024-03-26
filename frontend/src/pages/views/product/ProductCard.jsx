@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../../../features/cartSlice";
+import { addToCart } from "../../../redux/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { formatPrice } from "../../../constants";
+import { formatPrice } from "../../../data/custom";
 
 export function ProductCard(props) {
   const dispatch = useDispatch();

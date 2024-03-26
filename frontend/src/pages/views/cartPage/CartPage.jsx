@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
-import LayoutView from "../components/LayoutView";
+import { formatPrice } from "../../../data/custom";
+import ProductInCart from "../../../widgets/ProductInCart";
 import { Link } from "react-router-dom";
-import ProductInCart from "../../../components/ProductInCart";
-import { formatPrice } from "../../../constants";
 
 const CartPage = () => {
   const cartData = useSelector((state) => state.cart.cart);
