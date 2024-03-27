@@ -2,13 +2,19 @@ import Arrivals from "../components/Arrivals";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "../../../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
   const [userDetail, setUserDetail] = useState({});
 
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { error, loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +25,7 @@ const LoginPage = () => {
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
+      dispatch(loginStart());
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -29,16 +35,13 @@ const LoginPage = () => {
       });
       const data = await res.json();
       if (data.success === false) {
-        setError(data.message);
-        setIsLoading(false);
+        dispatch(loginFailure(data.message));
         return;
       }
-      setIsLoading(false);
-      setError(null);
+      dispatch(loginSuccess(data));
       navigate("/");
     } catch (error) {
-      setIsLoading(false);
-      setError(error.message);
+      dispatch(loginFailure(error.message));
     }
 
     // console.log(data);
@@ -64,16 +67,16 @@ const LoginPage = () => {
                 Email
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-red-500 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-first-name'
                 type='text'
                 name='email'
                 onChange={handleInputChange}
                 placeholder='demo@gmail.com'
               />
-              <p className='text-xs italic text-red-500'>
+              {/* <p className='text-xs italic text-red-500'>
                 Please fill out this field.
-              </p>
+              </p> */}
             </div>
           </div>
           <div className='flex flex-wrap mb-6 -mx-3'>
@@ -85,7 +88,7 @@ const LoginPage = () => {
                 Password
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-password'
                 name='password'
                 onChange={handleInputChange}
@@ -105,11 +108,11 @@ const LoginPage = () => {
           )}
           <button
             type='submit'
-            disabled={isLoading}
+            disabled={loading}
             className='hover:bg-opacity-100 group/login hover:border bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
           >
             <span className=' text-sm font-bold tracking-tight'>
-              {isLoading ? "Loading..." : "Continue"}
+              {loading ? "Loading..." : "Continue"}
             </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'

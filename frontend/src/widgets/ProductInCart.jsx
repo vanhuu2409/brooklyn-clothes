@@ -6,7 +6,7 @@ import {
   increaseQuantity,
   quantityByAmount,
   removeFromCart,
-} from "../redux/cartSlice";
+} from "../redux/cart/cartSlice";
 import { formatPrice } from "../data/custom";
 const ProductInCart = (props) => {
   console.log(props.image);

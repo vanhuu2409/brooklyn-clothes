@@ -724,11 +724,11 @@ const Header = () => {
                   </svg>
                 </Link>
                 <Link
-                  to='/sign-in'
+                  to='/signup'
                   className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
                 >
                   <span className='text-sm font-bold tracking-tight'>
-                    Sign In
+                    Sign Up
                   </span>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'

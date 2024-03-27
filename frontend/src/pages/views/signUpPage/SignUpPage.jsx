@@ -5,9 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [userDetail, setUserDetail] = useState({});
-
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -19,7 +18,7 @@ const SignUpPage = () => {
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
+      setLoading(true);
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -31,14 +30,14 @@ const SignUpPage = () => {
       console.log(data);
       if (data.success === false) {
         setError(data.message);
-        setIsLoading(false);
+        setLoading(false);
         return;
       }
-      setIsLoading(false);
+      setLoading(false);
       setError(null);
       navigate("/login");
     } catch (error) {
-      setIsLoading(false);
+      setLoading(false);
       setError(error.message);
     }
   };
@@ -58,16 +57,13 @@ const SignUpPage = () => {
                 Username
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-red-500 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-first-name'
                 type='text'
                 name='username'
                 onChange={handleInputChange}
                 placeholder='username'
               />
-              <p className='text-xs italic text-red-500'>
-                Please fill out this field.
-              </p>
             </div>
           </div>
           <div className='flex flex-wrap -mx-3'>
@@ -79,7 +75,7 @@ const SignUpPage = () => {
                 Email
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-gmail'
                 type='text'
                 onChange={handleInputChange}
@@ -100,7 +96,7 @@ const SignUpPage = () => {
                 Password
               </label>
               <input
-                className='focus:outline-none focus:bg-white focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none'
+                className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-password'
                 type='password'
                 onChange={handleInputChange}
@@ -113,12 +109,12 @@ const SignUpPage = () => {
             </div>
           </div>
           <button
-            disabled={isLoading}
+            disabled={loading}
             type='submit'
             className='hover:bg-opacity-100 group/signin hover:border bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
           >
             <span className=' text-sm font-bold tracking-tight'>
-              {isLoading ? "Loading..." : "Sign In"}
+              {loading ? "Loading..." : "Sign In"}
             </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'

@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../../../redux/cartSlice";
+import { addToCart } from "../../../redux/cart/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { formatPrice } from "../../../data/custom";
 

@@ -1,7 +1,7 @@
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../redux/cartSlice";
+import { addToCart } from "../../../redux/cart/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { formatPrice } from "../../../data/custom";
 import { fetchData } from "../../../services/api";
