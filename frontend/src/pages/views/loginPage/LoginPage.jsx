@@ -18,7 +18,6 @@ const LoginPage = () => {
     e.preventDefault();
     // Handle form submission (e.g., send data to the server)
     try {
-      console.log(userDetail);
       const response = await fetch("http://localhost:4000/login", {
         method: "POST",
         headers: {
@@ -27,9 +26,9 @@ const LoginPage = () => {
         },
         body: JSON.stringify(userDetail),
       }).then((res) => res.json());
-      console.log(response);
+      // console.log(response);
       if (response.success) {
-        console.log(response);
+        alert(response);
         window.location.replace("/");
         localStorage.setItem("auth-token", response.token);
       } else alert("Cannot Login");
@@ -38,10 +37,12 @@ const LoginPage = () => {
       console.error("Fetch error:", error.message);
     }
   };
-  const handleLogout = (e) => {
+  const handleLogout = () => {
     localStorage.removeItem("auth-token");
     window.location.replace("/products");
   };
+
+  const isLogin = localStorage.getItem("auth-token");
   return (
     <LayoutView>
       {/* form */}
@@ -83,14 +84,14 @@ const LoginPage = () => {
                 name='password'
                 onChange={handleInputChange}
                 type='password'
-                placeholder='******************'
+                placeholder='**********'
               />
               <p className='text-xs italic text-gray-600'>
                 Make it as long and as crazy as you&#39;d like
               </p>
             </div>
           </div>
-          {localStorage.getItem("auth-token") && (
+          {isLogin && (
             <button
               type='button'
               className='text-6xl font-bold text-white bg-red-500'

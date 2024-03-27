@@ -9,22 +9,15 @@ export function ProductCard(props) {
   return (
     <div key={props?.id} className='group flex flex-col w-full'>
       <div className=' relative flex-1 w-full overflow-hidden bg-gray-200'>
-        <Link className='' to={`/products/${props?.id}`}>
+        <Link className='' to={`/products/${props?.name}/${props?.id}`}>
           <img
-            src={props?.imageSrc}
-            alt={props?.imageAlt}
+            src={props?.image}
+            alt={props?.name}
             className='group-hover:opacity-75 group-hover:scale-125 object-cover object-center w-full h-full transition-transform duration-500'
           />
         </Link>
         <div className='top-4 left-4 absolute flex flex-col gap-1'>
-          {props?.colors?.map((color, i) => (
-            <div
-              key={(color.class, i)}
-              className={`${color?.class} size-6 border border-black-4`}
-            >
-              {/* {color?.name} */}
-            </div>
-          ))}
+          {props?.color}
         </div>
         <button
           onClick={() =>

@@ -1,27 +1,30 @@
 import LayoutView from "../../../widgets/layout/LayoutView";
-import { products } from "../../../services/data";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { useState } from "react";
 import { formatPrice } from "../../../data/custom";
+import { fetchData } from "../../../services/api";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const { id } = params;
 
-  const product = products.find((i) => {
-    return i.id.toString() === params.id;
+  const data = fetchData;
+  const product = data.find((i) => {
+    return i.id.toString() === id;
   });
+  const detailsFormart = product.details.split(",\n");
 
-  const [size, setSize] = useState("M");
-  const [color, setColor] = useState(product.colors[0].name);
-  console.table(size, color);
-
+  console.log(detailsFormart);
   const handleOnAddToBag = () => {
     dispatch(
-      addToCart({ ...product, colorSelected: color, sizeSelected: size })
+      addToCart({
+        ...product,
+        colorSelected: product?.color,
+        sizeSelected: product?.size,
+      })
     ) & toast.success(`${product?.name} is added to Cart!`);
   };
   return (
@@ -32,31 +35,31 @@ const ProductDetail = () => {
           <div className='sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8 max-w-2xl mx-auto'>
             <div className='aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg'>
               <img
-                src={product?.imageSrc}
-                alt={product?.imageAlt}
+                src={product?.image}
+                alt={product?.name}
                 className='object-cover object-center w-full h-full'
               />
             </div>
             <div className='lg:grid lg:grid-cols-1 lg:gap-y-8 hidden'>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.imageSrc}
-                  alt={product?.imageAlt}
+                  src={product?.image}
+                  alt={product?.name}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.imageSrc}
-                  alt={product?.imageAlt}
+                  src={product?.image}
+                  alt={product?.name}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
             </div>
             <div className='aspect-h-4 aspect-w-3 lg:block hidden overflow-hidden rounded-lg'>
               <img
-                src={product?.imageSrc}
-                alt={product?.imageAlt}
+                src={product?.image}
+                alt={product?.name}
                 className='object-cover object-center w-full h-full'
               />
             </div>
@@ -83,20 +86,8 @@ const ProductDetail = () => {
                 {/* Colors */}
                 <div className='flex items-center gap-4'>
                   <h3 className='text-black-2 text-lg font-medium'>Colors</h3>
-                  <select
-                    className='border'
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                  >
-                    {product?.colors.map((color, i) => (
-                      <option
-                        key={color?.name + i}
-                        disabled={!color?.inStock}
-                        value={color?.name}
-                      >
-                        {color?.name}
-                      </option>
-                    ))}
+                  <select className='border'>
+                    <option value={product?.color}>{product?.color}</option>
                   </select>
                 </div>
 
@@ -105,24 +96,12 @@ const ProductDetail = () => {
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
                       <h3 className='text-black-2 text-lg font-medium'>Size</h3>
-                      <select
-                        className='border'
-                        value={size}
-                        onChange={(e) => setSize(e.target.value)}
-                      >
-                        {product?.sizes.map((size) => (
-                          <option
-                            key={size.name}
-                            disabled={!size.inStock}
-                            value={size.name}
-                          >
-                            {size.name}
-                          </option>
-                        ))}
+                      <select className='border'>
+                        <option value={product?.size}>{product?.size}</option>
                       </select>
                     </div>
                     <a
-                      href='#'
+                      href='/side-guide'
                       className='hover:text-neutral-500 text-neutral-600 text-sm font-medium'
                     >
                       Size guide
@@ -154,13 +133,8 @@ const ProductDetail = () => {
                 <div>
                   <h3 className='text-black-2 text-xl font-bold'>Details</h3>
                   <ul className='space-y-2 list-disc list-inside'>
-                    {product?.details.map((item, i) => (
-                      <li
-                        key={"productDetails" + i}
-                        className='text-black-2 text-base'
-                      >
-                        {item}
-                      </li>
+                    {detailsFormart.map((item, i) => (
+                      <li key={i}>{item}</li>
                     ))}
                   </ul>
                 </div>

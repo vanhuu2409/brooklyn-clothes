@@ -23,9 +23,7 @@ const Home = () => {
       </div>
 
       {/* arrivals */}
-      <div>
-        <Arrivals />
-      </div>
+      <div>{/* <Arrivals /> */}</div>
       {/* marquee */}
       <div>
         <div className='bg-black-1 drop-shadow-md text-neutral-300 w-full py-4 text-2xl subpixel-antialiased font-bold leading-tight tracking-widest text-center uppercase shadow-md select-none'>
@@ -35,7 +33,7 @@ const Home = () => {
         </div>
       </div>
       {/* collection */}
-      <NewCollection />
+      {/* <NewCollection /> */}
     </>
   );
 };

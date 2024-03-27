@@ -1,12 +1,9 @@
-import { products } from "../../../services/data";
 import { ProductCard } from "../product/ProductCard";
+import { fetchData } from "../../../services/api";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { Link } from "react-router-dom";
 const NewCollection = () => {
-  // arrivals filter
-  const arrivalsData = products.filter(
-    (product) => product?.category === "t-shirts"
-  );
+  const products = fetchData;
   return (
     <div className='bg-white'>
       <LayoutView>
@@ -32,7 +29,7 @@ const NewCollection = () => {
         </div>
 
         <div className='gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 grid grid-cols-1'>
-          {arrivalsData.map((product) => (
+          {products.map((product) => (
             <ProductCard {...product} key={product?.id} />
           ))}
         </div>

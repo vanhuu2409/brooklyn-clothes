@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 export const formatPrice = (price) => {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₫";
+  return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₫";
 };
 
 // shop list

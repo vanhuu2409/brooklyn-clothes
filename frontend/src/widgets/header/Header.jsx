@@ -32,11 +32,8 @@ const Header = () => {
   console.log(cartData);
 
   // bags count
-  const bagsCount = cartData.reduce((acc, curr) => {
-    return acc + curr.quantity;
-  }, 0);
+  const bagsCount = cartData.length;
   const bagsTotal = cartData.reduce((acc, curr) => {
-    console.log(curr.price);
     return acc + curr.quantity * curr.price;
   }, 0);
 

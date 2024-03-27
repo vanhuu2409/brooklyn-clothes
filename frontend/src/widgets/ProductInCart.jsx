@@ -9,7 +9,7 @@ import {
 } from "../redux/cartSlice";
 import { formatPrice } from "../data/custom";
 const ProductInCart = (props) => {
-  console.log(props.isCartPage);
+  console.log(props.image);
   const dispatch = useDispatch();
 
   const handleOnChangeQuantity = (e, props) => {
@@ -35,7 +35,7 @@ const ProductInCart = (props) => {
         <div className='grid grid-cols-6 grid-rows-1 gap-4 px-6 py-4 text-black border-b'>
           {/* img */}
           <img
-            src={props?.imageSrc}
+            src={props?.image}
             className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
           />
           {/* body */}
@@ -52,8 +52,8 @@ const ProductInCart = (props) => {
             {/* center */}
             {/* size select */}
             <span className='text-black-3 flex-1 text-base font-extrabold normal-case'>
-              {props.sizeSelected ? props.sizeSelected : "M"} {" / "}
-              {props?.colorSelected || props.colors[0].name}
+              {props?.size} {" / "}
+              {props?.color}
             </span>
             {/* bottom body */}
             <div className='propss-cenpropster flex justify-between'>
@@ -120,7 +120,7 @@ const ProductInCart = (props) => {
             className='whitespace-nowrap text-black-2 flex items-center gap-2 px-6 py-4 font-bold'
           >
             <img
-              src={props?.imageSrc}
+              src={props?.image}
               alt={props?.name}
               className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
             />

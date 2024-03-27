@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
+  const fileIputRef = useRef();
   const [images, setImages] = useState(null);
-  const [productDetail, setProductDetail] = useState({
+  const defaultProductDetail = {
     name: "",
     price: "",
     collections: "",
@@ -13,7 +14,8 @@ const Dashboard = () => {
     size: "",
     description: "",
     details: "",
-  });
+  };
+  const [productDetail, setProductDetail] = useState(defaultProductDetail);
 
   const handleImages = (e) => {
     console.log(e.target.files);
@@ -64,11 +66,13 @@ const Dashboard = () => {
             body: JSON.stringify(product),
           })
             .then((res) => res.json())
-            .then((data) =>
-              data.success
-                ? alert(data.name)
-                : alert("File uploaded failed:", data.image)
-            );
+            .then((data) => {
+              if (data.success) {
+                alert(data.name);
+                fileIputRef.current.value = "";
+                setProductDetail(defaultProductDetail);
+              } else alert("File uploaded failed:", data.image);
+            });
         } else {
           // Handle server response indicating failure
           console.error("File upload failed:", data.error);
@@ -163,7 +167,9 @@ const Dashboard = () => {
                 <input
                   type='file'
                   accept='image/png, image/jpeg, image/webp'
+                  ref={fileIputRef}
                   // multiple={true}
+                  // value={productDetail.image}
                   onChange={handleImages}
                   name='image'
                   id='image-input'
@@ -192,7 +198,7 @@ const Dashboard = () => {
                 >
                   <option value=''>Select Collections</option>
                   <option value='tops'>Tops</option>
-                  <option value='pants'>Pants</option>
+                  <option value='bottoms'>Bottoms</option>
                   <option value='headwears'>Headwears</option>
                 </select>
               </div>

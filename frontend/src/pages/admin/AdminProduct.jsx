@@ -37,24 +37,10 @@ const AdminProduct = (props) => {
           />
           {props?.name}
         </th>
+        <td className='px-6 py-4'>{props?.collections}</td>
+        <td className='px-6 py-4'>{props?.category}</td>
         <td className='px-6 py-4'>{props?.size}</td>
         <td className='px-6 py-4'>{props?.color}</td>
-        <td className='px-6 py-4'>
-          <div className='propss-cenpropster w-fit flex items-center justify-center border'>
-            {/* increase quantity */}
-            <button className='inline-flex items-center justify-center px-4'>
-              -
-            </button>
-            <input
-              type='number'
-              className='spin focus:border-x w-10 px-2 py-1 text-[.8rem] text-center rounded-none outline-none'
-            />
-            {/* increase quantity */}
-            <button className='w-fit inline-flex items-center justify-center px-4'>
-              +
-            </button>
-          </div>
-        </td>
         <td className='px-6 py-4 min-w-[7.5rem]'>{props?.price}</td>
         <td className='px-2 py-4'>
           {/* delete btn */}

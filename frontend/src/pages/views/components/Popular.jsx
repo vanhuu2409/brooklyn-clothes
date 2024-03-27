@@ -1,12 +1,10 @@
-import { products } from "../../../services/data";
+import { fetchData } from "../../../services/api";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { ProductCard } from "../product/ProductCard";
 import { Link } from "react-router-dom";
 
 const Popular = () => {
-  // const shortsProduct = products.filter((product) => {
-  //   return product?.collection === "acid";
-  // });
+  const products = fetchData;
   return (
     <div className='bg-white'>
       <LayoutView>

@@ -13,14 +13,16 @@ const path = require("path");
 // cors
 const cors = require("cors");
 
+// dotenv
+const dotenv = require("dotenv");
+dotenv.config();
+
 // running app
 app.use(express.json());
 app.use(cors());
 
 // Database connection with mongoDB
-mongoose.connect(
-  "mongodb+srv://huuvanhoang5588:eYrEjybAiJFaHvTK@cluster0.htahf1v.mongodb.net/brooklyn"
-);
+mongoose.connect(process.env.MONGODB);
 
 // API Creation
 app.get("/", (req, res) => {
