@@ -1,42 +1,50 @@
 const port = 4000;
 // express server
-const express = require("express");
+import express from "express";
+const { json, static: statics } = express;
 const app = express();
+// userRouter
+import userRouter from "./routes/user.route.js";
+// authRouter
+import authRouter from "./routes/auth.route.js";
+
 // mongoose server
-const mongoose = require("mongoose");
+import { connect, model } from "mongoose";
 // jsonwebtoken
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+const { sign } = jwt;
 // multer for storage img
-const multer = require("multer");
+import multer, { diskStorage } from "multer";
 // path
-const path = require("path");
+import { extname } from "path";
 // cors
-const cors = require("cors");
+import cors from "cors";
 
 // dotenv
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
 // running app
-app.use(express.json());
+app.use(json());
 app.use(cors());
 
 // Database connection with mongoDB
-mongoose.connect(process.env.MONGODB);
+connect(process.env.MONGODB)
+  .then(() => console.log("Connect to MongoDB"))
+  .catch((err) => console.log(err));
 
-// API Creation
-app.get("/", (req, res) => {
-  res.send("Express App is running");
-});
+// API Route Creation
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 // Image Storage Engine
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: "./upload/images",
   filename: (req, file, callback) => {
     const time = Date.now();
     return callback(
       null,
-      `${file.fieldname}_${time}${path.extname(file.originalname)}`
+      `${file.fieldname}_${time}${extname(file.originalname)}`
     );
   },
 });
@@ -44,7 +52,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Creating upload endpoint
-app.use("/images", express.static("upload/images"));
+app.use("/images", statics("upload/images"));
 
 app.post("/upload", upload.single("products"), (req, res) => {
   res.json({
@@ -54,7 +62,7 @@ app.post("/upload", upload.single("products"), (req, res) => {
 });
 
 // Schema for creating Products
-const Product = mongoose.model("Product", {
+const Product = model("Product", {
   id: { type: Number, required: true },
   name: { type: String, required: true },
   price: { type: Number, required: true },
@@ -70,9 +78,9 @@ const Product = mongoose.model("Product", {
 });
 
 // Schema for creating Users
-const Users = mongoose.model("Users", {
+const Users = model("Users", {
   email: { type: String, unique: true },
-  name: { type: String },
+  username: { type: String, unique: true },
   password: { type: String, required: true },
   cartdata: { type: Object },
   createAt: { type: Date, default: Date.now },
@@ -94,7 +102,7 @@ app.post("/signup", async (req, res) => {
   // create user and save to db
   const user = new Users({
     email: req.body.email,
-    name: req.body.username,
+    username: req.body.username,
     password: req.body.password,
     cartData: cart,
   });
@@ -108,7 +116,7 @@ app.post("/signup", async (req, res) => {
       id: user.id,
     },
   };
-  const token = jwt.sign(data, "secret_ecom");
+  const token = sign(data, "secret_ecom");
   res.json({ success: true, token });
 });
 
@@ -121,7 +129,7 @@ app.post("/login", async (req, res) => {
       const data = {
         id: user.id,
       };
-      const token = jwt.sign(data, "secret_ecom");
+      const token = sign(data, "secret_ecom");
       res.json({ success: true, token });
     } else {
       res.json({ success: false, error: "Wrong password" });

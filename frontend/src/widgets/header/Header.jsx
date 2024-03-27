@@ -597,33 +597,36 @@ const Header = () => {
             <div className='flex flex-col w-full h-full mt-4 overflow-y-scroll'>
               {/* top */}
               <div className='flex-1 mb-8'>
-                <div className='relative mt-2 shadow-sm'>
-                  <input
-                    type='text'
-                    name='search'
-                    className='ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black-4 sm:text-sm sm:leading-6 text-black-1 block w-full px-5 py-4 pr-20 mt-4 transition-all bg-white border border-black outline-none'
-                    placeholder='Search something...'
-                  />
-                </div>
-                <button className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'>
-                  <span className='text-sm font-bold tracking-tight'>
-                    Search
-                  </span>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={3}
-                    stroke='currentColor'
-                    className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                {/* search form */}
+                <form>
+                  <div className='relative mt-2 shadow-sm'>
+                    <input
+                      type='text'
+                      name='search'
+                      className='ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black-4 sm:text-sm sm:leading-6 text-black-1 block w-full px-5 py-4 pr-20 mt-4 transition-all bg-white border border-black outline-none'
+                      placeholder='Search something...'
                     />
-                  </svg>
-                </button>
+                  </div>
+                  <button className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'>
+                    <span className='text-sm font-bold tracking-tight'>
+                      Search
+                    </span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={3}
+                      stroke='currentColor'
+                      className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                      />
+                    </svg>
+                  </button>
+                </form>
                 <div className='mt-6'>
                   <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
                     Categories
