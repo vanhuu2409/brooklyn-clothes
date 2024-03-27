@@ -1,13 +1,19 @@
 import { useState } from "react";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import NewCollection from "../components/NewCollection";
+import { Link, useNavigate } from "react-router-dom";
 
-const SignInPage = () => {
+const SignUpPage = () => {
   const [userDetail, setUserDetail] = useState({
     username: "",
     password: "",
     email: "",
   });
+
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserDetail((prev) => {
@@ -16,34 +22,39 @@ const SignInPage = () => {
   };
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to the server)
     try {
-      const response = await fetch("http://localhost:4000/signup", {
+      setIsLoading(true);
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
-          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userDetail),
-      }).then((res) => res.json());
-      if (response.success) {
-        console.log(response);
-        window.location.replace("/");
-        localStorage.setItem("auth-token", response.token);
-      } else alert("Cannot Sign Up");
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setError(data.message);
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(false);
+      setError(null);
+      navigate("/login");
     } catch (error) {
-      // Handle fetch error (e.g., network issue)
-      console.error("Fetch error:", error.message);
+      setError(error.message);
+      setIsLoading(false);
     }
+
+    // console.log(data);
   };
   return (
     <LayoutView>
       {/* form */}
 
       <div className='flex flex-col items-center justify-center'>
-        <h1 className='text-black-2 mb-6 text-6xl font-extrabold'>Sign In</h1>
+        <h1 className='text-black-2 mb-8 text-6xl font-extrabold'>Sign In</h1>
         <form onSubmit={handleSubmitSignup} className='w-full max-w-lg'>
-          <div className='flex flex-wrap mb-6 -mx-3'>
+          <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
@@ -64,7 +75,7 @@ const SignInPage = () => {
               </p>
             </div>
           </div>
-          <div className='flex flex-wrap mb-6 -mx-3'>
+          <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
@@ -85,7 +96,7 @@ const SignInPage = () => {
               </p> */}
             </div>
           </div>
-          <div className='flex flex-wrap mb-6 -mx-3'>
+          <div className='flex flex-wrap -mx-3'>
             <div className='w-full px-3'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
@@ -99,7 +110,7 @@ const SignInPage = () => {
                 type='password'
                 onChange={handleInputChange}
                 name='password'
-                placeholder='******************'
+                placeholder='**********'
               />
               <p className='text-xs italic text-gray-600'>
                 Make it as long and as crazy as you&#39;d like
@@ -107,10 +118,13 @@ const SignInPage = () => {
             </div>
           </div>
           <button
+            disabled={isLoading}
             type='submit'
             className='hover:bg-opacity-100 group/signin hover:border bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
           >
-            <span className=' text-sm font-bold tracking-tight'>Sign In</span>
+            <span className=' text-sm font-bold tracking-tight'>
+              {isLoading ? "Loading..." : "Sign In"}
+            </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -126,6 +140,14 @@ const SignInPage = () => {
               />
             </svg>
           </button>
+          <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
+            Already have an account? <Link to='/login'>Sign In</Link>
+          </p>
+          {error && (
+            <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
+              {error}
+            </p>
+          )}
         </form>
       </div>
       {/* form */}
@@ -135,4 +157,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignUpPage;

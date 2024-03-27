@@ -6,7 +6,7 @@ import Home from "../pages/views/home/Home";
 import Products from "../pages/views/products/Products";
 import ProductDetail from "../pages/views/product/ProductDetail";
 import LoginPage from "../pages/views/loginPage/LoginPage";
-import SignInPage from "../pages/views/signInPage/SignInPage";
+import SignUpPage from "../pages/views/signUpPage/SignUpPage";
 import LookBook from "../pages/views/lookBook/LookBook";
 import CartPage from "../pages/views/cartPage/CartPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -28,7 +28,7 @@ const AppRouter = () => {
             element={<ProductDetail />}
           />
           <Route path='/login' element={<LoginPage />} />
-          <Route path='/sign-in' element={<SignInPage />} />
+          <Route path='/signup' element={<SignUpPage />} />
           <Route path='/lookbook' element={<LookBook />} />
           {/* <Route path='/checkouts' element={<Checkouts />} /> */}
           <Route path='/cart' element={<CartPage />} />

@@ -1,6 +1,7 @@
 import Arrivals from "../components/Arrivals";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [userDetail, setUserDetail] = useState({
@@ -49,7 +50,7 @@ const LoginPage = () => {
       <div className='flex flex-col items-center justify-center'>
         <h1 className='text-black-2 mb-6 text-6xl font-extrabold'>Login</h1>
         <form onSubmit={handleSubmitLogin} className='w-full max-w-lg'>
-          <div className='flex flex-wrap mb-6 -mx-3'>
+          <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
               <label
                 className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase'
@@ -63,7 +64,7 @@ const LoginPage = () => {
                 type='text'
                 name='email'
                 onChange={handleInputChange}
-                placeholder='email'
+                placeholder='demo@gmail.com'
               />
               <p className='text-xs italic text-red-500'>
                 Please fill out this field.
@@ -121,6 +122,9 @@ const LoginPage = () => {
             </svg>
           </button>
         </form>
+        <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
+          Don't have an account yet? <Link to='/signup'>Sign Up</Link>
+        </p>
       </div>
       {/* form */}
 
