@@ -1,14 +1,15 @@
 import Arrivals from "../components/Arrivals";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [userDetail, setUserDetail] = useState({
-    // username: "",
-    password: "",
-    email: "",
-  });
+  const [userDetail, setUserDetail] = useState({});
+
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserDetail((prev) => {
@@ -17,33 +18,37 @@ const LoginPage = () => {
   };
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to the server)
     try {
-      const response = await fetch("http://localhost:4000/login", {
+      setIsLoading(true);
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
-          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userDetail),
-      }).then((res) => res.json());
-      // console.log(response);
-      if (response.success) {
-        alert(response);
-        window.location.replace("/");
-        localStorage.setItem("auth-token", response.token);
-      } else alert("Cannot Login");
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setError(data.message);
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(false);
+      setError(null);
+      navigate("/");
     } catch (error) {
-      // Handle fetch error (e.g., network issue)
-      console.error("Fetch error:", error.message);
+      setIsLoading(false);
+      setError(error.message);
     }
+
+    // console.log(data);
   };
   const handleLogout = () => {
-    localStorage.removeItem("auth-token");
+    localStorage.removeItem("access_token");
     window.location.replace("/products");
   };
 
-  const isLogin = localStorage.getItem("auth-token");
+  const isLogin = localStorage.getItem("access_token");
   return (
     <LayoutView>
       {/* form */}
@@ -87,9 +92,6 @@ const LoginPage = () => {
                 type='password'
                 placeholder='**********'
               />
-              <p className='text-xs italic text-gray-600'>
-                Make it as long and as crazy as you&#39;d like
-              </p>
             </div>
           </div>
           {isLogin && (
@@ -103,9 +105,12 @@ const LoginPage = () => {
           )}
           <button
             type='submit'
+            disabled={isLoading}
             className='hover:bg-opacity-100 group/login hover:border bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
           >
-            <span className=' text-sm font-bold tracking-tight'>Continue</span>
+            <span className=' text-sm font-bold tracking-tight'>
+              {isLoading ? "Loading..." : "Continue"}
+            </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -123,8 +128,13 @@ const LoginPage = () => {
           </button>
         </form>
         <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
-          Don't have an account yet? <Link to='/signup'>Sign Up</Link>
+          Don`t have an account yet? <Link to='/signup'>Sign Up</Link>
         </p>
+        {error && (
+          <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
+            {error}
+          </p>
+        )}
       </div>
       {/* form */}
 

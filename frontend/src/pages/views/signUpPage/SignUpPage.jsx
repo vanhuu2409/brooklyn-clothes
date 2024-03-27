@@ -4,11 +4,7 @@ import NewCollection from "../components/NewCollection";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
-  const [userDetail, setUserDetail] = useState({
-    username: "",
-    password: "",
-    email: "",
-  });
+  const [userDetail, setUserDetail] = useState({});
 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +28,7 @@ const SignUpPage = () => {
         body: JSON.stringify(userDetail),
       });
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
         setError(data.message);
         setIsLoading(false);
@@ -41,11 +38,9 @@ const SignUpPage = () => {
       setError(null);
       navigate("/login");
     } catch (error) {
-      setError(error.message);
       setIsLoading(false);
+      setError(error.message);
     }
-
-    // console.log(data);
   };
   return (
     <LayoutView>
