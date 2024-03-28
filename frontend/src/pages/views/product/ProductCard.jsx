@@ -9,7 +9,7 @@ export function ProductCard(props) {
   return (
     <div key={props?.id} className='group flex flex-col w-full'>
       <div className=' relative flex-1 w-full overflow-hidden bg-gray-200'>
-        <Link className='' to={`/products/${props?.name}/${props?.id}`}>
+        <Link className='' to={`/products/${props?.name}/${props?._id}`}>
           <img
             src={props?.image}
             alt={props?.name}

@@ -13,7 +13,7 @@ const ProductDetail = () => {
 
   const data = fetchData;
   const product = data.find((i) => {
-    return i.id.toString() === id;
+    return i._id.toString() === id;
   });
   const detailsFormart = product.details.split(",\n");
 

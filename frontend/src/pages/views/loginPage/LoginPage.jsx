@@ -122,7 +122,7 @@ const LoginPage = () => {
           Don`t have an account yet? <Link to='/signup'>Sign Up</Link>
         </p>
         {error && (
-          <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
+          <p className='text-normal mt-2 mb-6 italic text-center text-red-600 *:text-cyan-600 *:font-bold'>
             {error}
           </p>
         )}

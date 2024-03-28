@@ -1,21 +1,28 @@
-import LayoutView from "../../../widgets/layout/LayoutView";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { app } from "../../../firebase";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../../../firebase";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../../../redux/user/userSlice";
+import LayoutView from "../../../widgets/layout/LayoutView";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user);
-  const [userDetail, setUserDetail] = useState(currentUser);
-  const { username, email } = userDetail;
+  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [userDetail, setUserDetail] = useState({});
+  const { username, email } = currentUser;
   const [file, setFile] = useState(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [uploadFileErr, setUploadFileErr] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
+  const dispatch = useDispatch();
 
   // allow read;
   // allow write: if
@@ -58,13 +65,29 @@ const Profile = () => {
   };
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userDetail),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      setUpdateSuccess(true);
+      dispatch(updateUserSuccess(data));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
   };
   return (
     <LayoutView>
-      {/* form */}
-
       <div className='flex flex-col items-center justify-center'>
         <h1 className='text-black-2 mb-8 text-6xl font-extrabold'>Profile</h1>
+        {/* avatar */}
         <label htmlFor='avatar-input'>
           <img
             src={userDetail.avatar || currentUser.avatar}
@@ -91,6 +114,7 @@ const Profile = () => {
             ""
           )}
         </p>
+        {/* form */}
         <form onSubmit={handleSubmitSignup} className='w-full max-w-lg'>
           <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
@@ -104,7 +128,7 @@ const Profile = () => {
                 className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-first-name'
                 type='text'
-                value={username}
+                defaultValue={username}
                 name='username'
                 onChange={handleInputChange}
                 placeholder='username'
@@ -123,7 +147,7 @@ const Profile = () => {
                 className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                 id='grid-gmail'
                 type='text'
-                value={email}
+                defaultValue={email}
                 onChange={handleInputChange}
                 name='email'
                 placeholder='demo@gmail.com'
@@ -155,13 +179,12 @@ const Profile = () => {
             </div>
           </div>
           <button
-            // disabled={loading}
+            disabled={loading}
             type='submit'
             className='hover:bg-opacity-100 group/signin hover:border-black-4 bg-opacity-60 disabled:opacity-80 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
           >
             <span className=' text-sm font-bold tracking-tight'>
-              {/* {loading ? "Loading..." : "Sign In"} */}
-              Update
+              {loading ? "Loading..." : "Update"}
             </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -186,11 +209,16 @@ const Profile = () => {
               Sign out
             </p>
           </div>
-          {/* <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
-            Already have an account? <Link to='/login'>Sign In</Link>
-          </p> */}
-          {/* {error && (
-          )} */}
+          {error && (
+            <p className='text-normal mt-2 mb-6 italic text-center text-red-600'>
+              {error}
+            </p>
+          )}
+          {!error && (
+            <p className='text-normal mt-2 mb-6 italic text-center text-green-500'>
+              {updateSuccess ? "Update User Successfully" : ""}
+            </p>
+          )}
         </form>
       </div>
       {/* form */}
