@@ -10,4 +10,7 @@ export default defineConfig({
       "/api": { target: "http://localhost:4000", excure: false },
     },
   },
+  build: {
+    target: "esnext",
+  },
 });
