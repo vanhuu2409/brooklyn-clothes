@@ -91,7 +91,7 @@ const Profile = () => {
         <label htmlFor='avatar-input'>
           <img
             src={userDetail.avatar || currentUser.avatar}
-            className='size-20 object-cover rounded-full cursor-pointer'
+            className='size-32 object-cover border-2 rounded-full cursor-pointer'
             alt=''
           />
         </label>

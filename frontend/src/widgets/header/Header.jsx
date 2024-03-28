@@ -527,7 +527,7 @@ const Header = () => {
                 className='hover:text-black-4 flex items-center gap-2 p-2 transition-all'
               >
                 <img
-                  className='size-8 object-cover rounded-full'
+                  className='size-8 min-w-6 object-cover border-2 rounded-full cursor-pointer'
                   src={currentUser.avatar}
                 />
               </Link>
