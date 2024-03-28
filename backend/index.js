@@ -24,9 +24,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
+// cookie parser
+import cookieParser from "cookie-parser";
+
 // running app
 app.use(json());
 app.use(cors());
+app.use(cookieParser());
 
 // Database connection with mongoDB
 connect(process.env.MONGODB)
