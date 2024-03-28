@@ -129,9 +129,7 @@ const ProductInCart = (props) => {
           <td className='px-6 py-4'>
             {props.sizeSelected ? props.sizeSelected : "M"}
           </td>
-          <td className='px-6 py-4'>
-            {props?.colorSelected || props.colors[0].name}
-          </td>
+          <td className='px-6 py-4'>{props?.colorSelected || props.color}</td>
           <td className='px-6 py-4'>
             <div className='propss-cenpropster w-fit flex items-center justify-center border'>
               {/* increase quantity */}
