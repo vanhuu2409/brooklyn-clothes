@@ -1,11 +1,9 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedAdminPage = ({ role, children }) => {
+const ProtectedAdminPage = ({ role }) => {
   let redirectPath = "/";
 
-  if (role !== "admin") return <Navigate to={redirectPath} replace />;
-
-  return children;
+  return role == "admin" ? <Outlet /> : <Navigate to={redirectPath} replace />;
 };
 
 export default ProtectedAdminPage;

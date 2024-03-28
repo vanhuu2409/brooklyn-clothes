@@ -14,7 +14,7 @@ import Dashboard from "../pages/admin/Dashboard";
 import ProtectedAdminPage from "./ProtectedAdminPage";
 import AdminAllProducts from "../pages/admin/AdminAllProducts";
 import ProtectedRoute from "./ProtectedRoute";
-import Profile from "../pages/profile/Profile";
+import Profile from "../pages/views/profile/Profile";
 
 const AppRouter = () => {
   return (
@@ -41,22 +41,10 @@ const AppRouter = () => {
           <Route path='/*' element={<NotFoundPage />} />
         </Route>
         {/* admin page */}
-        <Route
-          path='/admin/dashboard'
-          element={
-            <ProtectedAdminPage role='admin'>
-              <Dashboard />
-            </ProtectedAdminPage>
-          }
-        />
-        <Route
-          path='/admin/allproducts'
-          element={
-            <ProtectedAdminPage role='admin'>
-              <AdminAllProducts />
-            </ProtectedAdminPage>
-          }
-        />
+        <Route element={<ProtectedAdminPage role='admin' />}>
+          <Route path='/admin/dashboard' element={<Dashboard />} />
+          <Route path='/admin/allproducts' element={<AdminAllProducts />} />
+        </Route>
       </Routes>
       {/* Toast container */}
       <div className=' normal-case'>

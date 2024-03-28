@@ -34,11 +34,12 @@ const LoginPage = () => {
         body: JSON.stringify(userDetail),
       });
       const data = await res.json();
+      console.log(userDetail);
       if (data.success === false) {
         dispatch(loginFailure(data.message));
         return;
       }
-      dispatch(loginSuccess(data));
+      dispatch(loginSuccess(data.message));
       navigate("/");
     } catch (error) {
       dispatch(loginFailure(error.message));
@@ -46,12 +47,6 @@ const LoginPage = () => {
 
     // console.log(data);
   };
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    window.location.replace("/products");
-  };
-
-  const isLogin = localStorage.getItem("access_token");
   return (
     <LayoutView>
       {/* form */}
@@ -97,15 +92,6 @@ const LoginPage = () => {
               />
             </div>
           </div>
-          {isLogin && (
-            <button
-              type='button'
-              className='text-6xl font-bold text-white bg-red-500'
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          )}
           <button
             type='submit'
             disabled={loading}
