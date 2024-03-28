@@ -95,7 +95,7 @@ const LoginPage = () => {
           <button
             type='submit'
             disabled={loading}
-            className='hover:bg-opacity-100 group/login hover:border bg-opacity-60 disabled:opacity-50 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
+            className='hover:bg-opacity-100 group/login hover:border-black-4 bg-opacity-60 disabled:opacity-50 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
           >
             <span className=' text-sm font-bold tracking-tight'>
               {loading ? "Loading..." : "Continue"}

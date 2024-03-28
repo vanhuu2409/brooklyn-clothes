@@ -11,18 +11,26 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
+  signOutStart,
+  signOutFailure,
+  signOutSuccess,
 } from "../../../redux/user/userSlice";
 import LayoutView from "../../../widgets/layout/LayoutView";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [userDetail, setUserDetail] = useState({});
   const { username, email } = currentUser;
   const [file, setFile] = useState(null);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [uploadFileErr, setUploadFileErr] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // allow read;
   // allow write: if
@@ -63,6 +71,48 @@ const Profile = () => {
       return { ...prev, [name]: value };
     });
   };
+
+  const handleOnDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message)) &
+          toast.error(`Delete User Failure!`);
+        return;
+      }
+      dispatch(deleteUserSuccess()) &
+        toast.success(`Delete User Successfully!`);
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message)) &
+        toast.error(`Delete User Failure!`);
+    }
+  };
+  const handleOnSignout = async () => {
+    try {
+      dispatch(signOutStart());
+      const res = await fetch("/api/auth/signout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutFailure(data.message));
+        return;
+      }
+      dispatch(signOutSuccess(data.message)) &
+        toast.success(`User has been logged out!`);
+      navigate("/login");
+    } catch (error) {
+      dispatch(signOutFailure(error.message));
+    }
+  };
+
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
     try {
@@ -74,13 +124,15 @@ const Profile = () => {
       });
       const data = await res.json();
       if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
+        dispatch(updateUserFailure(data.message)) &
+          toast.error(`Update User Failure!`);
         return;
       }
-      setUpdateSuccess(true);
-      dispatch(updateUserSuccess(data));
+      dispatch(updateUserSuccess(data)) &
+        toast.success(`Update User Successfully!`);
     } catch (error) {
-      dispatch(updateUserFailure(error.message));
+      dispatch(updateUserFailure(error.message)) &
+        toast.error(`Update User Failure!`);
     }
   };
   return (
@@ -202,26 +254,40 @@ const Profile = () => {
             </svg>
           </button>
           <div className='flex flex-row justify-between mt-4'>
-            <p className='text-normal mt-2 mb-6 italic text-center text-red-800'>
+            <p
+              onClick={handleOnDeleteAccount}
+              className='text-normal hover:text-red-500 mt-2 mb-6 italic font-semibold text-center text-red-800 transition-all cursor-pointer'
+            >
               Delete Account
             </p>
-            <p className='text-normal mt-2 mb-6 italic text-center text-red-800'>
+            <p
+              onClick={handleOnSignout}
+              className='text-normal hover:text-red-500 mt-2 mb-6 italic font-semibold text-center text-red-800 transition-all cursor-pointer'
+            >
               Sign out
             </p>
           </div>
-          {error && (
-            <p className='text-normal mt-2 mb-6 italic text-center text-red-600'>
-              {error}
-            </p>
-          )}
-          {!error && (
-            <p className='text-normal mt-2 mb-6 italic text-center text-green-500'>
-              {updateSuccess ? "Update User Successfully" : ""}
-            </p>
-          )}
         </form>
       </div>
       {/* form */}
+      {/* Toast container */}
+      <div className=' normal-case'>
+        <ToastContainer
+          position='top-left'
+          autoClose={2000}
+          limit={10}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
+          transition:Bounce
+          stacked
+        />
+      </div>
     </LayoutView>
   );
 };

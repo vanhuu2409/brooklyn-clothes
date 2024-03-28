@@ -33,7 +33,7 @@ const OAuth = () => {
     <button
       type='button'
       onClick={handleOnClickGoogle}
-      className='hover:bg-opacity-100 group/signin hover:border bg-opacity-60 bg-neutral-200 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-black transition-all translate-y-0'
+      className='hover:bg-opacity-100 group/signin hover:border-black-4 bg-opacity-60 bg-neutral-200 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-black transition-all translate-y-0 border'
     >
       <span className=' text-sm font-bold tracking-tight'>
         {/* {loading ? "Loading..." : "Sign In"} */}
