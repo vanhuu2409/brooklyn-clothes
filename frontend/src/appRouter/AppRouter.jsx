@@ -13,6 +13,8 @@ import NotFoundPage from "../pages/NotFoundPage";
 import Dashboard from "../pages/admin/Dashboard";
 import ProtectedAdminPage from "./ProtectedAdminPage";
 import AdminAllProducts from "../pages/admin/AdminAllProducts";
+import ProtectedRoute from "./ProtectedRoute";
+import Profile from "../pages/profile/Profile";
 
 const AppRouter = () => {
   return (
@@ -32,6 +34,9 @@ const AppRouter = () => {
           <Route path='/lookbook' element={<LookBook />} />
           {/* <Route path='/checkouts' element={<Checkouts />} /> */}
           <Route path='/cart' element={<CartPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/profile' element={<Profile />} />
+          </Route>
 
           <Route path='/*' element={<NotFoundPage />} />
         </Route>

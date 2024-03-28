@@ -8,13 +8,13 @@ import {
   loginFailure,
 } from "../../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../../../widgets/OAuth";
 
 const LoginPage = () => {
   const [userDetail, setUserDetail] = useState({});
-
   const { error, loading } = useSelector((state) => state.user);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -129,6 +129,8 @@ const LoginPage = () => {
               />
             </svg>
           </button>
+          {/* login with google */}
+          <OAuth />
         </form>
         <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
           Don`t have an account yet? <Link to='/signup'>Sign Up</Link>

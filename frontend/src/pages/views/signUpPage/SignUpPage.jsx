@@ -2,11 +2,18 @@ import { useState } from "react";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import NewCollection from "../components/NewCollection";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../../../widgets/OAuth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from "../../../redux/user/userSlice";
 
 const SignUpPage = () => {
   const [userDetail, setUserDetail] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { error, loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -18,7 +25,7 @@ const SignUpPage = () => {
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(loginStart());
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -29,16 +36,13 @@ const SignUpPage = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        setError(data.message);
-        setLoading(false);
+        dispatch(loginFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+      dispatch(loginSuccess(data.message));
       navigate("/login");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(loginFailure(data.message));
     }
   };
   return (
@@ -131,6 +135,8 @@ const SignUpPage = () => {
               />
             </svg>
           </button>
+          {/* login with google */}
+          <OAuth />
           <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
             Already have an account? <Link to='/login'>Sign In</Link>
           </p>
