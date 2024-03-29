@@ -15,6 +15,7 @@ const ProductDetail = () => {
   const product = data.find((i) => {
     return i._id.toString() === id;
   });
+  console.log(product);
   const detailsFormart = product.details.split(",\n");
 
   console.log(detailsFormart);

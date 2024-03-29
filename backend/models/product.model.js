@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
-// Schema for creating Users
+// Schema for creating Product
 const productSchema = new mongoose.Schema(
   {
-    id: { type: Number, required: true },
     name: { type: String, required: true },
     price: { type: Number, required: true },
+    discountPrice: { type: Number, required: true },
     category: { type: String, required: true },
     collections: { type: String, required: true },
     description: { type: String, required: true },
     details: { type: String, required: true },
-    image: { type: String, required: true },
-    size: { type: String, required: true },
-    color: { type: String, required: true },
+    imageUrls: { type: Array, required: true },
+    sizes: { type: Array, required: true },
+    colors: { type: Array, required: true },
     available: { type: Boolean, default: true },
   },
   { timestamps: true }

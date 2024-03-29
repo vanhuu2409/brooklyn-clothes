@@ -17,6 +17,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Profile from "../pages/views/profile/Profile";
 
 const AppRouter = () => {
+  const adminRole = "huuvanhoang5588@gmail.com";
   return (
     <Router>
       <ScrollTop />
@@ -41,7 +42,7 @@ const AppRouter = () => {
           <Route path='/*' element={<NotFoundPage />} />
         </Route>
         {/* admin page */}
-        <Route element={<ProtectedAdminPage role='admin' />}>
+        <Route element={<ProtectedAdminPage adminRole={adminRole} />}>
           <Route path='/admin/dashboard' element={<Dashboard />} />
           <Route path='/admin/allproducts' element={<AdminAllProducts />} />
         </Route>
