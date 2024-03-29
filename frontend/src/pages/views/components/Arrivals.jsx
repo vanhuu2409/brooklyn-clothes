@@ -1,10 +1,11 @@
-import { ProductCard } from "../product/ProductCard";
+import ProductCard from "../product/ProductCard";
 import { fetchData } from "../../../services/api";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { Link } from "react-router-dom";
 
 const Arrivals = () => {
   const products = fetchData;
+  console.log(products);
   return (
     <div className='bg-white'>
       <LayoutView>

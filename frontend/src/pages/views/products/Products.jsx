@@ -1,4 +1,4 @@
-import { ProductCard } from "../product/ProductCard";
+import ProductCard from "../product/ProductCard";
 import { fetchData } from "../../../services/api";
 import { Link } from "react-router-dom";
 const Products = () => {

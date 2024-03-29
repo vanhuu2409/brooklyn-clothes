@@ -1,6 +1,5 @@
-import ProductInCart from "./../ProductInCart";
 import { Logo } from "./../Logo";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   formatPrice,
@@ -12,6 +11,7 @@ import {
 import Marquee from "react-fast-marquee";
 import NavbarCollectionItem from "../NavbarCollectionItem";
 import { useSelector } from "react-redux";
+import ProductInCart from "../../pages/views/product/ProductInCart";
 const Header = () => {
   // mobile state
   const [toggleMobileNav, setToggleMobileNav] = useState(false);
@@ -29,7 +29,6 @@ const Header = () => {
 
   // bag/cart flow
   const cartData = useSelector((state) => state.cart.cart);
-  console.log(cartData);
 
   // bags count
   const bagsCount = cartData.length;
@@ -840,8 +839,8 @@ const Header = () => {
               <div className='flex-1 mb-8'>
                 {cartData.length > 0 && (
                   <div className='flex flex-col w-full border-t'>
-                    {cartData.map((item) => (
-                      <ProductInCart key={item.id} {...item} />
+                    {cartData.map((item, i) => (
+                      <ProductInCart key={i} {...item} />
                     ))}
                   </div>
                 )}
@@ -941,4 +940,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

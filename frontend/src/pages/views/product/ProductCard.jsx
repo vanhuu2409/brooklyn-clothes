@@ -4,20 +4,31 @@ import { addToCart } from "../../../redux/cart/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { formatPrice } from "../../../data/custom";
 
-export function ProductCard(props) {
+const ProductCard = (props) => {
+  console.log(props);
+  console.log(props._id, props.name);
   const dispatch = useDispatch();
   return (
     <div key={props?.id} className='group flex flex-col w-full'>
       <div className=' relative flex-1 w-full overflow-hidden bg-gray-200'>
         <Link className='' to={`/products/${props?.name}/${props?._id}`}>
           <img
-            src={props?.image}
+            src={props?.imageUrls[0]}
             alt={props?.name}
-            className='group-hover:opacity-75 group-hover:scale-125 object-cover object-center w-full h-full transition-transform duration-500'
+            className='group-hover:opacity-75 group-hover:scale-125 size-52 object-cover object-center w-full h-full transition-transform duration-500'
           />
         </Link>
         <div className='top-4 left-4 absolute flex flex-col gap-1'>
-          {props?.color}
+          {props?.colors.map((color, i) => {
+            const classColor = `bg-[${color.colorCode}]`;
+            console.log(classColor);
+            return (
+              <div
+                key={i}
+                className={`size-6 ${classColor} border border-black-4`}
+              ></div>
+            );
+          })}
         </div>
         <button
           onClick={() =>
@@ -45,19 +56,20 @@ export function ProductCard(props) {
         </button>
         {/* product status */}
         <div className='top-4 px-2 group-hover:-translate-y-[250%] translate-y-0 transition-transform overflow-hidden py-1 leading-tight bg-black text-white font-normal tracking-widest text-[.4rem] capitalize right-4 absolute *:drop-shadow-sm'>
-          {props?.status}
+          {/* {props?.status} */}
+          Sale
         </div>
       </div>
       <div>
         <h4 className=' text-neutral-300 mt-4 font-normal tracking-widest text-[.6rem]'>
           BROOKLYN lifestyle
         </h4>
-        <Link to={`/products/${props?.id}`}>
+        <Link to={`/products/${props?.name}/${props?._id}`}>
           <h3 className='mt-2 text-lg text-gray-700'>{props?.name}</h3>
           <p className='font-extralight inline-flex gap-2 mt-1 text-lg text-gray-900'>
             {formatPrice(props?.price)}
             <span className='text-neutral-400 line-through'>
-              {props?.salePrice}
+              {formatPrice(props?.discountPrice)}
             </span>
           </p>
         </Link>
@@ -82,4 +94,6 @@ export function ProductCard(props) {
       </div>
     </div>
   );
-}
+};
+
+export default ProductCard;

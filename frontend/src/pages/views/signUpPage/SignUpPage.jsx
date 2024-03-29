@@ -3,17 +3,11 @@ import LayoutView from "../../../widgets/layout/LayoutView";
 import NewCollection from "../components/NewCollection";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../../widgets/OAuth";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from "../../../redux/user/userSlice";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const [userDetail, setUserDetail] = useState({});
-  const { error, loading } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -24,8 +18,23 @@ const SignUpPage = () => {
   };
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
+    const usernameRegex = /^[^\W_](?!.*?[._]{2})[\w.]{6,18}[^\W_]$/;
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
     try {
-      dispatch(loginStart());
+      setLoading(true);
+      if (!userDetail.username || !usernameRegex.test(userDetail.username))
+        return (
+          setLoading(false) &
+          toast.error(
+            "Please enter a valid username\n(6-18 character can be use '_' and '.')!"
+          )
+        );
+      if (!userDetail.email || !emailRegex.test(userDetail.email))
+        return setLoading(false) & toast.error("Please enter a valid email!");
+      if (!userDetail.password)
+        return (
+          setLoading(false) & toast.error("Please enter a valid password!")
+        );
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -36,13 +45,14 @@ const SignUpPage = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        dispatch(loginFailure(data.message));
+        setLoading(false) & toast.error("Cannot sign up!");
         return;
       }
-      dispatch(loginSuccess(data.message));
+      setLoading(false);
       navigate("/login");
     } catch (error) {
-      dispatch(loginFailure(data.message));
+      console.log(error);
+      setLoading(false) & toast.error("Cannot sign up!");
     }
   };
   return (
@@ -140,11 +150,6 @@ const SignUpPage = () => {
           <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
             Already have an account? <Link to='/login'>Sign In</Link>
           </p>
-          {error && (
-            <p className='text-normal mt-2 mb-6 italic text-center text-red-600 *:text-cyan-600 *:font-bold'>
-              {error}
-            </p>
-          )}
         </form>
       </div>
       {/* form */}

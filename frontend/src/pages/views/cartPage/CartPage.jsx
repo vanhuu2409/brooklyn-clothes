@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { formatPrice } from "../../../data/custom";
-import ProductInCart from "../../../widgets/ProductInCart";
 import { Link } from "react-router-dom";
+import ProductInCart from "../product/ProductInCart";
 
 const CartPage = () => {
   const cartData = useSelector((state) => state.cart.cart);
@@ -52,12 +52,12 @@ const CartPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cartData.map((item) => {
+                    {cartData.map((item, i) => {
                       return (
                         <ProductInCart
                           isCartPage={true}
                           {...item}
-                          key={item?.id}
+                          key={item?._id + i}
                         />
                       );
                     })}

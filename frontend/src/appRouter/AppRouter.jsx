@@ -27,7 +27,7 @@ const AppRouter = () => {
           <Route index element={<Home />} />
           <Route path='/products' element={<Products />} />
           <Route
-            path='/products/:productname/:id'
+            path='/products/:productname/:_id'
             element={<ProductDetail />}
           />
           <Route path='/login' element={<LoginPage />} />

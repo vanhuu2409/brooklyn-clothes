@@ -6,10 +6,9 @@ import {
   increaseQuantity,
   quantityByAmount,
   removeFromCart,
-} from "../redux/cart/cartSlice";
-import { formatPrice } from "../data/custom";
+} from "../../../redux/cart/cartSlice";
+import { formatPrice } from "../../../data/custom";
 const ProductInCart = (props) => {
-  console.log(props.image);
   const dispatch = useDispatch();
 
   const handleOnChangeQuantity = (e, props) => {
@@ -35,7 +34,7 @@ const ProductInCart = (props) => {
         <div className='grid grid-cols-6 grid-rows-1 gap-4 px-6 py-4 text-black border-b'>
           {/* img */}
           <img
-            src={props?.image}
+            src={props?.imageUrls[0]}
             className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
           />
           {/* body */}
@@ -60,7 +59,12 @@ const ProductInCart = (props) => {
               {/* left bottom */}
               <p className='text-black-3 sm:text-base flex gap-1 text-sm font-bold'>
                 {formatPrice(props?.price)}
-                <span className='text-black-4 font-light'>/</span>
+                <span className='text-black-4 font-light'>
+                  /{" "}
+                  <span className='line-through'>
+                    {formatPrice(props?.discountPrice)}
+                  </span>
+                </span>
               </p>
               {/* middle */}
               <div className='propss-cenpropster flex border'>
@@ -120,16 +124,42 @@ const ProductInCart = (props) => {
             className='whitespace-nowrap text-black-2 flex items-center gap-2 px-6 py-4 font-bold'
           >
             <img
-              src={props?.image}
+              src={props?.imageUrls[0]}
               alt={props?.name}
               className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
             />
             {props?.name}
           </th>
           <td className='px-6 py-4'>
-            {props.sizeSelected ? props.sizeSelected : "M"}
+            <select className='border'>
+              {props?.sizes.map((size, i) => (
+                <option
+                  key={i}
+                  // disabled={!size.inStock}
+                  value={size}
+                >
+                  {size}
+                </option>
+              ))}
+            </select>
           </td>
-          <td className='px-6 py-4'>{props?.colorSelected || props.color}</td>
+          <td className='px-6 py-4'>
+            <select
+              className='border'
+              defaultValue={"M"}
+              // onChange={(e) => setColor(e.target.value)}
+            >
+              {props?.colors.map((color, i) => (
+                <option
+                  key={i + color.name}
+                  // disabled={!color?.inStock}
+                  value={color?.name}
+                >
+                  {color?.name}
+                </option>
+              ))}
+            </select>
+          </td>
           <td className='px-6 py-4'>
             <div className='propss-cenpropster w-fit flex items-center justify-center border'>
               {/* increase quantity */}

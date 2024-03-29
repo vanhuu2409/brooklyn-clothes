@@ -7,13 +7,39 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../firebase";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const fileIputRef = useRef();
   const [images, setImages] = useState([]);
+  const [requestData, setRequestData] = useState([]);
   const [imagesUploading, setImagesUploading] = useState(false);
   const [imagesUploadErr, setImagesUploadErr] = useState(null);
-  console.log(images);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // handle format
+  const formatColorsAndSizes = (formatString, type = false) => {
+    const formatItem = formatString.replace(/\s/g, "").split(",");
+    let result = [];
+    if (type === "color") {
+      for (let i = 0; i < formatItem.length; i++) {
+        let item = formatItem[i].split("#");
+        result.push({ name: item[0], colorCode: `#${item[1]}` });
+      }
+    }
+    if (type === "size") {
+      for (let i = 0; i < formatItem.length; i++) {
+        result.push(`${formatItem[i]}`);
+      }
+    }
+    if (type === "detail") {
+      const formatDetail = formatString.replace(/ /g, " ").split("\n");
+      for (let i = 0; i < formatDetail.length; i++) {
+        result.push(`${formatDetail[i]}`);
+      }
+    }
+    return result;
+  };
   const defaultProductDetail = {
     name: "",
     price: "",
@@ -21,25 +47,13 @@ const Dashboard = () => {
     category: "",
     collections: "",
     description: "",
-    details: "",
+    details: [],
     imageUrls: [],
-    sizes: [
-      {
-        name: "XL",
-        inStock: true,
-      },
-    ],
-    colors: [
-      {
-        name: "White",
-        class: "#fff",
-        inStock: true,
-      },
-    ],
+    sizes: [],
+    colors: [],
     available: true,
   };
-  const [productDetail, setProductDetail] = useState({ imageUrls: [] });
-  console.log(productDetail);
+  const [productDetail, setProductDetail] = useState(defaultProductDetail);
 
   // images handle
   const handleImages = (e) => {
@@ -67,11 +81,13 @@ const Dashboard = () => {
           setImagesUploading(false);
         })
         .catch((err) => {
-          setImagesUploadErr("Image upload failed (2MB max per image)");
+          setImagesUploadErr("Image upload failed (2MB max per image)") &
+            toast.error("Image upload failed (2MB max per image)");
           setImagesUploading(false);
         });
     } else {
-      setImagesUploadErr("You can only upload 4 images per product");
+      setImagesUploadErr("You can only upload 4 images per product") &
+        toast.error("You can only upload 4 images per product");
       setImagesUploading(false);
     }
   };
@@ -93,8 +109,9 @@ const Dashboard = () => {
           reject(err);
         },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-            resolve(downloadURL)
+          getDownloadURL(uploadTask.snapshot.ref).then(
+            (downloadURL) =>
+              resolve(downloadURL) & toast.success(`Upload image successfully`)
           );
         }
       );
@@ -103,18 +120,61 @@ const Dashboard = () => {
 
   const handleRemoveImage = (i) => {
     const newUrls = productDetail.imageUrls.filter((_, index) => index !== i);
-    setProductDetail({ ...productDetail, imageUrls: newUrls });
+    setProductDetail({ ...productDetail, imageUrls: newUrls }) &
+      toast.success("Remove image successfully");
   };
 
   // product detail
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setError(false);
+    setProductDetail({ ...productDetail, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log({
+      ...productDetail,
+      colors: [...formatColorsAndSizes(productDetail.colors, "color")],
+      sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
+      details: [...formatColorsAndSizes(productDetail.details, "detail")],
+    });
     try {
-    } catch (error) {}
+      if (productDetail.imageUrls.length < 1)
+        return (
+          setError("You must upload at least one image") &
+          toast.error("You must upload at least one image")
+        );
+      if (+productDetail.price < +productDetail.discountPrice)
+        return (
+          setError("Discount price must be lower than Regular Price") &
+          toast.error("Discount price must be lower than Regular Price")
+        );
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/api/product/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...productDetail,
+          colors: [...formatColorsAndSizes(productDetail.colors, "color")],
+          sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
+          details: [...formatColorsAndSizes(productDetail.details, "detail")],
+        }),
+      });
+      const data =
+        (await res.json()) & toast.success("Add product successfully");
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+      } else {
+        setLoading(false);
+        setProductDetail(defaultProductDetail);
+      }
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
   };
   return (
     <div>
@@ -220,8 +280,8 @@ const Dashboard = () => {
                   <button
                     onClick={handleImagesSubmit}
                     type='button'
-                    disabled={imagesUploading}
-                    className='h-fit w-fit hover:opacity-80 px-4 py-3 font-bold text-white bg-green-800 border'
+                    disabled={loading || imagesUploading}
+                    className='h-fit w-fit hover:opacity-80 disabled:opacity-80 px-4 py-3 font-bold text-white bg-green-800 border'
                   >
                     {imagesUploading ? "Uploading..." : "Upload Images"}
                   </button>
@@ -251,6 +311,7 @@ const Dashboard = () => {
                     );
                   })}
               </div>
+              <div></div>
               {/* collections */}
               <div>
                 <label
@@ -290,9 +351,13 @@ const Dashboard = () => {
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
                 >
                   <option value=''>Select Category</option>
-                  <option value='shorts'>Shorts</option>
                   <option value='hoodies'>Hoodies</option>
                   <option value='t-shirts'>T-Shirts</option>
+                  <option value='jackets'>Jackets</option>
+                  <option value='pants'>Pants</option>
+                  <option value='shorts'>Shorts</option>
+                  <option value='caps'>Caps</option>
+                  <option value='hats'>Hats</option>
                 </select>
               </div>
               {/* Colors */}
@@ -305,8 +370,8 @@ const Dashboard = () => {
                 </label>
                 <input
                   type='text'
-                  name='color'
-                  value={productDetail.color}
+                  name='colors'
+                  value={productDetail.colors}
                   onChange={handleInputChange}
                   id='color'
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
@@ -376,10 +441,16 @@ const Dashboard = () => {
             {/* submit form */}
             <button
               type='submit'
-              className='inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-xl font-medium text-center text-white bg-black-2 focus:ring-4 focus:ring-black-4 hover:bg-black-3 w-full justify-center'
+              disabled={loading || imagesUploading}
+              className='inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-xl font-medium text-center text-white bg-black-2 focus:ring-4 disabled:opacity-80 focus:ring-black-4 hover:bg-black-3 w-full justify-center'
             >
-              Add product
+              {loading ? "Loading..." : "Add product"}
             </button>
+            {error && (
+              <p className='text-normal mt-2 mb-6 italic text-center text-red-600 *:text-cyan-600 *:font-bold'>
+                {error}
+              </p>
+            )}
           </form>
         </div>
       </section>

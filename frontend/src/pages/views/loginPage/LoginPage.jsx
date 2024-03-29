@@ -9,10 +9,11 @@ import {
 } from "../../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import OAuth from "../../../widgets/OAuth";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [userDetail, setUserDetail] = useState({});
-  const { error, loading } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,15 +35,14 @@ const LoginPage = () => {
         body: JSON.stringify(userDetail),
       });
       const data = await res.json();
-      console.log(userDetail);
       if (data.success === false) {
-        dispatch(loginFailure(data.message));
+        dispatch(loginFailure(data.message)) & toast.error(data.message);
         return;
       }
-      dispatch(loginSuccess(data));
+      dispatch(loginSuccess(data)) & toast.success("Successfully logged in!");
       navigate("/");
     } catch (error) {
-      dispatch(loginFailure(error.message));
+      dispatch(loginFailure(error.message)) & toast.error(error);
     }
 
     // console.log(data);
@@ -121,11 +121,6 @@ const LoginPage = () => {
         <p className='text-normal mt-2 mb-6 italic text-center text-gray-600 *:text-cyan-600 *:font-bold'>
           Don`t have an account yet? <Link to='/signup'>Sign Up</Link>
         </p>
-        {error && (
-          <p className='text-normal mt-2 mb-6 italic text-center text-red-600 *:text-cyan-600 *:font-bold'>
-            {error}
-          </p>
-        )}
       </div>
       {/* form */}
 

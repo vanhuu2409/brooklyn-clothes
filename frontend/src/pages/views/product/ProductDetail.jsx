@@ -9,16 +9,12 @@ import { fetchData } from "../../../services/api";
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  const { id } = params;
+  const { _id } = params;
 
   const data = fetchData;
   const product = data.find((i) => {
-    return i._id.toString() === id;
+    return i._id.toString() === _id;
   });
-  console.log(product);
-  const detailsFormart = product.details.split(",\n");
-
-  console.log(detailsFormart);
   const handleOnAddToBag = () => {
     dispatch(
       addToCart({
@@ -36,7 +32,7 @@ const ProductDetail = () => {
           <div className='sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8 max-w-2xl mx-auto'>
             <div className='aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg'>
               <img
-                src={product?.image}
+                src={product?.imageUrls[0]}
                 alt={product?.name}
                 className='object-cover object-center w-full h-full'
               />
@@ -44,14 +40,14 @@ const ProductDetail = () => {
             <div className='lg:grid lg:grid-cols-1 lg:gap-y-8 hidden'>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.image}
+                  src={product?.imageUrls[1]}
                   alt={product?.name}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
               <div className='aspect-h-2 aspect-w-3 overflow-hidden rounded-lg'>
                 <img
-                  src={product?.image}
+                  src={product?.imageUrls[2]}
                   alt={product?.name}
                   className='object-cover object-center w-full h-full'
                 />
@@ -59,7 +55,7 @@ const ProductDetail = () => {
             </div>
             <div className='aspect-h-4 aspect-w-3 lg:block hidden overflow-hidden rounded-lg'>
               <img
-                src={product?.image}
+                src={product?.imageUrls[3]}
                 alt={product?.name}
                 className='object-cover object-center w-full h-full'
               />
@@ -79,8 +75,11 @@ const ProductDetail = () => {
               <h2 className='sm:text-3xl text-black-2 text-2xl font-bold tracking-tight'>
                 {product?.name}
               </h2>
-              <p className='text-black-2 text-xl tracking-tight'>
+              <p className='font-extralight inline-flex gap-2 mt-1 text-lg text-gray-900'>
                 {formatPrice(product?.price)}
+                <span className='text-neutral-400 line-through'>
+                  {formatPrice(product?.discountPrice)}
+                </span>
               </p>
 
               <div className='mt-10'>
@@ -88,7 +87,15 @@ const ProductDetail = () => {
                 <div className='flex items-center gap-4'>
                   <h3 className='text-black-2 text-lg font-medium'>Colors</h3>
                   <select className='border'>
-                    <option value={product?.color}>{product?.color}</option>
+                    {product?.colors.map((color, i) => (
+                      <option
+                        key={i}
+                        // disabled={!color?.inStock}
+                        value={color?.name}
+                      >
+                        {color?.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -98,7 +105,15 @@ const ProductDetail = () => {
                     <div className='flex items-center gap-4'>
                       <h3 className='text-black-2 text-lg font-medium'>Size</h3>
                       <select className='border'>
-                        <option value={product?.size}>{product?.size}</option>
+                        {product?.sizes.map((size, i) => (
+                          <option
+                            key={i}
+                            // disabled={!size.inStock}
+                            value={size}
+                          >
+                            {size}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <a
@@ -134,7 +149,7 @@ const ProductDetail = () => {
                 <div>
                   <h3 className='text-black-2 text-xl font-bold'>Details</h3>
                   <ul className='space-y-2 list-disc list-inside'>
-                    {detailsFormart.map((item, i) => (
+                    {product.details.map((item, i) => (
                       <li key={i}>{item}</li>
                     ))}
                   </ul>

@@ -1,22 +1,16 @@
 import React, { memo } from "react";
+import { toast } from "react-toastify";
 const AdminProduct = (props) => {
   const handleRemoveProduct = async () => {
-    console.log(props);
-    await fetch("http://localhost:4000/removeproduct", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: props.id, name: props.name }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          alert(data.name);
-          location.reload();
-        } else alert("File uploaded failed:", data.image);
+    try {
+      const res = await fetch(`/api/product/delete/${props._id}`, {
+        method: "DELETE",
       });
+      (await res.json()) & toast.success("Remove product successfully");
+      location.reload();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   return (
     // normal
@@ -31,7 +25,7 @@ const AdminProduct = (props) => {
           className='whitespace-nowrap text-black-2 flex items-center gap-2 px-6 py-4 font-bold'
         >
           <img
-            src={props?.image}
+            src={props?.imageUrls[0]}
             alt={props?.name}
             className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
           />
@@ -39,9 +33,17 @@ const AdminProduct = (props) => {
         </th>
         <td className='px-6 py-4'>{props?.collections}</td>
         <td className='px-6 py-4'>{props?.category}</td>
-        <td className='px-6 py-4'>{props?.size}</td>
-        <td className='px-6 py-4'>{props?.color}</td>
-        <td className='px-6 py-4 min-w-[7.5rem]'>{props?.price}</td>
+        <td className='px-6 py-4'>{props?.sizes.map((size) => size + ", ")}</td>
+        <td className='px-6 py-4'>
+          {props?.colors.map(
+            (color) => color.name + ":" + color.colorCode + ", "
+          )}
+        </td>
+        <td className='px-6 py-4 min-w-[7.5rem]'>
+          {props?.price}
+          {"đ, "}
+          <span className=' line-through'>{props?.discountPrice}đ</span>
+        </td>
         <td className='px-2 py-4'>
           {/* delete btn */}
           <button className='p-2' onClick={handleRemoveProduct}>
