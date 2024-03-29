@@ -50,7 +50,7 @@ const SignUpPage = () => {
       {/* form */}
 
       <div className='flex flex-col items-center justify-center'>
-        <h1 className='text-black-2 mb-8 text-6xl font-extrabold'>Sign In</h1>
+        <h1 className='text-black-2 mb-8 text-6xl font-extrabold'>Sign Up</h1>
         <form onSubmit={handleSubmitSignup} className='w-full max-w-lg'>
           <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
@@ -118,7 +118,7 @@ const SignUpPage = () => {
             className='hover:bg-opacity-100 group/signin hover:border-black-4 disabled:opacity-50 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
           >
             <span className=' text-sm font-bold tracking-tight'>
-              {loading ? "Loading..." : "Sign In"}
+              {loading ? "Loading..." : "Sign Up"}
             </span>
             <svg
               xmlns='http://www.w3.org/2000/svg'

@@ -39,7 +39,7 @@ const LoginPage = () => {
         dispatch(loginFailure(data.message));
         return;
       }
-      dispatch(loginSuccess(data.message));
+      dispatch(loginSuccess(data));
       navigate("/");
     } catch (error) {
       dispatch(loginFailure(error.message));

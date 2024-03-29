@@ -1,90 +1,120 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../firebase";
 
 const Dashboard = () => {
   const fileIputRef = useRef();
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
+  const [imagesUploading, setImagesUploading] = useState(false);
+  const [imagesUploadErr, setImagesUploadErr] = useState(null);
+  console.log(images);
   const defaultProductDetail = {
     name: "",
     price: "",
-    collections: "",
+    discountPrice: "",
     category: "",
-    color: "",
-    image: "",
-    size: "",
+    collections: "",
     description: "",
     details: "",
+    imageUrls: [],
+    sizes: [
+      {
+        name: "XL",
+        inStock: true,
+      },
+    ],
+    colors: [
+      {
+        name: "White",
+        class: "#fff",
+        inStock: true,
+      },
+    ],
+    available: true,
   };
-  const [productDetail, setProductDetail] = useState(defaultProductDetail);
+  const [productDetail, setProductDetail] = useState({ imageUrls: [] });
+  console.log(productDetail);
 
+  // images handle
   const handleImages = (e) => {
-    console.log(e.target.files);
-    setImages(e.target.files[0]);
+    setImages(e.target.files);
+    setImagesUploadErr(null);
+  };
+  const handleImagesSubmit = () => {
+    if (
+      images.length > 0 &&
+      images.length + productDetail.imageUrls.length <= 4
+    ) {
+      setImagesUploadErr(false);
+      setImagesUploading(true);
+      const promises = [];
+      for (let i = 0; i < images.length; i++) {
+        promises.push(storeImages(images[i]));
+      }
+      Promise.all(promises)
+        .then((urls) => {
+          setProductDetail({
+            ...productDetail,
+            imageUrls: productDetail.imageUrls.concat(urls),
+          });
+          setImagesUploadErr(false);
+          setImagesUploading(false);
+        })
+        .catch((err) => {
+          setImagesUploadErr("Image upload failed (2MB max per image)");
+          setImagesUploading(false);
+        });
+    } else {
+      setImagesUploadErr("You can only upload 4 images per product");
+      setImagesUploading(false);
+    }
   };
 
+  const storeImages = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Uploading ${progress}% done!`);
+        },
+        (err) => {
+          reject(err);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+            resolve(downloadURL)
+          );
+        }
+      );
+    });
+  };
+
+  const handleRemoveImage = (i) => {
+    const newUrls = productDetail.imageUrls.filter((_, index) => index !== i);
+    setProductDetail({ ...productDetail, imageUrls: newUrls });
+  };
+
+  // product detail
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // if (name === "price") value = parseInt(value);
-    setProductDetail((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to the server)
-    console.log("Form submitted:", productDetail);
-    console.log(`images; ${images}`);
-
-    let product = productDetail;
-    let formData = new FormData();
-    formData.append("products", images);
-    console.log(formData);
     try {
-      const response = await fetch("http://localhost:4000/upload", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          product.image = data.image_url;
-          console.table(product, data, productDetail);
-          // Handle success (e.g., update product image URL)
-          console.log("File uploaded successfully:", data.image_url);
-          await fetch("http://localhost:4000/addproduct", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(product),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.success) {
-                alert(data.name);
-                fileIputRef.current.value = "";
-                setProductDetail(defaultProductDetail);
-              } else alert("File uploaded failed:", data.image);
-            });
-        } else {
-          // Handle server response indicating failure
-          console.error("File upload failed:", data.error);
-        }
-      } else {
-        // Handle non-200 response (e.g., server error)
-        console.error("Server error:", response.status, response.statusText);
-      }
-    } catch (error) {
-      // Handle fetch error (e.g., network issue)
-      console.error("Fetch error:", error.message);
-    }
+    } catch (error) {}
   };
   return (
     <div>
@@ -112,6 +142,8 @@ const Dashboard = () => {
                 <input
                   type='text'
                   name='name'
+                  maxLength={62}
+                  minLength={10}
                   value={productDetail.name}
                   onChange={handleInputChange}
                   id='name'
@@ -120,23 +152,6 @@ const Dashboard = () => {
                   required={true}
                 />
               </div>
-              {/* Brand */}
-              {/* <div className='w-full'>
-                <label
-                  htmlFor='brand'
-                  className='dark:text-white block mb-2 text-sm font-medium text-gray-900'
-                >
-                  Brand
-                </label>
-                <input
-                  type='text'
-                  name='brand'
-                  id='brand'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
-                  placeholder='Brooklyn Lifestyle'
-                  required={true}
-                />
-              </div> */}
               {/* Price */}
               <div className='w-full'>
                 <label
@@ -156,6 +171,25 @@ const Dashboard = () => {
                   required={true}
                 />
               </div>
+              {/* Discount Price */}
+              <div className='w-full'>
+                <label
+                  htmlFor='discountPrice'
+                  className='dark:text-white block mb-2 text-sm font-medium text-gray-900'
+                >
+                  Discount Price
+                </label>
+                <input
+                  value={productDetail.discountPrice}
+                  onChange={handleInputChange}
+                  type='number'
+                  name='discountPrice'
+                  id='discountPrice'
+                  className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
+                  placeholder='1000000 ₫'
+                  required={true}
+                />
+              </div>
               {/* images */}
               <div>
                 <label
@@ -168,7 +202,7 @@ const Dashboard = () => {
                   type='file'
                   accept='image/png, image/jpeg, image/webp'
                   ref={fileIputRef}
-                  // multiple={true}
+                  multiple={true}
                   // value={productDetail.image}
                   onChange={handleImages}
                   name='image'
@@ -177,8 +211,45 @@ const Dashboard = () => {
                   required={true}
                 />
                 <p className='dark:text-gray-300 mt-1 text-sm text-gray-500'>
-                  SVG, PNG, JPG or GIF (MAX. 800x400px).
+                  The first images will be cover (max 4)
                 </p>
+              </div>
+              {/*  Upload Images Button */}
+              <div className='flex flex-col justify-center'>
+                <div className='flex items-center'>
+                  <button
+                    onClick={handleImagesSubmit}
+                    type='button'
+                    disabled={imagesUploading}
+                    className='h-fit w-fit hover:opacity-80 px-4 py-3 font-bold text-white bg-green-800 border'
+                  >
+                    {imagesUploading ? "Uploading..." : "Upload Images"}
+                  </button>
+                </div>
+                {imagesUploadErr && (
+                  <p className='dark:text-red-300 mt-1 text-sm text-red-500'>
+                    {imagesUploadErr && imagesUploadErr}
+                  </p>
+                )}
+              </div>
+              {/* preview image upload */}
+              <div className='flex gap-2'>
+                {productDetail.imageUrls &&
+                  productDetail.imageUrls.map((imageUrl, i) => {
+                    return (
+                      <div
+                        key={i}
+                        className='flex items-center gap-2 cursor-pointer'
+                        onClick={() => handleRemoveImage(i)}
+                      >
+                        <img
+                          src={imageUrl}
+                          className='size-16 max-w-full max-h-full border'
+                          alt='Delete Product Image'
+                        />
+                      </div>
+                    );
+                  })}
               </div>
               {/* collections */}
               <div>
@@ -239,26 +310,26 @@ const Dashboard = () => {
                   onChange={handleInputChange}
                   id='color'
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
-                  placeholder='White, Black, Red,...'
+                  placeholder='White #fff, Black #000, ...'
                   required={true}
                 />
               </div>
               {/* Sizes */}
               <div>
                 <label
-                  htmlFor='size'
+                  htmlFor='sizes'
                   className='dark:text-white block mb-2 text-sm font-medium text-gray-900'
                 >
-                  Size
+                  Sizes
                 </label>
                 <input
                   type='text'
-                  name='size'
-                  value={productDetail.size}
+                  name='sizes'
+                  value={productDetail.sizes}
                   onChange={handleInputChange}
-                  id='size'
+                  id='sizes'
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
-                  placeholder='M, XL,...'
+                  placeholder='XS, M, XL, ...'
                   required={true}
                 />
               </div>

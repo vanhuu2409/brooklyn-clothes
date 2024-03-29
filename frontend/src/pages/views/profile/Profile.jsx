@@ -20,7 +20,7 @@ import {
 } from "../../../redux/user/userSlice";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -253,6 +253,30 @@ const Profile = () => {
               />
             </svg>
           </button>
+          {email === "huuvanhoang5588@gmail.com" && (
+            <Link
+              to='/admin/allproducts'
+              className='hover:bg-opacity-100 group/signin hover:border-black-4 bg-opacity-60 disabled:opacity-80 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
+            >
+              <span className=' text-sm font-bold tracking-tight'>
+                Goto Admin Page
+              </span>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={3}
+                stroke='currentColor'
+                className='group-hover/signin:rotate-0 w-4 h-4 transition-all -rotate-45'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                />
+              </svg>
+            </Link>
+          )}
           <div className='flex flex-row justify-between mt-4'>
             <p
               onClick={handleOnDeleteAccount}
