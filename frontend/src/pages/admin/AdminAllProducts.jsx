@@ -8,8 +8,11 @@ const AdminAllProducts = () => {
   return (
     <div className='flex flex-col items-center mt-20'>
       <div className=''>
-        <Link to='/admin/dashboard' className='text-xl underline'>
+        <Link to='/admin/dashboard' className='block text-xl underline'>
           Goto Dashboard
+        </Link>
+        <Link to='/' className='block text-xl underline'>
+          Goto Home
         </Link>
         <div className='grid grid-cols-4'>
           <div className='col-span-1'>sidebar</div>

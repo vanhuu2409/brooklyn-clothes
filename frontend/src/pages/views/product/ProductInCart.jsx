@@ -7,7 +7,7 @@ import {
   quantityByAmount,
   removeFromCart,
 } from "../../../redux/cart/cartSlice";
-import { formatPrice } from "../../../data/custom";
+import { formatPrice } from "../../../services/custom";
 const ProductInCart = (props) => {
   const dispatch = useDispatch();
 
@@ -35,6 +35,7 @@ const ProductInCart = (props) => {
           {/* img */}
           <img
             src={props?.imageUrls[0]}
+            draggable={false}
             className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
           />
           {/* body */}
@@ -51,20 +52,15 @@ const ProductInCart = (props) => {
             {/* center */}
             {/* size select */}
             <span className='text-black-3 flex-1 text-base font-extrabold normal-case'>
-              {props?.size} {" / "}
-              {props?.color}
+              {props?.sizeSelected} {" / "}
+              {props?.colorSelected}
             </span>
             {/* bottom body */}
             <div className='propss-cenpropster flex justify-between'>
               {/* left bottom */}
               <p className='text-black-3 sm:text-base flex gap-1 text-sm font-bold'>
                 {formatPrice(props?.price)}
-                <span className='text-black-4 font-light'>
-                  /{" "}
-                  <span className='line-through'>
-                    {formatPrice(props?.discountPrice)}
-                  </span>
-                </span>
+                <span className='text-black-4 font-light'>/ </span>
               </p>
               {/* middle */}
               <div className='propss-cenpropster flex border'>
@@ -126,6 +122,7 @@ const ProductInCart = (props) => {
             <img
               src={props?.imageUrls[0]}
               alt={props?.name}
+              draggable={false}
               className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
             />
             {props?.name}

@@ -4,7 +4,7 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB7HpayAecyZV23NgAXAnISIShRm0HOuWY",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "brooklyn-clothes.firebaseapp.com",
   projectId: "brooklyn-clothes",
   storageBucket: "brooklyn-clothes.appspot.com",

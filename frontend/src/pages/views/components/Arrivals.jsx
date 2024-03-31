@@ -2,10 +2,11 @@ import ProductCard from "../product/ProductCard";
 import { fetchData } from "../../../services/api";
 import LayoutView from "../../../widgets/layout/LayoutView";
 import { Link } from "react-router-dom";
+import { RandomProducts } from "../../../services/custom";
 
 const Arrivals = () => {
-  const products = fetchData;
-  console.log(products);
+  const products = RandomProducts(fetchData, 4);
+
   return (
     <div className='bg-white'>
       <LayoutView>
@@ -26,9 +27,9 @@ const Arrivals = () => {
           </div>
         </div>
 
-        <div className='gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 grid grid-cols-1'>
-          {products.map((product) => (
-            <ProductCard {...product} key={product?.id} />
+        <div className='gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:gap-x-8 grid grid-cols-1'>
+          {products.map((product, i) => (
+            <ProductCard {...product} key={i} />
           ))}
         </div>
       </LayoutView>

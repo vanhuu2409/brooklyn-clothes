@@ -10,7 +10,7 @@ const Layout = () => {
       <Headroom>
         <Header />
       </Headroom>
-      <div className=' h-full'>
+      <div className='h-full'>
         <Outlet />
       </div>
 

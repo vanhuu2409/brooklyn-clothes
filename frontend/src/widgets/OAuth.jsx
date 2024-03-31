@@ -3,6 +3,7 @@ import { app } from "../firebase";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { loginSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const OAuth = () => {
   const dispatch = useDispatch();
@@ -23,10 +24,10 @@ const OAuth = () => {
         }),
       });
       const data = await res.json();
-      dispatch(loginSuccess(data));
+      dispatch(loginSuccess(data)) & toast.success("Login Success");
       navigate("/");
     } catch (error) {
-      console.log("could not sign with Google:", error);
+      console.log("Could not sign with Google:", error);
     }
   };
   return (

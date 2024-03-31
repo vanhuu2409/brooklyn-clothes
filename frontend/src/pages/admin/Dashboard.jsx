@@ -145,11 +145,11 @@ const Dashboard = () => {
           setError("You must upload at least one image") &
           toast.error("You must upload at least one image")
         );
-      if (+productDetail.price < +productDetail.discountPrice)
-        return (
-          setError("Discount price must be lower than Regular Price") &
-          toast.error("Discount price must be lower than Regular Price")
-        );
+      // if (+productDetail.price > +productDetail.discountPrice)
+      //   return (
+      //     setError("Discount price must be lower than Regular Price") &
+      //     toast.error("Discount price must be lower than Regular Price")
+      //   );
       setLoading(true);
       setError(false);
       const res = await fetch("/api/product/create", {
@@ -247,7 +247,7 @@ const Dashboard = () => {
                   id='discountPrice'
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
                   placeholder='1000000 ₫'
-                  required={true}
+                  // required={true}
                 />
               </div>
               {/* images */}

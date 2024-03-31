@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { formatPrice } from "../../../data/custom";
+import { formatPrice } from "../../../services/custom";
 import { Link } from "react-router-dom";
 import ProductInCart from "../product/ProductInCart";
 
@@ -12,7 +12,7 @@ const CartPage = () => {
   const bagsTotalFormat = formatPrice(bagsTotal);
 
   return (
-    <div className='sm:px-6 lg:max-w-[90rem] lg:px-8 max-w-2xl px-4 mx-auto'>
+    <div className='sm:px-6 h-screen lg:max-w-[90rem] lg:px-8 max-w-2xl px-4 mx-auto'>
       <div className='lg:block flex flex-col py-4'>
         <div className='lg:py-8 md:flex-row flex flex-col items-center py-4'>
           <h1 className='text-black-3 flex-1 text-6xl font-extrabold text-left'>

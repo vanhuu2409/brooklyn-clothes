@@ -7,7 +7,7 @@ import {
   navbarPresetsList,
   presetsList,
   shopListMobile,
-} from "../../data/custom";
+} from "../../services/custom";
 import Marquee from "react-fast-marquee";
 import NavbarCollectionItem from "../NavbarCollectionItem";
 import { useSelector } from "react-redux";
@@ -111,12 +111,17 @@ const Header = () => {
                       <ul className='flex flex-col justify-center gap-3 *:capitalize *:font-normal *:text-black-3'>
                         <li>
                           <Link className='hover:opacity-70 p-2 transition-all'>
+                            T Shirts
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className='hover:opacity-70 p-2 transition-all'>
                             Hoodies
                           </Link>
                         </li>
                         <li>
                           <Link className='hover:opacity-70 p-2 transition-all'>
-                            T Shirts
+                            Sweaters
                           </Link>
                         </li>
                         <li>
@@ -145,6 +150,11 @@ const Header = () => {
                           </Link>
                         </li>
                         <li>
+                          <Link className='hover:opacity-70 p-2 transition-all'>
+                            Denim
+                          </Link>
+                        </li>
+                        <li>
                           <Link className='hover:opacity-70 p-2 font-bold transition-all'>
                             View all
                           </Link>
@@ -152,16 +162,16 @@ const Header = () => {
                       </ul>
                     </ul>
                     <ul className='flex flex-col gap-3'>
-                      <div className='p-2 text-2xl font-bold'>Headwears</div>
+                      <div className='p-2 text-2xl font-bold'>Other</div>
                       <ul className='flex flex-col justify-center gap-3 *:capitalize *:font-normal *:text-black-3'>
                         <li>
                           <Link className='hover:opacity-70 p-2 transition-all'>
-                            Caps
+                            Hats
                           </Link>
                         </li>
                         <li>
                           <Link className='hover:opacity-70 p-2 transition-all'>
-                            Hats
+                            Bags
                           </Link>
                         </li>
                         <li>

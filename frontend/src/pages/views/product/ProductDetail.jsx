@@ -3,24 +3,28 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/cart/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { formatPrice } from "../../../data/custom";
 import { fetchData } from "../../../services/api";
+import { formatPrice } from "../../../services/custom";
+import { memo, useState } from "react";
 
 const ProductDetail = () => {
-  const dispatch = useDispatch();
+  const data = fetchData;
   const params = useParams();
   const { _id } = params;
-
-  const data = fetchData;
   const product = data.find((i) => {
     return i._id.toString() === _id;
   });
+  const dispatch = useDispatch();
+  const [selectSize, setSelectSize] = useState(product?.sizes[0]);
+  const [selectColor, setSelectColor] = useState(product?.colors[0].name);
+
+  console.log({ selectColor, selectSize });
   const handleOnAddToBag = () => {
     dispatch(
       addToCart({
         ...product,
-        colorSelected: product?.color,
-        sizeSelected: product?.size,
+        colorSelected: selectColor,
+        sizeSelected: selectSize,
       })
     ) & toast.success(`${product?.name} is added to Cart!`);
   };
@@ -34,6 +38,7 @@ const ProductDetail = () => {
               <img
                 src={product?.imageUrls[0]}
                 alt={product?.name}
+                draggable={false}
                 className='object-cover object-center w-full h-full'
               />
             </div>
@@ -42,6 +47,7 @@ const ProductDetail = () => {
                 <img
                   src={product?.imageUrls[1]}
                   alt={product?.name}
+                  draggable={false}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
@@ -49,6 +55,7 @@ const ProductDetail = () => {
                 <img
                   src={product?.imageUrls[2]}
                   alt={product?.name}
+                  draggable={false}
                   className='object-cover object-center w-full h-full'
                 />
               </div>
@@ -57,6 +64,7 @@ const ProductDetail = () => {
               <img
                 src={product?.imageUrls[3]}
                 alt={product?.name}
+                draggable={false}
                 className='object-cover object-center w-full h-full'
               />
             </div>
@@ -75,18 +83,24 @@ const ProductDetail = () => {
               <h2 className='sm:text-3xl text-black-2 text-2xl font-bold tracking-tight'>
                 {product?.name}
               </h2>
-              <p className='font-extralight inline-flex gap-2 mt-1 text-lg text-gray-900'>
+              <p className='font-extralight inline-flex gap-3 mt-1 text-lg text-gray-900'>
                 {formatPrice(product?.price)}
-                <span className='text-neutral-400 line-through'>
-                  {formatPrice(product?.discountPrice)}
-                </span>
+                {product?.discountPrice !== 0 &&
+                  product?.discountPrice !== null && (
+                    <span className='text-neutral-400 line-through'>
+                      {formatPrice(product?.discountPrice)}
+                    </span>
+                  )}
               </p>
 
               <div className='mt-10'>
                 {/* Colors */}
                 <div className='flex items-center gap-4'>
                   <h3 className='text-black-2 text-lg font-medium'>Colors</h3>
-                  <select className='border'>
+                  <select
+                    className='border'
+                    onChange={(e) => setSelectColor(e.target.value)}
+                  >
                     {product?.colors.map((color, i) => (
                       <option
                         key={i}
@@ -104,7 +118,10 @@ const ProductDetail = () => {
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
                       <h3 className='text-black-2 text-lg font-medium'>Size</h3>
-                      <select className='border'>
+                      <select
+                        className='border'
+                        onChange={(e) => setSelectSize(e.target.value)}
+                      >
                         {product?.sizes.map((size, i) => (
                           <option
                             key={i}
@@ -181,4 +198,4 @@ const ProductDetail = () => {
   );
 };
 
-export default ProductDetail;
+export default memo(ProductDetail);
