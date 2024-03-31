@@ -1,16 +1,13 @@
-const port = 4000;
+// dotenv
+import dotenv from "dotenv";
+dotenv.config();
+const port = process.env.PORT;
+console.log(process.env.PORT);
 // express server
 import express from "express";
 const { json, static: statics } = express;
 const app = express();
-import { connect, model } from "mongoose";
-// jsonwebtoken
-import jwt from "jsonwebtoken";
-const { sign } = jwt;
-// multer for storage img
-import multer, { diskStorage } from "multer";
-// path
-import { extname } from "path";
+import { connect } from "mongoose";
 // cors
 import cors from "cors";
 
@@ -21,10 +18,6 @@ import authRouter from "./routes/auth.route.js";
 // productRouter
 import productRouter from "./routes/product.route.js";
 // mongoose server
-
-// dotenv
-import dotenv from "dotenv";
-dotenv.config();
 
 // cookie parser
 import cookieParser from "cookie-parser";
