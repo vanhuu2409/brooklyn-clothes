@@ -1,6 +1,6 @@
 import Arrivals from "../components/Arrivals";
 import LayoutView from "../../../widgets/layout/LayoutView";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   loginStart,
@@ -129,4 +129,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default memo(LoginPage);
