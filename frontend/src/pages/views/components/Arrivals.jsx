@@ -1,8 +1,9 @@
 import ProductCard from "../product/ProductCard";
 import { fetchData } from "../../../services/api";
-import LayoutView from "../../../widgets/layout/LayoutView";
+import LayoutView from "../../../_widgets/layout/LayoutView";
 import { Link } from "react-router-dom";
 import { RandomProducts } from "../../../services/custom";
+import { memo } from "react";
 
 const Arrivals = () => {
   const products = RandomProducts(fetchData, 4);
@@ -37,4 +38,4 @@ const Arrivals = () => {
   );
 };
 
-export default Arrivals;
+export default memo(Arrivals);

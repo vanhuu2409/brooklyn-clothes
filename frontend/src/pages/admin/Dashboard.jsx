@@ -6,7 +6,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../../firebase";
+import { app } from "../../firebase/firebase";
 import { toast } from "react-toastify";
 
 const Dashboard = () => {
@@ -177,15 +177,12 @@ const Dashboard = () => {
     }
   };
   return (
-    <div>
-      <h1 className='text-7xl flex flex-col font-extrabold tracking-wide text-center'>
+    <div className=''>
+      <h1 className='text-7xl font-extrabold tracking-wide text-center'>
         Dashboard
-        <Link to='/admin/allproducts' className='text-xl underline'>
-          all products
-        </Link>
       </h1>
       <section className=' bg-white'>
-        <div className='lg:py-16 max-w-2xl px-4 py-8 mx-auto'>
+        <div className='lg:py-16 px-4 py-8 mx-auto'>
           <h2 className='dark:text-white mb-4 text-xl font-bold text-gray-900'>
             Add a new product
           </h2>
@@ -203,7 +200,7 @@ const Dashboard = () => {
                   type='text'
                   name='name'
                   maxLength={62}
-                  minLength={10}
+                  minLength={6}
                   value={productDetail.name}
                   onChange={handleInputChange}
                   id='name'
@@ -331,7 +328,7 @@ const Dashboard = () => {
                   <option value=''>Select Collections</option>
                   <option value='tops'>Tops</option>
                   <option value='bottoms'>Bottoms</option>
-                  <option value='headwears'>Headwears</option>
+                  <option value='other'>Other</option>
                 </select>
               </div>
               {/* category */}
@@ -351,13 +348,27 @@ const Dashboard = () => {
                   className='bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-black-4 focus:border-black-4 block w-full p-2.5 '
                 >
                   <option value=''>Select Category</option>
-                  <option value='hoodies'>Hoodies</option>
-                  <option value='t-shirts'>T-Shirts</option>
-                  <option value='jackets'>Jackets</option>
-                  <option value='pants'>Pants</option>
-                  <option value='shorts'>Shorts</option>
-                  <option value='caps'>Caps</option>
-                  <option value='hats'>Hats</option>
+                  {productDetail.collections === "tops" && (
+                    <>
+                      <option value='t-shirts'>T-Shirts</option>
+                      <option value='hoodies'>Hoodies</option>
+                      <option value='sweaters'>Sweaters</option>
+                      <option value='jackets'>Jackets</option>)
+                    </>
+                  )}
+                  {productDetail.collections === "bottoms" && (
+                    <>
+                      <option value='pants'>Pants</option>
+                      <option value='shorts'>Shorts</option>
+                      <option value='denims'>Denims</option>
+                    </>
+                  )}
+                  {productDetail.collections === "other" && (
+                    <>
+                      <option value='hats'>Hats</option>
+                      <option value='bags'>Bags</option>
+                    </>
+                  )}
                 </select>
               </div>
               {/* Colors */}

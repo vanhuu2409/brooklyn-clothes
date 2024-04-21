@@ -5,11 +5,11 @@ import "react-slideshow-image/dist/styles.css";
 const Carousel = () => {
   const properties = {
     transitionDuration: 700,
-    duration: 2000,
+    duration: 5000,
     pauseOnHover: false,
-    indicators: true,
+    indicators: false,
     prevArrow: (
-      <button className='hover:translate-x-2 hover:opacity-100 sm:hover:-translate-x-4 h-full px-6 text-white transition-all opacity-50'>
+      <button className='hover:translate-x-2 lg:block hover:opacity-100 sm:hover:-translate-x-4 hidden h-full px-6 text-white transition-all opacity-50'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -27,7 +27,7 @@ const Carousel = () => {
       </button>
     ),
     nextArrow: (
-      <button className='hover:-translate-x-2 hover:opacity-100 sm:hover:translate-x-4 h-full px-6 text-white transition-all opacity-50'>
+      <button className='hover:-translate-x-2 lg:block hover:opacity-100 sm:hover:translate-x-4 hidden h-full px-6 text-white transition-all opacity-50'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -88,7 +88,7 @@ const Carousel = () => {
               alt={item?.title}
               draggable={false}
               loading='priority'
-              className='object-cover w-screen select-none h-full max-w-screen max-h-full min-h-[15rem]'
+              className='object-cover brightness-75 w-screen select-none h-full max-w-screen max-h-full min-h-[15rem]'
             />
             <div className='top-1/2 left-1/2 lg:gap-6 absolute min-h-[15rem] flex flex-col items-center justify-center gap-2 w-2/3 sm:gap-2 -translate-x-1/2 -translate-y-1/2'>
               <h1 className='text-wrap lg:text-6xl sm:text-3xl md:text-5xl text-2xl font-extrabold leading-tight tracking-wide text-center text-white select-none'>
@@ -123,49 +123,6 @@ const Carousel = () => {
           </div>
         ))}
       </Slide>
-      {/* controls */}
-      {/* chev left */}
-      {/* <div className='top-1/2 inset-x-0 *:px-6 *:block sm:*:px-6 md:*:px-8 lg:*:px-12 xl:*:px-24 absolute flex justify-between *:text-white *:p-4 *:-m-4 -translate-y-1/2'>
-        <button
-          onClick={handlePrevSlide}
-          className='hover:translate-x-2 hover:opacity-100 sm:hover:-translate-x-4 h-full transition-all opacity-50'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth={1.5}
-            stroke='currentColor'
-            className=' lg:w-8 lg:h-8 w-6 h-6'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M15.75 19.5 8.25 12l7.5-7.5'
-            />
-          </svg>
-        </button>
-        {/* chev right */}
-      {/* <button
-        onClick={handleNextSlide}
-        className='hover:-translate-x-2 hover:opacity-100 sm:hover:translate-x-4 h-full transition-all opacity-50'
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={1.5}
-          stroke='currentColor'
-          className=' lg:w-8 lg:h-8 w-6 h-6'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='m8.25 4.5 7.5 7.5-7.5 7.5'
-          />
-        </svg>
-      </button> */}
-      {/* </div> */}
     </div>
   );
 };

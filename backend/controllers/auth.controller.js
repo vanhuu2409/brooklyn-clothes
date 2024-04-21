@@ -1,17 +1,25 @@
 import User from "../models/user.model.js";
-import bcryptjs from "bcryptjs";
+import { createCart } from "./cart.controller.js";
 import { errorHandler } from "../ultils/error.js";
+import bcryptjs from "bcryptjs";
 // jsonwebtoken
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-  // hashed password
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashedPassword });
+  const { username, email, password, role } = req.body;
   try {
+    // hashed password
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({
+      role,
+      username,
+      email,
+      password: hashedPassword,
+    });
+    console.log({ newUser });
     await newUser.save();
-    res.status(201).json("User created successfully!");
+    await createCart(newUser, res);
+    res.status(201).json({ newUser, message: "User created successfully!" });
   } catch (error) {
     next(error);
   }
@@ -21,6 +29,7 @@ export const login = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     const validUser = await User.findOne({ email });
+    console.log(validUser._id);
     if (!validUser) {
       return next(errorHandler(404, "User not found!"));
     }
@@ -33,7 +42,7 @@ export const login = async (req, res, next) => {
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
-      .json(rest);
+      .json({ user: rest, message: "Login successfully" });
   } catch (error) {
     next(error);
   }
@@ -69,6 +78,7 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json(rest);
+      await createCart(rest, res);
     }
   } catch (error) {
     next(error);

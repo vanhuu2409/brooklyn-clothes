@@ -1,10 +1,9 @@
 import React from "react";
-import Logo from "../../../assets/images/brand.png";
-import LayoutView from "../../../widgets/layout/LayoutView";
+import LayoutView from "../../../_widgets/layout/LayoutView";
 
 const ShipPolicy = () => {
   return (
-    <div className='bg-third flex flex-col items-center justify-center w-full h-full mx-auto'>
+    <div className='bg-third flex flex-col items-center justify-center w-full h-full mx-auto select-none'>
       <div className='border-primary border-y-2 sm:py-0 sm:my-0 flex flex-col items-center justify-center w-full gap-5 py-10 my-10 bg-transparent'>
         <LayoutView>
           <div className='lg:flex-row lg:divide-x-2 flex flex-col justify-around w-full gap-8'>
@@ -48,7 +47,7 @@ const ShipPolicy = () => {
                 />
               </svg>
 
-              <h4 className='text-black-3 min-w-[17.5rem] text-2xl font-bold text-center uppercase'>
+              <h4 className='text-black-3 text-2xl font-bold text-center uppercase'>
                 high-quality materials
               </h4>
               <p className=' text-center md:max-w-[70%] max-w-[50%] lg:max-w-[80%]	 text-black-4 font-light text-[1.125rem] leading-5 tracking-tight normal-case'>

@@ -1,4 +1,4 @@
-import LayoutView from "../../../widgets/layout/LayoutView";
+import LayoutView from "../../../_widgets/layout/LayoutView";
 
 const LookBook = () => {
   return <LayoutView>LookBook</LayoutView>;

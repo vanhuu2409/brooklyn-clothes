@@ -17,10 +17,19 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 // productRouter
 import productRouter from "./routes/product.route.js";
+// cartRouter
+import cartRouter from "./routes/cart.route.js";
+// orderRouter
+import orderRouter from "./routes/order.route.js";
+// ratingsRouter
+import ratingsRouter from "./routes/ratings.route.js";
+// reviewsRouter
+import reviewsRouter from "./routes/reviews.route.js";
 // mongoose server
 
 // cookie parser
 import cookieParser from "cookie-parser";
+import Product from "./models/product.model.js";
 
 // running app
 app.use(json());
@@ -36,6 +45,11 @@ connect(process.env.MONGODB)
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/reviews", reviewsRouter);
+app.use("/api/ratings", ratingsRouter);
+
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";

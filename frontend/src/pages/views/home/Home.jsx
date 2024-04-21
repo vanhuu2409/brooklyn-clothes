@@ -5,7 +5,7 @@ import Arrivals from "../components/Arrivals";
 import NewCollection from "../components/NewCollection";
 import ShipPolicy from "../components/ShipPolicy";
 import Memories from "../components/Memories";
-import Reviews from "../components/Reviews";
+import Testimonials from "../components/Testimonials";
 const Home = () => {
   return (
     <>
@@ -30,17 +30,16 @@ const Home = () => {
       <ShipPolicy />
       {/* arrivals */}
       <Arrivals />
-
-      {/* Reviews */}
-      <Reviews />
       {/* marquee */}
       <div>
-        <div className='bg-black-1 drop-shadow-md text-neutral-300 sm:my-0 w-full py-4 mb-12 text-2xl subpixel-antialiased font-bold leading-tight tracking-widest text-center uppercase shadow-md select-none'>
+        <div className='bg-black-1 drop-shadow-md text-neutral-300 sm:my-0 w-full py-4 mt-12 text-2xl subpixel-antialiased font-bold leading-tight tracking-widest text-center uppercase shadow-md select-none'>
           <Marquee pauseOnHover={true} autoFill={true}>
             <span className='px-4'>·</span> FREE SHIPPING ON ORDERS OVER €75
           </Marquee>
         </div>
       </div>
+      {/* Testimonials */}
+      <Testimonials />
       {/* Memories */}
       <Memories />
     </>

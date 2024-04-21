@@ -1,23 +1,26 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import ScrollTop from "../widgets/ScrollTop";
-import Layout from "../widgets/layout/Layout";
+import ScrollTop from "../_widgets/ScrollTop";
+import Layout from "../_widgets/layout/Layout";
 import Home from "../pages/views/home/Home";
 import Products from "../pages/views/products/Products";
 import ProductDetail from "../pages/views/product/ProductDetail";
-import LoginPage from "../pages/views/loginPage/LoginPage";
-import SignUpPage from "../pages/views/signUpPage/SignUpPage";
 import LookBook from "../pages/views/lookBook/LookBook";
-import CartPage from "../pages/views/cartPage/CartPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import Dashboard from "../pages/admin/Dashboard";
 import ProtectedAdminPage from "./ProtectedAdminPage";
 import AdminAllProducts from "../pages/admin/AdminAllProducts";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "../pages/views/profile/Profile";
+import AdminLayout from "../pages/admin/AdminLayout";
+import Login from "../pages/views/login/Login";
+import Cart from "../pages/views/cart/Cart";
+import Checkout from "../pages/views/checkout/Checkout";
+import SignUp from "../pages/views/signup/SignUp";
+import Orders from "../pages/views/orders/Orders";
+import OrderDetail from "../pages/views/orders/OrderDetail";
 
 const AppRouter = () => {
-  const adminRole = "huuvanhoang5588@gmail.com";
   return (
     <Router>
       <ScrollTop />
@@ -27,24 +30,32 @@ const AppRouter = () => {
           <Route index element={<Home />} />
           <Route path='/products' element={<Products />} />
           <Route
-            path='/products/:productname/:_id'
+            path='/products/:collection/:category'
+            element={<Products />}
+          />
+          <Route
+            path='/products/:collection/:category/:productname/:_id'
             element={<ProductDetail />}
           />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<SignUpPage />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
           <Route path='/lookbook' element={<LookBook />} />
-          {/* <Route path='/checkouts' element={<Checkouts />} /> */}
-          <Route path='/cart' element={<CartPage />} />
+          <Route path='/checkout' element={<Checkout />} />
+          <Route path='/cart' element={<Cart />} />
           <Route element={<ProtectedRoute />}>
             <Route path='/profile' element={<Profile />} />
+            <Route path='/profile/orders' element={<Orders />} />
+            <Route path='/profile/orders/:id' element={<OrderDetail />} />
           </Route>
 
           <Route path='/*' element={<NotFoundPage />} />
         </Route>
         {/* admin page */}
-        <Route element={<ProtectedAdminPage adminRole={adminRole} />}>
-          <Route path='/admin/dashboard' element={<Dashboard />} />
-          <Route path='/admin/allproducts' element={<AdminAllProducts />} />
+        <Route element={<ProtectedAdminPage />}>
+          <Route path='/admin/' element={<AdminLayout />}>
+            <Route path='/admin/dashboard' element={<Dashboard />} />
+            <Route path='/admin/allproducts' element={<AdminAllProducts />} />
+          </Route>
         </Route>
       </Routes>
       {/* Toast container */}

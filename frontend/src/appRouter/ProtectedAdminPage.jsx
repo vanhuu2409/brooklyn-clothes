@@ -1,12 +1,12 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedAdminPage = ({ adminRole }) => {
+const ProtectedAdminPage = () => {
   const user = useSelector((state) => state.user);
-  console.log(user);
   let redirectPath = "/";
+  console.log(user.currentUser.role);
 
-  return adminRole === user?.currentUser?.email ? (
+  return user.currentUser.role === "Admin" ? (
     <Outlet />
   ) : (
     <Navigate to={redirectPath} replace />

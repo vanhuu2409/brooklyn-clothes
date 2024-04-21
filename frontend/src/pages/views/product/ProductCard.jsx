@@ -1,27 +1,29 @@
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../../../redux/cart/cartSlice";
-import { ToastContainer, toast } from "react-toastify";
 import { formatPrice } from "../../../services/custom";
 import { memo } from "react";
 
 const ProductCard = (props) => {
-  const dispatch = useDispatch();
   return (
-    <div key={props?.id} className='group flex flex-col w-full'>
+    <div
+      key={props?.id}
+      className='group flex flex-col w-full border-t border-r'
+    >
       <div className=' relative flex-1 w-full overflow-hidden bg-gray-200'>
-        <Link className='' to={`/products/${props?.name}/${props?._id}`}>
+        <Link
+          className=''
+          to={`/products/${props?.collections}/${props?.category}/${props?.name}/${props?._id}`}
+        >
           <img
             src={props?.imageUrls[0]}
             alt={props?.name}
             draggable={false}
-            className='group-hover:opacity-0 group-hover:h-0 group-hover:scale-125 size-52 object-cover object-center w-full h-full transition-transform duration-500'
+            className='group-hover:opacity-0 group-hover:h-0 h-[30rem] group-hover:scale-125 size-52 object-cover object-center w-full transition-transform duration-500'
           />
           <img
             src={props?.imageUrls[1]}
             alt={props?.name}
             draggable={false}
-            className='group-hover:opacity-75 group-hover:h-full group-hover:scale-125 size-52 object-cover object-center w-full h-0 transition-transform duration-500 opacity-0'
+            className='group-hover:opacity-75 group-hover:h-[30rem] group-hover:scale-125 size-52 object-cover object-center w-full h-0 transition-transform duration-500 opacity-0'
           />
         </Link>
         <div className='top-4 left-4 absolute flex flex-col gap-1'>
@@ -36,12 +38,8 @@ const ProductCard = (props) => {
           })}
         </div>
         <Link
-          // onClick={() =>
-          //   dispatch(addToCart(props)) &
-          //   toast.success(`${props?.name} is added to Cart!`)
-          // }
-          to={`/products/${props?.name}/${props?._id}`}
-          className='group/shopall group-hover:translate-y-0 hover:bg-opacity-100 hover:border bg-opacity-60 sm:translate-y-full absolute inset-x-0 bottom-[1px] inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
+          to={`/products/${props?.collections}/${props?.category}/${props?.name}/${props?._id}`}
+          className='group/shopall group-hover:translate-y-0 hover:bg-opacity-100 hover:border bg-opacity-60 sm:translate-y-[120%] absolute inset-x-0 bottom-[1px] inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black'
         >
           <span className=' text-sm font-bold tracking-tight'>add to cart</span>
           <svg
@@ -60,14 +58,13 @@ const ProductCard = (props) => {
           </svg>
         </Link>
         {/* product status */}
-        {props?.discountPrice && (
+        {props?.discountPrice !== 0 && (
           <div className='top-4 px-2 group-hover:-translate-y-[250%] translate-y-0 transition-transform overflow-hidden py-1 leading-tight bg-black text-white font-normal tracking-widest text-[.4rem] capitalize right-4 absolute *:drop-shadow-sm'>
-            {/* {props?.status} */}
             Sale
           </div>
         )}
       </div>
-      <div>
+      <div className=''>
         <h4 className=' text-neutral-300 mt-4 font-normal tracking-widest text-[.6rem]'>
           BROOKLYN lifestyle
         </h4>
@@ -82,24 +79,6 @@ const ProductCard = (props) => {
             )}
           </p>
         </Link>
-      </div>
-      {/* Toast container */}
-      <div className='normal-case'>
-        <ToastContainer
-          position='top-left'
-          autoClose={2000}
-          limit={10}
-          hideProgressBar
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme='light'
-          transition:Bounce
-          stacked
-        />
       </div>
     </div>
   );

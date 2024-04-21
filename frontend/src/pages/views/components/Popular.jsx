@@ -1,5 +1,5 @@
 import { fetchData } from "../../../services/api";
-import LayoutView from "../../../widgets/layout/LayoutView";
+import LayoutView from "../../../_widgets/layout/LayoutView";
 import ProductCard from "../product/ProductCard";
 import { Link } from "react-router-dom";
 import { RandomProducts } from "../../../services/custom";
@@ -8,7 +8,7 @@ const Popular = () => {
   return (
     <div className='bg-white'>
       <LayoutView>
-        <div className=' pb-8'>
+        <div className='pb-8'>
           <p className='text-black-4 mt-4 font-normal tracking-widest text-[.8rem] sm:text-[1rem]'>
             BEST SELLERS
           </p>

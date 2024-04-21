@@ -2,12 +2,24 @@ export const formatPrice = (price) => {
   return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
 };
 
+// debounce request
+export const debounce = (func, delay) => {
+  let timer;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(context, args), delay);
+  };
+};
+
 export const RandomProducts = (products, quantity = 4) => {
   const randomProducts = [];
   const length = products.length;
   for (let i = 0; i < quantity; i++) {
     const randomNum = Math.floor(Math.random() * length);
-    randomProducts.push(products[randomNum]);
+    if (randomProducts[i]?.name !== products[i]?.name) {
+      randomProducts.push(products[randomNum]);
+    }
   }
   return randomProducts;
 };
