@@ -50,14 +50,15 @@ const DeliveryAddress = () => {
     //   userAddress[pair[0]] = pair[1];
     // }
 
-    try {
-      const res = await axios.post("/api/order/create", userAddress);
-      console.log(res);
-      if (res.status === 200) {
-        navigate(`/checkout?step=3&orderId=${res.data._id}`);
+    if (userAddress) {
+      try {
+        const res = await axios.post("/api/order/create", userAddress);
+        if (res.status === 200) {
+          navigate(`/checkout?step=3&orderId=${res.data._id}`);
+        }
+      } catch (error) {
+        throw new Error(error.message);
       }
-    } catch (error) {
-      throw new Error(error.message);
     }
   }, 300);
 
@@ -111,7 +112,7 @@ const DeliveryAddress = () => {
             <div
               name='address'
               id='address'
-              onSubmit={handleSubmit}
+              // onSubmit={handleSubmit}
               className='mt-10'
             >
               <div>

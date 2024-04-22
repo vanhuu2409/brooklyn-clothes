@@ -14,6 +14,7 @@ import axios from "axios";
 const ProductInCart = (props) => {
   const dispatch = useDispatch();
   const { size, color } = props;
+  console.log(props);
   // /api/cart/update/productId
   // colorSelected
   // sizeSelected
@@ -21,7 +22,7 @@ const ProductInCart = (props) => {
 
   const handleOnChangeQuantity = debounce(async (e) => {
     let value = parseInt(e.target.value);
-    if (props && props?.quantity > 0) {
+    if (props && props.quantity > 0) {
       try {
         // Otherwise, fetch products with the provided productId
         const response = await axios.put(
@@ -33,7 +34,6 @@ const ProductInCart = (props) => {
           }
         );
         dispatch(quantityByAmount({ quantity: value, props }));
-        window.location.reload();
         return response.data;
       } catch (error) {
         throw new Error(error.message);
@@ -45,6 +45,7 @@ const ProductInCart = (props) => {
     if (props && props?.quantity > 0) {
       try {
         // Otherwise, fetch products with the provided productId
+        console.log(colorSelected, sizeSelected);
         const response = await axios.put(
           `/api/cart/update/${props?.product?._id}`,
           {
@@ -53,7 +54,6 @@ const ProductInCart = (props) => {
           }
         );
         dispatch(increaseQuantity(props));
-        window.location.reload();
         return response.data;
       } catch (error) {
         throw new Error(error.message);
@@ -72,7 +72,6 @@ const ProductInCart = (props) => {
           }
         );
         dispatch(decreaseQuantity(props));
-        window.location.reload();
         return response.data;
       } catch (error) {
         throw new Error(error.message);
@@ -82,8 +81,6 @@ const ProductInCart = (props) => {
 
   const handleRemoveFromCart = debounce(async () => {
     try {
-      console.log(props);
-
       // Otherwise, fetch products with the provided productId
       const response = await axios.delete(
         `/api/cart/delete/${props?.product?._id}`,
@@ -110,7 +107,7 @@ const ProductInCart = (props) => {
             title='Product Detail'
           >
             <img
-              src={props && props?.product?.imageUrls[0]}
+              src={props?.product?.imageUrls[0]}
               draggable={false}
               className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
             />
@@ -199,7 +196,7 @@ const ProductInCart = (props) => {
               className='flex flex-col items-center gap-2 px-6 py-4'
             >
               <img
-                src={props && props?.product?.imageUrls[0]}
+                src={props?.product?.imageUrls[0]}
                 alt={props?.product?.name}
                 draggable={false}
                 className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
