@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { formatPrice } from "../../../services/custom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { formatPrice } from "../../services/custom.jsx";
 
-const Orders = () => {
+const AdminAllOrder = () => {
   const orderFilterOption = [
     { label: "On The Way" },
     { label: "Delivered" },
@@ -17,7 +17,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/order/user`);
+        const response = await axios.get(`/api/order/`);
         setOrders(response.data);
         // setOrder(response.data);
         return response.data;
@@ -87,6 +87,12 @@ const Orders = () => {
             return (
               <div key={i} className='border-y mt-4'>
                 <div className='flex flex-col gap-4 bg-white'>
+                  <h3 className='flex flex-col mt-4 normal-case'>
+                    <span className='w-full'>User Id: {order.user._id}</span>
+                    <span className='w-full'>
+                      Username: {order.user.username}
+                    </span>
+                  </h3>
                   <div className='sm:flex-row flex flex-col items-start justify-start h-full gap-6 px-4 py-4 shadow-sm'>
                     <div className='shrink-0 sm:w-auto flex items-center justify-between w-full h-full my-auto rounded-sm'>
                       <img
@@ -111,36 +117,14 @@ const Orders = () => {
                             <span className='font-bold'>Order Status:</span>{" "}
                             {order.orderStatus}
                           </h3>
-                          <h3 className='normal-case'>
-                            <span className='font-bold'>Payment Status:</span>{" "}
-                            {order.paymentDetails.paymentStatus}
-                          </h3>
                         </div>
                         <div className='flex gap-4 mt-auto min-w-[10rem]'>
-                          <button
-                            type='button'
-                            disabled={
-                              order.orderStatus === "Cancelled" ||
-                              order.orderStatus === "Delivered" ||
-                              order.orderStatus === "Shipped"
-                            }
-                            onClick={() => handleCancelledOrder(order._id)}
-                            className='hover:bg-opacity-100 ml-auto hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full max-w-[8rem] px-5 py-2 text-white transition-all translate-y-0 bg-red-800 border'
-                          >
-                            Cancel
-                          </button>
                           <Link
-                            to={`/profile/orders/${order._id}`}
+                            to={`/admin/allorders/${order._id}`}
                             className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full px-5 py-2 text-white transition-all translate-y-0 bg-black border'
                           >
                             Details
                           </Link>
-                          {/* <button
-                            type='button'
-                            className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full px-5 py-2 text-white transition-all translate-y-0 bg-black border'
-                          >
-                            Rating
-                          </button> */}
                         </div>
                       </div>
                     </div>
@@ -164,7 +148,7 @@ const Orders = () => {
                     </div>
                     <div className='sm:flex flex-col items-end justify-between hidden gap-6'>
                       <div className='flex items-center gap-2'>
-                        <svg
+                        {/* <svg
                           xmlns='http://www.w3.org/2000/svg'
                           viewBox='0 0 24 24'
                           fill='currentColor'
@@ -175,31 +159,19 @@ const Orders = () => {
                             d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z'
                             clipRule='evenodd'
                           />
-                        </svg>
+                        </svg> */}
                         <h3 className='normal-case'>
                           <span className='font-bold'>Order Status:</span>{" "}
                           {order.orderStatus}
                         </h3>
                         <h3 className='normal-case'>
-                          <span className='font-bold'>PaymentStatus:</span>{" "}
+                          <span className='font-bold'>Payment Status:</span>{" "}
                           {order.paymentDetails.paymentStatus}
                         </h3>
                       </div>
                       <div className='flex gap-4 mt-auto min-w-[10rem]'>
-                        <button
-                          type='button'
-                          disabled={
-                            order.orderStatus === "Cancelled" ||
-                            order.orderStatus === "Delivered" ||
-                            order.orderStatus === "Shipped"
-                          }
-                          onClick={() => handleCancelledOrder(order._id)}
-                          className='hover:bg-opacity-100 ml-auto hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full max-w-[8rem] px-5 py-2 text-white transition-all translate-y-0 bg-red-800 border'
-                        >
-                          Cancel
-                        </button>
                         <Link
-                          to={`/profile/orders/${order._id}`}
+                          to={`/admin/allorders/${order._id}`}
                           className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full px-5 py-2 text-white transition-all translate-y-0 bg-black border'
                         >
                           Details
@@ -329,4 +301,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default AdminAllOrder;

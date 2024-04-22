@@ -14,7 +14,6 @@ import axios from "axios";
 const ProductInCart = (props) => {
   const dispatch = useDispatch();
   const { size, color } = props;
-  console.log(props);
   // /api/cart/update/productId
   // colorSelected
   // sizeSelected

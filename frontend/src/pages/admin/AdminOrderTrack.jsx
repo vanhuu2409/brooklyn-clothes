@@ -2,7 +2,8 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 
-const OrderTrack = ({ activeStep }) => {
+const AdminOrderTrack = ({ activeStep }) => {
+  console.log(activeStep);
   const steps =
     activeStep === "Cancelled"
       ? ["Cancelled"]
@@ -31,4 +32,4 @@ const OrderTrack = ({ activeStep }) => {
   );
 };
 
-export default OrderTrack;
+export default AdminOrderTrack;

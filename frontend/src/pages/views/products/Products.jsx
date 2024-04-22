@@ -13,6 +13,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchProductStart,
+  fetchProductSuccess,
   fetchProducts,
   updateProducts,
 } from "../../../redux/product/productSlice.jsx";
@@ -103,18 +105,22 @@ const Products = () => {
   const totalPages = useSelector((state) => state.product.products.totalPages);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const searchParams = new URLSearchParams(location.search);
+  console.log(searchParams.get("search"));
+
+  console.log(location.search);
 
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.product);
+  const isLoading = useSelector((state) => state.product.loading);
   const error = useSelector((state) => state.product.error);
   useEffect(() => {
-    if (isLoading.isLoading) {
-      if (!searchParams) {
-        dispatch(fetchProducts(""));
-      } else dispatch(fetchProducts(searchParams));
+    try {
+      dispatch(fetchProducts(searchParams.toString()));
+    } catch (error) {
+      throw new Error(error.message);
     }
+
     // Clear filters when component mounts
-  }, [isLoading.isLoading, searchParams, dispatch]);
+  }, [location.search]);
 
   const handleFilter = (value, section) => {
     if (searchParams.toString().includes("sort")) {

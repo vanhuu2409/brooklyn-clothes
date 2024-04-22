@@ -19,6 +19,8 @@ import Checkout from "../pages/views/checkout/Checkout";
 import SignUp from "../pages/views/signup/SignUp";
 import Orders from "../pages/views/orders/Orders";
 import OrderDetail from "../pages/views/orders/OrderDetail";
+import AdminAllOrder from "../pages/admin/AdminAllOrder.jsx";
+import AdminOrderDetail from "../pages/admin/AdminOrderDetail.jsx";
 
 const AppRouter = () => {
   return (
@@ -55,6 +57,8 @@ const AppRouter = () => {
           <Route path='/admin/' element={<AdminLayout />}>
             <Route path='/admin/dashboard' element={<Dashboard />} />
             <Route path='/admin/allproducts' element={<AdminAllProducts />} />
+            <Route path='/admin/allorders' element={<AdminAllOrder />} />
+            <Route path='/admin/allorders/:id' element={<AdminOrderDetail />} />
           </Route>
         </Route>
       </Routes>

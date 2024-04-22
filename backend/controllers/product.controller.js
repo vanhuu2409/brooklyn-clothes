@@ -15,6 +15,7 @@ export const getProducts = async (req, res, next) => {
   try {
     // let products = await Product.find({});
     let {
+      search,
       category,
       collections,
       color,
@@ -31,6 +32,10 @@ export const getProducts = async (req, res, next) => {
     console.log(pageNumber);
 
     let query = {};
+    console.log(search);
+    if (search) {
+      query["name"] = { $regex: `${search}`, $options: "i" };
+    }
 
     if (category) {
       const cate = category
@@ -81,7 +86,7 @@ export const getProducts = async (req, res, next) => {
     }
 
     if (available) {
-      query.available = available > 0 ? true : false;
+      query.available = available ? true : false;
     }
 
     let sortQuery = {};

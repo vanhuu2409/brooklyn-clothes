@@ -41,7 +41,10 @@ export const findOrder = async (req, res, next) => {
 // place order
 export const placeOrder = async (req, res, next) => {
   try {
-    const order = await findOrderById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("user")
+      .populate({ path: "orderItem", populate: { path: "product" } })
+      .populate("shippingAddress");
     order.orderStatus = "Placed";
     order.paymentDetails.status = "Completed";
     await order.save();
@@ -54,7 +57,10 @@ export const placeOrder = async (req, res, next) => {
 // comfirmedOrder
 export const comfirmedOrders = async (req, res, next) => {
   try {
-    const order = await findOrderById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("user")
+      .populate({ path: "orderItem", populate: { path: "product" } })
+      .populate("shippingAddress");
     order.orderStatus = "Confirmed";
     await order.save();
     res.status(200).json(order);
@@ -67,7 +73,10 @@ export const comfirmedOrders = async (req, res, next) => {
 // shipOrder
 export const shippedOrders = async (req, res, next) => {
   try {
-    const order = await findOrderById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("user")
+      .populate({ path: "orderItem", populate: { path: "product" } })
+      .populate("shippingAddress");
     order.orderStatus = "Shipped";
     await order.save();
     res.status(200).json(order);
@@ -80,8 +89,13 @@ export const shippedOrders = async (req, res, next) => {
 // deliveryOrder
 export const deliveryOrders = async (req, res, next) => {
   try {
-    const order = await findOrderById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("user")
+      .populate({ path: "orderItem", populate: { path: "product" } })
+      .populate("shippingAddress");
     order.orderStatus = "Delivered";
+    order.paymentDetails.paymentStatus = "Paided";
+    await order.save();
     res.status(200).json(order);
   } catch (error) {
     // throw new Error(error.message);
@@ -92,7 +106,10 @@ export const deliveryOrders = async (req, res, next) => {
 // cancelOrder
 export const cancelOrders = async (req, res, next) => {
   try {
-    const order = await findOrderById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("user")
+      .populate({ path: "orderItem", populate: { path: "product" } })
+      .populate("shippingAddress");
     order.orderStatus = "Cancelled";
     await order.save();
     res.status(200).json(order);

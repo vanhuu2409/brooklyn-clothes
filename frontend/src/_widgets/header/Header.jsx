@@ -1,5 +1,5 @@
 import { Logo } from "../Logo";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   formatPrice,
@@ -10,12 +10,15 @@ import {
 } from "../../services/custom";
 import Marquee from "react-fast-marquee";
 import NavbarCollectionItem from "../NavbarCollectionItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ProductInCart from "../../pages/views/cart/ProductInCart";
 import axios from "axios";
+import { fetchCartItem } from "../../redux/cart/cartSlice.jsx";
 const Header = () => {
+  const [searchValue, setSearchValue] = useState("");
   // user handle
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   // mobile state
   const [toggleMobileNav, setToggleMobileNav] = useState(false);
@@ -37,9 +40,9 @@ const Header = () => {
     const fetchCart = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/cart`);
-        setCartData(response.data.cartItem);
-        return response.data;
+        dispatch(fetchCartItem()).then((response) => {
+          setCartData(response.payload.cartItem);
+        });
       } catch (error) {
         throw new Error(error.message);
       }
@@ -633,16 +636,22 @@ const Header = () => {
               {/* top */}
               <div className='flex-1 mb-8'>
                 {/* search form */}
-                <form>
+                <div>
                   <div className='relative mt-2 shadow-sm'>
                     <input
                       type='text'
+                      onChange={(e) => {
+                        setSearchValue(e.target.value);
+                      }}
                       name='search'
                       className='ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black-4 sm:text-sm sm:leading-6 text-black-1 block w-full px-5 py-4 pr-20 mt-4 transition-all bg-white border border-black outline-none'
                       placeholder='Search something...'
                     />
                   </div>
-                  <button className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'>
+                  <Link
+                    to={`/products?search=${searchValue}`}
+                    className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
+                  >
                     <span className='text-sm font-bold tracking-tight'>
                       Search
                     </span>
@@ -660,8 +669,8 @@ const Header = () => {
                         d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
                       />
                     </svg>
-                  </button>
-                </form>
+                  </Link>
+                </div>
                 <div className='mt-6'>
                   <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
                     Categories

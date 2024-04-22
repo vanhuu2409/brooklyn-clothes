@@ -6,10 +6,9 @@ import AddressCard from "./AddressCard";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const OrderSummary = () => {
+const Purchase = () => {
   const [orderData, setOrderData] = useState([]);
   const [addressData, setAddressData] = useState({});
-  console.log(addressData);
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -49,14 +48,13 @@ const OrderSummary = () => {
       // Otherwise, fetch products with the provided productId
       const response = await axios.delete(`/api/order/${orderId}/deleteOrders`);
       if (response.status === 200) {
-        navigate("/cart");
+        navigate("/profile/orders");
       }
       return response.data;
     } catch (error) {
       throw new Error(error.message);
     }
   };
-
   // bag/cart flow
   const bagsTotal = orderData.reduce((acc, item) => {
     return acc + item.price;
@@ -100,7 +98,7 @@ const OrderSummary = () => {
           </div>
           <div className='lg:col-span-1 h-max sticky top-0 p-8 rounded-md'>
             <h2 className='text-2xl font-extrabold text-[#333]'>
-              Complete your order
+              Payable immediately after the receipt of the goods
             </h2>
             <div className='mt-4'>
               <div className='border-spacing-2 pb-2 border-b-2'>
@@ -108,14 +106,14 @@ const OrderSummary = () => {
               </div>
               <div className='flex gap-4 mt-4'>
                 <Link
-                  to={`/checkout?step=4&orderId=${orderId}`}
+                  to={"/profile/orders"}
                   className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
                 >
                   Complete Purchase
                 </Link>
                 <button
-                  type='button'
-                  onClick={() => handleCancelledOrder()}
+                  // type='button'
+                  onClick={handleCancelledOrder}
                   className='hover:bg-opacity-100 max-w-[40%] bg-opacity-60 disabled:opacity-50 text-black-2 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 transition-all translate-y-0 bg-[#ddd] border'
                 >
                   Cancel
@@ -129,4 +127,4 @@ const OrderSummary = () => {
   );
 };
 
-export default OrderSummary;
+export default Purchase;

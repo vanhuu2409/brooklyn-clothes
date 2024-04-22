@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema(
       paymentId: { type: String },
       paymentStatus: { type: String, default: "Pending" },
     },
-    orderStatus: { type: String, default: "Pending" },
+    orderStatus: { type: String, default: "Placed" },
     total: { type: Number, required: true },
     quantity: { type: Number, required: true },
   },

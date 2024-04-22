@@ -1,42 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formatPrice } from "../../../services/custom";
-import AddressCard from "./AddressCard";
 import AddressInput from "./AddressInput";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "@mui/material";
+import { fetchCartItem } from "../../../redux/cart/cartSlice.jsx";
 
 const DeliveryAddress = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cartItems);
+  const [addressData, setAddressData] = useState([]);
 
-  const [cartData, setCartData] = useState([]);
   useEffect(() => {
-    const fetchCart = async () => {
+    const fetchAddress = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/cart`);
-        setCartData(response.data.cartItem);
+        const response = await axios.get(`/api/order/userAddress`);
+        setAddressData(response.data);
         return response.data;
       } catch (error) {
         throw new Error(error.message);
       }
     };
-    fetchCart();
+    fetchAddress();
   }, []);
+
   // bag/cart flow
-  const bagsTotal = cartData.reduce((acc, item) => {
+  const bagsTotal = cart.cartItem.reduce((acc, item) => {
     return acc + item.price;
   }, 0);
   const bagsTotalFormat = formatPrice(bagsTotal);
 
-  const handleSubmit = async (e) => {
+  const userAddress = {};
+  const handleOnChange = (e) => {
+    userAddress[e.target.name] = e.target.value;
+  };
+  const handleOnBlur = (e) => {
+    if (!e.target.value) alert("Please complete " + e.target.name + " field!");
+  };
+
+  const handleSubmit = debounce(async (e) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const userAddress = {};
-    for (const pair of data.entries()) {
-      userAddress[pair[0]] = pair[1];
-    }
-    console.log({ userAddress });
+    // const data = new FormData(e.currentTarget);
+    // console.log(data);
+    // const userAddress = {};
+    // for (const pair of data.entries()) {
+    //   userAddress[pair[0]] = pair[1];
+    // }
 
     try {
       const res = await axios.post("/api/order/create", userAddress);
@@ -47,7 +59,7 @@ const DeliveryAddress = () => {
     } catch (error) {
       throw new Error(error.message);
     }
-  };
+  }, 300);
 
   return (
     <div className='h-screen'>
@@ -70,7 +82,7 @@ const DeliveryAddress = () => {
                   </div>
                 </div>
                 <div className='mt-8 space-y-6'>
-                  {cartData.map((item, i) => {
+                  {addressData.map((item, i) => {
                     return (
                       <div
                         key={i}
@@ -96,7 +108,12 @@ const DeliveryAddress = () => {
             <h2 className='text-2xl font-bold text-[#333]'>
               Complete your order
             </h2>
-            <form onSubmit={handleSubmit} className='mt-10'>
+            <div
+              name='address'
+              id='address'
+              onSubmit={handleSubmit}
+              className='mt-10'
+            >
               <div>
                 <h3 className='text-lg font-bold text-[#333] mb-6'>
                   Personal Details
@@ -106,7 +123,9 @@ const DeliveryAddress = () => {
                     <input
                       type='text'
                       name='fullName'
+                      onChange={(e) => handleOnChange(e)}
                       placeholder='First & Last Name'
+                      onBlur={handleOnBlur}
                       className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                     />
                     <svg
@@ -132,7 +151,9 @@ const DeliveryAddress = () => {
                     <input
                       type='number'
                       name='mobile'
+                      onChange={(e) => handleOnChange(e)}
                       placeholder='Phone Number'
+                      onBlur={handleOnBlur}
                       className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                     />
                     <svg
@@ -155,25 +176,33 @@ const DeliveryAddress = () => {
                 <div className='sm:grid-cols-2 grid gap-6'>
                   <input
                     type='text'
+                    onChange={(e) => handleOnChange(e)}
                     name='street'
+                    onBlur={handleOnBlur}
                     placeholder='Specific Address'
                     className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                   />
                   <input
                     type='text'
+                    onChange={(e) => handleOnChange(e)}
                     name='ward'
+                    onBlur={handleOnBlur}
                     placeholder='Ward/Commune'
                     className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                   />
                   <input
                     type='text'
+                    onChange={(e) => handleOnChange(e)}
                     name='district'
+                    onBlur={handleOnBlur}
                     placeholder='District'
                     className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                   />
                   <input
                     type='text'
+                    onChange={(e) => handleOnChange(e)}
                     name='city'
+                    onBlur={handleOnBlur}
                     placeholder='Province/City'
                     className='focus:outline-none focus:bg-white focus:ring-0 focus:border-gray-500 block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 appearance-none'
                   />
@@ -186,14 +215,15 @@ const DeliveryAddress = () => {
                     Cancel
                   </button>
                   <button
-                    type='submit'
+                    onClick={handleSubmit}
+                    type='button'
                     className='hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 disabled:opacity-50 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
                   >
                     Complete Purchase
                   </button>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

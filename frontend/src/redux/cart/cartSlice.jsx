@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   cart: [],
@@ -14,7 +15,6 @@ export const fetchCartItem = createAsyncThunk(
     try {
       // Otherwise, fetch products with the provided productId
       const response = await axios.get(`/api/cart`);
-      console.log(response);
       return response.data;
     } catch (error) {
       throw new Error(error.message);

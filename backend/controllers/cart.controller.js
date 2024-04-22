@@ -17,7 +17,6 @@ export const createCart = async (user, res) => {
 export const findUserCart = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ user: req.user.id });
-    console.log({ cart, CartItem });
     const cartItem = await CartItem.find({ cart: cart._id }).populate(
       "product"
     );

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
-import AddressCard from "../checkout/AddressCard";
-import { formatPrice } from "../../../services/custom";
-import OrderTrack from "./OrderTrack";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "@mui/material";
+import OrderTrack from "../views/orders/OrderTrack.jsx";
+import { formatPrice } from "../../services/custom.jsx";
+import AddressCard from "../views/checkout/AddressCard.jsx";
+import AdminOrderTrack from "./AdminOrderTrack.jsx";
 
-const OrderDetail = () => {
+const AdminOrderDetail = () => {
   const [orders, setOrders] = useState([]);
   console.log(orders);
+
+  const statusTrack = [
+    "Placed",
+    "Confirmed",
+    "Shipped",
+    "Delivered",
+    "Cancelled",
+  ];
 
   const status = orders.orderStatus;
 
@@ -19,9 +28,7 @@ const OrderDetail = () => {
   // "Delivered",
 
   const activeStep =
-    status === "Cancelled"
-      ? "Cancelled"
-      : status === "Placed"
+    status === "Placed"
       ? 0
       : status === "Confirmed"
       ? 1
@@ -29,7 +36,9 @@ const OrderDetail = () => {
       ? 2
       : status === "Delivered"
       ? 3
-      : "";
+      : "Cancelled";
+
+  console.log(activeStep);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -47,13 +56,17 @@ const OrderDetail = () => {
     fetchOrders();
   }, []);
 
-  const handleCancelledOrder = debounce(async () => {
-    if (confirm("Are you sure you want to cancel this order?")) {
+  const handleOrderStatus = debounce(async (item) => {
+    console.log(item);
+    if (confirm(`Are you sure you want to ${item} this order?`)) {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(`/api/order/${params.id}/cancelled`);
+        const response = await axios.put(
+          `/api/order/${params.id}/${item.toLowerCase()}`
+        );
         if (response.status === 200) {
-          navigate("/orders");
+          // navigate("/orders");
+          window.location.reload();
         }
         return response.data;
       } catch (error) {
@@ -64,6 +77,15 @@ const OrderDetail = () => {
   return (
     <div className='sm:px-6 py-10 lg:max-w-[90%] min-h-screen lg:px-8 max-w-2xl px-4 mx-auto'>
       <div className='lg:col-span-1 h-max sticky top-0 p-8 rounded-md'>
+        <h3 className='text-2xl font-extrabold text-[#333] flex flex-col mb-2'>
+          User Details
+          <span className='w-full font-semibold normal-case'>
+            User Id: {orders?.user?._id}
+          </span>
+          <span className='w-full font-semibold normal-case'>
+            Username: {orders?.user?.username}
+          </span>
+        </h3>
         <h2 className='text-2xl font-extrabold text-[#333]'>
           Delivery Address
         </h2>
@@ -74,20 +96,23 @@ const OrderDetail = () => {
             )}
           </div>
           <div className='flex flex-wrap items-center w-full gap-4 py-8 border-b-2'>
-            <OrderTrack activeStep={activeStep} />
+            <AdminOrderTrack activeStep={activeStep} />
             <div className='flex w-full mt-4'>
-              <button
-                type='button'
-                disabled={
-                  orders.orderStatus === "Cancelled" ||
-                  orders.orderStatus === "Delivered" ||
-                  orders.orderStatus === "Shipped"
-                }
-                onClick={handleCancelledOrder}
-                className='hover:bg-opacity-100 ml-auto hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full max-w-[8rem] px-5 py-2 text-white transition-all translate-y-0 bg-red-800 border'
-              >
-                Cancel
-              </button>
+              {statusTrack.map((item, i) => {
+                return (
+                  <button
+                    key={i}
+                    type='button'
+                    disabled={orders.orderStatus === item}
+                    onClick={() => handleOrderStatus(item)}
+                    className={`hover:bg-opacity-100 ml-auto hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full max-w-[8rem] px-5 py-2 text-white transition-all translate-y-0 ${
+                      item === "Cancelled" ? "bg-red-800" : "bg-cyan-800"
+                    } border`}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </div>
           </div>
           <div className='mt-4'>
@@ -195,4 +220,4 @@ const OrderDetail = () => {
   );
 };
 
-export default OrderDetail;
+export default AdminOrderDetail;

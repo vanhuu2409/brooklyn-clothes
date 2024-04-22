@@ -60,7 +60,7 @@ export const usersOrderHistory = async (req, res, next) => {
   try {
     const orders = await Order.find({
       user: req.user.id,
-      orderStatus: "Placed",
+      // orderStatus: "Placed",
     })
       // .populate("address")
       .populate({
@@ -69,6 +69,22 @@ export const usersOrderHistory = async (req, res, next) => {
       })
       .lean();
     res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// userAddress
+export const userAddress = async (req, res, next) => {
+  try {
+    const addresses = await Address.find({
+      user: req.user.id,
+    })
+      // .populate({
+      //   path: "user",
+      // })
+      .lean();
+    res.status(200).json(addresses);
   } catch (error) {
     next(error);
   }
