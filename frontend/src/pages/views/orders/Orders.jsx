@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { formatPrice } from "../../../services/custom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import http from "../../../services/api.jsx";
 
 const Orders = () => {
   const orderFilterOption = [
@@ -17,7 +18,9 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/order/user`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/user`
+        );
         setOrders(response.data);
         // setOrder(response.data);
         return response.data;
@@ -34,7 +37,9 @@ const Orders = () => {
     if (confirm("Are you sure you want to cancel this order?"))
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(`/api/order/${orderId}/cancelled`);
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/order/${orderId}/cancelled`
+        );
         console.log(response);
         if (response.status === 200) {
           window.location.reload();

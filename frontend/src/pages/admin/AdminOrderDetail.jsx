@@ -6,6 +6,7 @@ import OrderTrack from "../views/orders/OrderTrack.jsx";
 import { formatPrice } from "../../services/custom.jsx";
 import AddressCard from "../views/checkout/AddressCard.jsx";
 import AdminOrderTrack from "./AdminOrderTrack.jsx";
+import http from "../../services/api.jsx";
 
 const AdminOrderDetail = () => {
   const [orders, setOrders] = useState([]);
@@ -46,7 +47,9 @@ const AdminOrderDetail = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`/api/order/${params.id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/${params.id}`
+        );
         setOrders(response.data);
         // Otherwise, fetch products with the provided productId
       } catch (error) {
@@ -62,7 +65,9 @@ const AdminOrderDetail = () => {
       try {
         // Otherwise, fetch products with the provided productId
         const response = await axios.put(
-          `/api/order/${params.id}/${item.toLowerCase()}`
+          `${import.meta.env.VITE_API_URL}/api/order/${
+            params.id
+          }/${item.toLowerCase()}`
         );
         if (response.status === 200) {
           // navigate("/orders");

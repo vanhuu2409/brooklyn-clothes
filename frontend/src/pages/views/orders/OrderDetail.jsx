@@ -5,6 +5,7 @@ import OrderTrack from "./OrderTrack";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "@mui/material";
+import http from "../../../services/api.jsx";
 
 const OrderDetail = () => {
   const [orders, setOrders] = useState([]);
@@ -37,7 +38,9 @@ const OrderDetail = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`/api/order/${params.id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/${params.id}`
+        );
         setOrders(response.data);
         // Otherwise, fetch products with the provided productId
       } catch (error) {
@@ -51,7 +54,9 @@ const OrderDetail = () => {
     if (confirm("Are you sure you want to cancel this order?")) {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(`/api/order/${params.id}/cancelled`);
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/order/${params.id}/cancelled`
+        );
         if (response.status === 200) {
           navigate("/orders");
         }

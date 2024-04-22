@@ -17,7 +17,9 @@ const AdminAllOrder = () => {
     const fetchOrders = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/order/`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/`
+        );
         setOrders(response.data);
         // setOrder(response.data);
         return response.data;
@@ -34,7 +36,9 @@ const AdminAllOrder = () => {
     if (confirm("Are you sure you want to cancel this order?"))
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(`/api/order/${orderId}/cancelled`);
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/order/${orderId}/cancelled`
+        );
         console.log(response);
         if (response.status === 200) {
           window.location.reload();

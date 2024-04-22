@@ -1,5 +1,13 @@
 import axios from "axios";
-const response = await axios.get("/api/product/getall/");
+
+const http = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const response = await http.get("/api/product/getall/");
 const fetchData = response.data.products;
 
 export const handleUserApiPost = async (url, data) => {
@@ -8,9 +16,13 @@ export const handleUserApiPost = async (url, data) => {
   return resData;
 };
 export const handleProductApiGetById = async (id) => {
-  const res = await axios.get(`/api/product/getall/${id}`);
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_URL}/api/product/getall/${id}`
+  );
   const resData = await res.data;
   return resData;
 };
 
 export { fetchData };
+
+export default http;

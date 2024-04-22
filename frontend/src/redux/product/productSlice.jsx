@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import http from "../../services/api.jsx";
 
 // Define the initial state
 const initialState = {
@@ -16,11 +17,15 @@ export const fetchProducts = createAsyncThunk(
     try {
       // If the query is empty, fetch all products
       if (!query) {
-        const response = await axios.get("/api/product/getall");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/product/getall`
+        );
         return response.data;
       }
       // Otherwise, fetch products with the provided query
-      const response = await axios.get(`/api/product/getall?${query}`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/product/getall?${query}`
+      );
       return response.data;
     } catch (error) {
       throw new Error(error.message);

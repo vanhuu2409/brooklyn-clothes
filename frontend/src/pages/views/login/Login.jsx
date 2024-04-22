@@ -36,7 +36,10 @@ const Login = () => {
       // });
       // const data = await res.json();
       // console.log({ data });
-      const data = await handleUserApiPost("/api/auth/login", userDetail);
+      const data = await handleUserApiPost(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        userDetail
+      );
       if (data.success === false) {
         dispatch(loginFailure(data.message)) & toast.error(data.message);
         return;

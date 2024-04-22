@@ -5,6 +5,7 @@ import OrderCard from "./OrderCard";
 import AddressCard from "./AddressCard";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import http from "../../../services/api.jsx";
 
 const Purchase = () => {
   const [orderData, setOrderData] = useState([]);
@@ -32,7 +33,9 @@ const Purchase = () => {
     const fetchOrder = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/order/${orderId}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/${orderId}`
+        );
         setAddressData(response.data.shippingAddress);
         setOrderData(response.data.orderItem);
         return response.data;
@@ -46,7 +49,9 @@ const Purchase = () => {
   const handleCancelledOrder = async () => {
     try {
       // Otherwise, fetch products with the provided productId
-      const response = await axios.delete(`/api/order/${orderId}/deleteOrders`);
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/order/${orderId}/deleteOrders`
+      );
       if (response.status === 200) {
         navigate("/profile/orders");
       }

@@ -16,6 +16,7 @@ import {
   fetchProductStart,
   fetchProductSuccess,
 } from "../../../redux/product/productSlice.jsx";
+import http from "../../../services/api.jsx";
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -37,7 +38,10 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         dispatch(fetchProductStart());
-        const response = await axios.get(`/api/product/getall/${params._id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/product/getall/${params._id}`
+        );
+        console.log(response);
         dispatch(fetchProductSuccess(response.data));
         // if (response.status === 200) {
         setSelectSize(response.data.sizes[0]);
@@ -50,7 +54,7 @@ const ProductDetail = () => {
       }
     };
     fetchProduct();
-  }, [params]);
+  }, []);
 
   const handleOnAddToBag = debounce(async () => {
     try {
@@ -59,7 +63,10 @@ const ProductDetail = () => {
         sizeSelected: selectSize,
         colorSelected: selectColor,
       };
-      const response = await axios.put(`/api/cart/add`, productData);
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/cart/add`,
+        productData
+      );
       window.location.reload();
     } catch (error) {
       throw new Error(error.message);

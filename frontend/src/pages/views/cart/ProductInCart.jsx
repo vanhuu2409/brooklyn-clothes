@@ -11,6 +11,7 @@ import {
 import { debounce, formatPrice } from "../../../services/custom";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import http from "../../../services/api.jsx";
 const ProductInCart = (props) => {
   const dispatch = useDispatch();
   const { size, color } = props;
@@ -26,7 +27,9 @@ const ProductInCart = (props) => {
       try {
         // Otherwise, fetch products with the provided productId
         const response = await axios.put(
-          `/api/cart/update/${props?.product?._id}`,
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${
+            props?.product?._id
+          }`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
@@ -47,7 +50,9 @@ const ProductInCart = (props) => {
         // Otherwise, fetch products with the provided productId
         console.log(colorSelected, sizeSelected);
         const response = await axios.put(
-          `/api/cart/update/${props?.product?._id}`,
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${
+            props?.product?._id
+          }`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
@@ -65,7 +70,9 @@ const ProductInCart = (props) => {
       try {
         // Otherwise, fetch products with the provided productId
         const response = await axios.put(
-          `/api/cart/update/${props?.product?._id}`,
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${
+            props?.product?._id
+          }`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
@@ -83,7 +90,9 @@ const ProductInCart = (props) => {
     try {
       // Otherwise, fetch products with the provided productId
       const response = await axios.delete(
-        `/api/cart/delete/${props?.product?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/cart/delete/${
+          props?.product?._id
+        }`,
         {
           data: { colorSelected: props?.color, sizeSelected: props?.size },
         }

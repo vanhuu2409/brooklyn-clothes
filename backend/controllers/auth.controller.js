@@ -11,12 +11,11 @@ export const signup = async (req, res, next) => {
     // hashed password
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new User({
-      role,
+      role: email === "huuvanhoang5588@gmail.com" ? "Admin" : role,
       username,
       email,
       password: hashedPassword,
     });
-    console.log({ newUser });
     await newUser.save();
     await createCart(newUser, res);
     res.status(201).json({ newUser, message: "User created successfully!" });
@@ -29,7 +28,6 @@ export const login = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     const validUser = await User.findOne({ email });
-    console.log(validUser._id);
     if (!validUser) {
       return next(errorHandler(404, "User not found!"));
     }
@@ -38,6 +36,7 @@ export const login = async (req, res, next) => {
       return next(errorHandler(401, "Wrong credentials!"));
     }
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    console.log(token);
     const { password: pass, ...rest } = validUser._doc;
     res
       .cookie("access_token", token, { httpOnly: true })

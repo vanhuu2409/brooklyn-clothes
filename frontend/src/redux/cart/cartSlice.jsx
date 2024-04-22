@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import http from "../../services/api.jsx";
+import { useSelector } from "react-redux";
 
 const initialState = {
   cart: [],
@@ -14,7 +16,10 @@ export const fetchCartItem = createAsyncThunk(
   async () => {
     try {
       // Otherwise, fetch products with the provided productId
-      const response = await axios.get(`/api/cart`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/cart`,
+        { user: useSelector((state) => state.user.currentUser) }
+      );
       return response.data;
     } catch (error) {
       throw new Error(error.message);

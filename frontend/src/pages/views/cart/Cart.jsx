@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import ProductInCart from "./ProductInCart";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import http from "../../../services/api.jsx";
 
 const Cart = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [cartData, setCartData] = useState([]);
-  // const cartData = useSelector((state) => state.cart.cart);
   // bag/cart flow
   const bagsTotal = cartData.reduce((acc, item) => {
     return acc + item.price;
@@ -15,16 +16,20 @@ const Cart = () => {
   const bagsTotalFormat = formatPrice(bagsTotal);
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/cart`);
-        setCartData(response.data.cartItem);
-        return response.data;
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    };
+    if (currentUser) {
+      const fetchCart = async () => {
+        try {
+          // Otherwise, fetch products with the provided productId
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/cart`
+          );
+          setCartData(response.data.cartItem);
+          return response.data;
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      };
+    }
     fetchCart();
   }, []);
 

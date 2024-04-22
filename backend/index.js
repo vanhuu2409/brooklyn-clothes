@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 const port = process.env.PORT;
-console.log(process.env.PORT);
+// console.error(process.env.PORT);
 // express server
 import express from "express";
 const { json, static: statics } = express;
@@ -42,6 +42,7 @@ connect(process.env.MONGODB)
   .catch((err) => console.log(err));
 
 // API Route Creation
+app.use("/", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "@mui/material";
 import { fetchCartItem } from "../../../redux/cart/cartSlice.jsx";
+import http from "../../../services/api.jsx";
 
 const DeliveryAddress = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const DeliveryAddress = () => {
     const fetchAddress = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(`/api/order/userAddress`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/order/userAddress`
+        );
         setAddressData(response.data);
         return response.data;
       } catch (error) {

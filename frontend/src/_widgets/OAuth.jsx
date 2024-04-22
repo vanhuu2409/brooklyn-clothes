@@ -25,11 +25,14 @@ const OAuth = () => {
       //   }),
       // });
       // const data = await res.json();
-      const data = await handleUserApiPost("/api/auth/google", {
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL,
-      });
+      const data = await handleUserApiPost(
+        `${import.meta.env.VITE_API_URL}/api/auth/google`,
+        {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        }
+      );
       dispatch(loginSuccess(data)) & toast.success("Login Success");
       navigate("/");
     } catch (error) {

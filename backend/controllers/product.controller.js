@@ -29,10 +29,8 @@ export const getProducts = async (req, res, next) => {
 
     pageSize = parseInt(pageSize) || 12;
     pageNumber = parseInt(pageNumber) || 1;
-    console.log(pageNumber);
 
     let query = {};
-    console.log(search);
     if (search) {
       query["name"] = { $regex: `${search}`, $options: "i" };
     }

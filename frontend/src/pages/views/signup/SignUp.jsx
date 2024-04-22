@@ -43,7 +43,10 @@ const SignUp = () => {
       //   body: JSON.stringify(userDetail),
       // });
       // const data = await res.json();
-      const data = await handleUserApiPost("/api/auth/signup", userDetail);
+      const data = await handleUserApiPost(
+        `${import.meta.env.VITE_API_URL}/api/auth/signup`,
+        userDetail
+      );
       if (data.success === false) {
         setLoading(false) & toast.error("Cannot sign up!");
         return;

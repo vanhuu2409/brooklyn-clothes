@@ -3,9 +3,12 @@ import { toast } from "react-toastify";
 const AdminProduct = (props) => {
   const handleRemoveProduct = async () => {
     try {
-      const res = await fetch(`/api/product/delete/${props._id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/product/delete/${props._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       (await res.json()) & toast.success("Remove product successfully");
       location.reload();
     } catch (error) {

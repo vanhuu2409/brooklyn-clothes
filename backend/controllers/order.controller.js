@@ -6,7 +6,7 @@ import OrderItem from "../models/orderItem.model.js";
 import User from "../models/user.model.js";
 
 // create order
-export const createOrder = async (req, res) => {
+export const createOrder = async (req, res, next) => {
   const { body: shipAddress } = req;
   try {
     const user = await User.findById(req.user.id);
@@ -49,9 +49,8 @@ export const createOrder = async (req, res) => {
 
     const createdOrder = await createOrder.save();
     res.status(200).json(createdOrder);
-    console.log(createdOrder);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 

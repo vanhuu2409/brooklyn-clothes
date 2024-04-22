@@ -152,16 +152,19 @@ const Dashboard = () => {
       //   );
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/product/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...productDetail,
-          colors: [...formatColorsAndSizes(productDetail.colors, "color")],
-          sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
-          details: [...formatColorsAndSizes(productDetail.details, "detail")],
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/product/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...productDetail,
+            colors: [...formatColorsAndSizes(productDetail.colors, "color")],
+            sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
+            details: [...formatColorsAndSizes(productDetail.details, "detail")],
+          }),
+        }
+      );
       const data =
         (await res.json()) & toast.success("Add product successfully");
       if (data.success === false) {
