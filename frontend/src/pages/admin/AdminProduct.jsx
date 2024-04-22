@@ -25,7 +25,7 @@ const AdminProduct = (props) => {
           className='whitespace-nowrap text-black-2 flex items-center gap-2 px-6 py-4 font-bold'
         >
           <img
-            src={props?.imageUrls[0]}
+            src={props && props?.imageUrls[0]}
             alt={props?.name}
             className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
           />

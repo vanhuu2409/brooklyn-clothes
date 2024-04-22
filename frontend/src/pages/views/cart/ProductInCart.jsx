@@ -110,7 +110,7 @@ const ProductInCart = (props) => {
             title='Product Detail'
           >
             <img
-              src={props?.product?.imageUrls[0]}
+              src={props && props?.product?.imageUrls[0]}
               draggable={false}
               className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
             />
@@ -199,7 +199,7 @@ const ProductInCart = (props) => {
               className='flex flex-col items-center gap-2 px-6 py-4'
             >
               <img
-                src={props?.product?.imageUrls[0]}
+                src={props && props?.product?.imageUrls[0]}
                 alt={props?.product?.name}
                 draggable={false}
                 className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'

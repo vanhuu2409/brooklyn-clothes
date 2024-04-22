@@ -14,7 +14,7 @@ const ProductCard = (props) => {
           to={`/products/${props?.collections}/${props?.category}/${props?.name}/${props?._id}`}
         >
           <img
-            src={props?.imageUrls[0]}
+            src={props && props?.imageUrls[0]}
             alt={props?.name}
             draggable={false}
             className='group-hover:opacity-0 group-hover:h-0 h-[30rem] group-hover:scale-125 size-52 object-cover object-center w-full transition-transform duration-500'

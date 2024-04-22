@@ -25,10 +25,12 @@ const ProductDetail = () => {
   const product = useSelector((state) => state.product.productDetail);
   const cartLength = useSelector((state) => state.cart.cart)?.length;
 
-  const [selectSize, setSelectSize] = useState(product?.sizes[0]);
-  const [selectColor, setSelectColor] = useState(product?.colors[0].name);
+  const [selectSize, setSelectSize] = useState(product && product?.sizes[0]);
+  const [selectColor, setSelectColor] = useState(
+    product && product?.colors[0].name
+  );
   const [selectPreviewImg, setSelectPreviewImg] = useState(
-    product?.imageUrls[0]
+    product && product?.imageUrls[0]
   );
 
   useEffect(() => {
@@ -37,9 +39,11 @@ const ProductDetail = () => {
         dispatch(fetchProductStart());
         const response = await axios.get(`/api/product/getall/${params._id}`);
         dispatch(fetchProductSuccess(response.data));
+        // if (response.status === 200) {
         setSelectSize(response.data.sizes[0]);
         setSelectColor(response.data.colors[0].name);
         setSelectPreviewImg(response.data.imageUrls[0]);
+        // }
       } catch (error) {
         dispatch(fetchProductFailure(error.message));
         throw new Error(error.message);
@@ -140,7 +144,7 @@ const ProductDetail = () => {
                 <div className='max-w-xl overflow-hidden rounded-lg'>
                   <img
                     className='object-cover w-full h-full max-w-full'
-                    src={selectPreviewImg || product?.imageUrls[0]}
+                    src={selectPreviewImg || (product && product?.imageUrls[0])}
                     alt={product?.name}
                     draggable={false}
                   />
@@ -254,7 +258,7 @@ const ProductDetail = () => {
                       id={color?.name + i}
                       onChange={() => setSelectColor(color?.name)}
                       className='peer sr-only'
-                      defaultChecked={color?.name === product.colors[0].name}
+                      defaultChecked={color?.name === product?.colors[0]?.name}
                     />
                     <p className='peer-checked:bg-neutral-300 peer-disabled:bg-red-300 peer-disabled:text-white peer-checked:text-neutral-500 border-neutral-600 px-6 py-2 font-bold border rounded-lg'>
                       {color?.name}
@@ -284,7 +288,7 @@ const ProductDetail = () => {
                       id={size + i}
                       onChange={() => setSelectSize(size)}
                       className='peer sr-only'
-                      defaultChecked={size === product.sizes[0]}
+                      defaultChecked={size === product?.sizes[0]}
                     />
                     <p className='peer-checked:bg-neutral-300 peer-disabled:bg-red-300 peer-disabled:text-white peer-checked:text-neutral-500 border-neutral-600 px-6 py-2 font-bold border rounded-lg'>
                       {size}
@@ -429,7 +433,7 @@ const ProductDetail = () => {
               <div className='flex items-start'>
                 <img
                   className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product?.imageUrls[0]}
+                  src={product && product?.imageUrls[0]}
                   alt=''
                 />
 
@@ -485,7 +489,7 @@ const ProductDetail = () => {
               <div className='flex items-start'>
                 <img
                   className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product?.imageUrls[0]}
+                  src={product && product?.imageUrls[0]}
                   alt=''
                 />
 
@@ -541,7 +545,7 @@ const ProductDetail = () => {
               <div className='flex items-start'>
                 <img
                   className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product?.imageUrls[0]}
+                  src={product && product?.imageUrls[0]}
                   alt=''
                 />
 
@@ -597,7 +601,7 @@ const ProductDetail = () => {
               <div className='flex items-start'>
                 <img
                   className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product?.imageUrls[0]}
+                  src={product && product?.imageUrls[0]}
                   alt=''
                 />
 

@@ -6,7 +6,7 @@ const OrderCard = (props) => {
     <div className='border-spacing-2 flex items-start justify-start gap-6 pb-6 border-b-2'>
       <div className='shrink-0 bg-gray-50 rounded-sm'>
         <img
-          src={props.product.imageUrls[0]}
+          src={props && props?.product?.imageUrls[0]}
           className='object-contain max-w-[8rem] max-h-[8rem] w-full h-full'
         />
       </div>

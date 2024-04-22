@@ -127,7 +127,7 @@ const AdminOrderDetail = () => {
                       >
                         <div className='shrink-0 sm:w-auto flex items-center justify-between w-full h-full my-auto rounded-sm'>
                           <img
-                            src={item.product.imageUrls[0]}
+                            src={item && item?.product?.imageUrls[0]}
                             className='object-contain max-w-[8rem] max-h-[8rem] w-full h-full'
                           />
                           <div className='sm:hidden flex flex-col items-end justify-between gap-6'>

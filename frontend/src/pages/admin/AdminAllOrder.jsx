@@ -96,7 +96,7 @@ const AdminAllOrder = () => {
                   <div className='sm:flex-row flex flex-col items-start justify-start h-full gap-6 px-4 py-4 shadow-sm'>
                     <div className='shrink-0 sm:w-auto flex items-center justify-between w-full h-full my-auto rounded-sm'>
                       <img
-                        src={orderItem[0].product.imageUrls[0]}
+                        src={orderItem && orderItem[0]?.product?.imageUrls[0]}
                         className='object-contain max-w-[8rem] max-h-[8rem] w-full h-full'
                       />
                       <div className='sm:hidden flex flex-col items-end justify-between gap-6'>
