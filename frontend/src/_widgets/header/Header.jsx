@@ -50,7 +50,7 @@ const Header = () => {
     fetchCart();
   }, []);
   // bags count
-  const bagsCount = cartData.length;
+  const bagsCount = cartData?.length || 0;
   const bagsTotal = cartData.reduce((acc, curr) => {
     return acc + curr.price;
   }, 0);
@@ -867,100 +867,104 @@ const Header = () => {
             >
               {/* top */}
               <div className='flex-1 mb-8'>
-                {cartData.length > 0 && (
-                  <div className='flex flex-col w-full border-t'>
-                    {cartData.map((item, i) => (
-                      <ProductInCart key={i} {...item} />
-                    ))}
-                  </div>
-                )}
-                {cartData.length === 0 && (
-                  <>
-                    <div>No item found...</div>
-                    <div className='mt-6'>
-                      <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
-                        Categories
-                      </h3>
-                      <div className='sm:gap-x-4 gap-x-2 gap-y-0 sm:gap-y-2 flex flex-wrap *:font-bold *:text-2xl *:tracking-widest'>
-                        {navbarCollectionsList.map((item) => (
-                          <Link
-                            key={item?.id}
-                            to={item?.href}
-                            className='opacity-60 hover:opacity-100 hover:scale-110 block transition-all duration-300'
-                          >
-                            {item?.title}
-                          </Link>
-                        ))}
-                      </div>
+                {cartData?.length ||
+                  (0 > 0 && (
+                    <div className='flex flex-col w-full border-t'>
+                      {cartData.map((item, i) => (
+                        <ProductInCart key={i} {...item} />
+                      ))}
                     </div>
-                  </>
-                )}
+                  ))}
+                {cartData?.length ||
+                  (0 === 0 && (
+                    <>
+                      <div>No item found...</div>
+                      <div className='mt-6'>
+                        <h3 className='text-black-2 py-2 font-extrabold tracking-tighter'>
+                          Categories
+                        </h3>
+                        <div className='sm:gap-x-4 gap-x-2 gap-y-0 sm:gap-y-2 flex flex-wrap *:font-bold *:text-2xl *:tracking-widest'>
+                          {navbarCollectionsList.map((item) => (
+                            <Link
+                              key={item?.id}
+                              to={item?.href}
+                              className='opacity-60 hover:opacity-100 hover:scale-110 block transition-all duration-300'
+                            >
+                              {item?.title}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ))}
               </div>
             </div>
             {/* checkout btn */}
-            {cartData.length !== 0 && (
-              <>
-                {/* Top Bags Total */}
-                <div className='mt-6 *:flex *:justify-between *:flex-wrap *:mb-4'>
-                  <div>
-                    <p className='text-black-2 flex-1 text-lg font-bold'>
-                      Discount
-                    </p>
-                    <p className='text-black-4 text-base font-bold normal-case'>
-                      Calculated at checkout
-                    </p>
+            {cartData?.length ||
+              (0 !== 0 && (
+                <>
+                  {/* Top Bags Total */}
+                  <div className='mt-6 *:flex *:justify-between *:flex-wrap *:mb-4'>
+                    <div>
+                      <p className='text-black-2 flex-1 text-lg font-bold'>
+                        Discount
+                      </p>
+                      <p className='text-black-4 text-base font-bold normal-case'>
+                        Calculated at checkout
+                      </p>
+                    </div>
+                    <div>
+                      <p className='text-black-2 flex-1 text-lg font-bold'>
+                        Shipping
+                      </p>
+                      <p className='text-black-4 text-base font-bold normal-case'>
+                        Calculated at checkout
+                      </p>
+                    </div>
+                    <div>
+                      <p className='text-black-2 flex-1 text-lg font-bold'>
+                        Total
+                      </p>
+                      <p className='text-black-1 text-base font-bold'>
+                        {bagsTotalFormat}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className='text-black-2 flex-1 text-lg font-bold'>
-                      Shipping
-                    </p>
-                    <p className='text-black-4 text-base font-bold normal-case'>
-                      Calculated at checkout
-                    </p>
-                  </div>
-                  <div>
-                    <p className='text-black-2 flex-1 text-lg font-bold'>
-                      Total
-                    </p>
-                    <p className='text-black-1 text-base font-bold'>
-                      {bagsTotalFormat}
-                    </p>
-                  </div>
-                </div>
-                {/* Bottom Bags Total */}
-                <Link
-                  to='/cart'
-                  className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
-                >
-                  <span className='text-sm font-bold tracking-tight'>
-                    Check out
-                  </span>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={3}
-                    stroke='currentColor'
-                    className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
+                  {/* Bottom Bags Total */}
+                  <Link
+                    to='/cart'
+                    className='group hover:bg-opacity-100 hover:border-black-4 bg-opacity-60 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all bg-black border border-black'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
-                    />
-                  </svg>
-                </Link>
-              </>
-            )}
+                    <span className='text-sm font-bold tracking-tight'>
+                      Check out
+                    </span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={3}
+                      stroke='currentColor'
+                      className='group-hover:rotate-0 w-4 h-4 transition-all -rotate-45'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+                      />
+                    </svg>
+                  </Link>
+                </>
+              ))}
             {/* collections preview */}
             {/* bottom */}
-            {cartData.length === 0 && (
-              <div className='w-full'>
-                {navbarCollectionsList.map((item) => (
-                  <NavbarCollectionItem key={item?.id} {...item} />
-                ))}
-              </div>
-            )}
+            {cartData?.length ||
+              (0 === 0 && (
+                <div className='w-full'>
+                  {navbarCollectionsList.map((item) => (
+                    <NavbarCollectionItem key={item?.id} {...item} />
+                  ))}
+                </div>
+              ))}
           </div>
         </div>
       }

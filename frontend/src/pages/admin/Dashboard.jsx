@@ -22,19 +22,19 @@ const Dashboard = () => {
     const formatItem = formatString.replace(/\s/g, "").split(",");
     let result = [];
     if (type === "color") {
-      for (let i = 0; i < formatItem.length; i++) {
+      for (let i = 0; i < formatItem?.length; i++) {
         let item = formatItem[i].split("#");
         result.push({ name: item[0], colorCode: `#${item[1]}` });
       }
     }
     if (type === "size") {
-      for (let i = 0; i < formatItem.length; i++) {
+      for (let i = 0; i < formatItem?.length; i++) {
         result.push(`${formatItem[i]}`);
       }
     }
     if (type === "detail") {
       const formatDetail = formatString.replace(/ /g, " ").split("\n");
-      for (let i = 0; i < formatDetail.length; i++) {
+      for (let i = 0; i < formatDetail?.length; i++) {
         result.push(`${formatDetail[i]}`);
       }
     }
@@ -62,13 +62,13 @@ const Dashboard = () => {
   };
   const handleImagesSubmit = () => {
     if (
-      images.length > 0 &&
-      images.length + productDetail.imageUrls.length <= 4
+      images?.length > 0 &&
+      images?.length + productDetail.imageUrls?.length <= 4
     ) {
       setImagesUploadErr(false);
       setImagesUploading(true);
       const promises = [];
-      for (let i = 0; i < images.length; i++) {
+      for (let i = 0; i < images?.length; i++) {
         promises.push(storeImages(images[i]));
       }
       Promise.all(promises)
@@ -140,7 +140,7 @@ const Dashboard = () => {
       details: [...formatColorsAndSizes(productDetail.details, "detail")],
     });
     try {
-      if (productDetail.imageUrls.length < 1)
+      if (productDetail.imageUrls?.length < 1)
         return (
           setError("You must upload at least one image") &
           toast.error("You must upload at least one image")

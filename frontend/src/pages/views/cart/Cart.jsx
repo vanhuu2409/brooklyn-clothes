@@ -43,7 +43,7 @@ const Cart = () => {
           </Link>
         </div>
         {/* preview product */}
-        {cartData.length > 0 ? (
+        {cartData?.length > 0 ? (
           <div className='lg:grid-cols-12 grid grid-cols-1'>
             <div className=' flex flex-col w-full col-span-9 max-h-[50rem] overflow-y-scroll border'>
               <div className='sm:rounded-lg relative overflow-x-auto'>
@@ -85,7 +85,7 @@ const Cart = () => {
               {true ? (
                 <>
                   <div className='border-y border-x lg:border-r sticky top-0 w-full h-full col-span-1'>
-                    {cartData.length > 0 && (
+                    {cartData?.length > 0 && (
                       <div className=' flex flex-col w-full h-full'>
                         {/* Top Bags Total */}
                         <div className='mt-6 *:flex px-4 *:justify-between *:flex-wrap *:mb-4'>

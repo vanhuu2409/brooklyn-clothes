@@ -23,7 +23,7 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const breadcrumbData = location.pathname.split("/").splice(1, 3);
   const product = useSelector((state) => state.product.productDetail);
-  const cartLength = useSelector((state) => state.cart.cart).length;
+  const cartLength = useSelector((state) => state.cart.cart)?.length;
 
   const [selectSize, setSelectSize] = useState(product?.sizes[0]);
   const [selectColor, setSelectColor] = useState(product?.colors[0].name);

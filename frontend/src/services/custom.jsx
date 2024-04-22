@@ -14,7 +14,7 @@ export const debounce = (func, delay) => {
 
 export const RandomProducts = (products, quantity = 4) => {
   const randomProducts = [];
-  const length = products.length;
+  const length = products?.length;
   for (let i = 0; i < quantity; i++) {
     const randomNum = Math.floor(Math.random() * length);
     if (randomProducts[i]?.name !== products[i]?.name) {

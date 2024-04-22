@@ -134,16 +134,16 @@ const Products = () => {
     }
     let filterValue = searchParams.getAll(section);
     const isFilterValue =
-      filterValue.length > 0 && filterValue[0].split(",").includes(value);
+      filterValue?.length > 0 && filterValue[0].split(",").includes(value);
     if (isFilterValue) {
       filterValue = filterValue[0].split(",").filter((item) => item !== value);
-      if (filterValue.length === 0) {
+      if (filterValue?.length === 0) {
         searchParams.delete(section);
       }
     } else {
       filterValue.push(value);
     }
-    if (filterValue.length > 0) {
+    if (filterValue?.length > 0) {
       searchParams.set(section, filterValue.join(","));
     }
     const query = searchParams.toString();

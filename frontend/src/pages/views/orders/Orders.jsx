@@ -79,7 +79,7 @@ const Orders = () => {
       <div>
         <div className=''>
           {/* orders item */}
-          {!orders.length && (
+          {!orders?.length && (
             <div className='mt-4 text-2xl font-bold'>Order not found...</div>
           )}
           {orders.map((order, i) => {
