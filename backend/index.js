@@ -16,8 +16,6 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-console.log(process.env);
-
 // running app
 app.use(json());
 app.use(
