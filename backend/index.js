@@ -20,7 +20,8 @@ import bodyParser from "body-parser";
 app.use(json());
 app.use(
   cors({
-    origin: process.env.URL,
+    // origin: process.env.URL,
+    origin: "*",
     // origin: (origin, callback) => {
     //   if (
     //     ["http://localhost:8080", "https://brooklyn-one.vercel.app"].includes(
