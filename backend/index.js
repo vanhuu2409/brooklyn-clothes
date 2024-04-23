@@ -22,18 +22,19 @@ console.log(process.env.NODE_ENV);
 app.use(json());
 app.use(
   cors({
+    origin: "https://brooklyn-one.vercel.app",
     // origin: process.env.NODE_ENV
     // ? "http://localhost:8080"
     // : "https://brooklyn-one.vercel.app",
-    origin: (origin, callback) => {
-      if (
-        ["http://localhost:8080", "https://brooklyn-one.vercel.app/"].includes(
-          origin
-        )
-      ) {
-        callback(null, origin);
-      }
-    },
+    // origin: (origin, callback) => {
+    //   if (
+    //     ["http://localhost:8080", "https://brooklyn-one.vercel.app/"].includes(
+    //       origin
+    //     )
+    //   ) {
+    //     callback(null, origin);
+    //   }
+    // },
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     optionSuccessStatus: 200,
   })
