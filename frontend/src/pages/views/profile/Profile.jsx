@@ -124,7 +124,7 @@ const Profile = () => {
     }
   };
 
-  const handleSubmitSignup = async (e) => {
+  const handleSubmitUpdateAcc = async (e) => {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
@@ -181,7 +181,7 @@ const Profile = () => {
           )}
         </p>
         {/* form */}
-        <form onSubmit={handleSubmitSignup} className='w-full max-w-lg'>
+        <form onSubmit={handleSubmitUpdateAcc} className='w-full max-w-lg'>
           <div className='flex flex-wrap -mx-3'>
             <div className='md:mb-0 w-full px-3 mb-6'>
               <label

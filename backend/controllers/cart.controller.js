@@ -43,6 +43,8 @@ export const findUserCart = async (req, res, next) => {
 // add cart item
 export const addCartItem = async (req, res, next) => {
   try {
+    console.log(req.user);
+
     const cart = await Cart.findOne({ user: req.user.id });
 
     const product = await Product.findById(req.body.productId);

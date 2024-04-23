@@ -79,9 +79,9 @@ export const userAddress = async (req, res, next) => {
     const addresses = await Address.find({
       user: req.user.id,
     })
-      // .populate({
-      //   path: "user",
-      // })
+      .populate({
+        path: "user",
+      })
       .lean();
     res.status(200).json(addresses);
   } catch (error) {

@@ -12,6 +12,7 @@ export const signup = async (req, res, next) => {
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new User({
       role: email === "huuvanhoang5588@gmail.com" ? "Admin" : role,
+      // role,
       username,
       email,
       password: hashedPassword,
@@ -35,11 +36,13 @@ export const login = async (req, res, next) => {
     if (!validPassword) {
       return next(errorHandler(401, "Wrong credentials!"));
     }
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
-    console.log(token);
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY);
+    // console.log({ token });
     const { password: pass, ...rest } = validUser._doc;
+    // console.log(res.cookie("access_token", token, { httpOnly: true }));
+    res.cookie("access_token", token, { httpOnly: true });
     res
-      .cookie("access_token", token, { httpOnly: true })
+      // .cookie("access_token", token, { httpOnly: true })
       .status(200)
       .json({ user: rest, message: "Login successfully" });
   } catch (error) {
@@ -50,8 +53,10 @@ export const login = async (req, res, next) => {
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
+    console.log(user);
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      // console.log(token);
       const { password: pass, ...rest } = user._doc;
       res
         .cookie("access_token", token, { httpOnly: true })
@@ -71,7 +76,8 @@ export const google = async (req, res, next) => {
         avatar: req.body.photo,
       });
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      console.log({ token });
       const { password: pass, ...rest } = newUser._doc;
       res
         .cookie("access_token", token, { httpOnly: true })

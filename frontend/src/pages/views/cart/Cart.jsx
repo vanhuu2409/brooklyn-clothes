@@ -29,8 +29,8 @@ const Cart = () => {
           throw new Error(error.message);
         }
       };
+      fetchCart();
     }
-    fetchCart();
   }, []);
 
   return (

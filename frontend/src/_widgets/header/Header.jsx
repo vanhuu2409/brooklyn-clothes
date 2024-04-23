@@ -41,6 +41,9 @@ const Header = () => {
       try {
         // Otherwise, fetch products with the provided productId
         dispatch(fetchCartItem()).then((response) => {
+          console.log("====================================");
+          console.log(response);
+          console.log("====================================");
           setCartData(response.payload.cartItem);
         });
       } catch (error) {

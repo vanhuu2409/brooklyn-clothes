@@ -8,8 +8,36 @@ import express from "express";
 const { json, static: statics } = express;
 const app = express();
 import { connect } from "mongoose";
+
 // cors
 import cors from "cors";
+import morgan from "morgan";
+// cookie parser
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+
+console.log(process.env.NODE_ENV);
+
+// running app
+app.use(json());
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "dev"
+        ? "http://localhost:8080"
+        : "https://brooklyn-one.vercel.app/",
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  })
+);
+app.use(cookieParser());
+
+// use morgan to log requests to the console
+app.use(morgan("dev"));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+// parse application/json
+app.use(bodyParser.json());
 
 // userRouter
 import userRouter from "./routes/user.route.js";
@@ -27,14 +55,7 @@ import ratingsRouter from "./routes/ratings.route.js";
 import reviewsRouter from "./routes/reviews.route.js";
 // mongoose server
 
-// cookie parser
-import cookieParser from "cookie-parser";
-import Product from "./models/product.model.js";
-
-// running app
-app.use(json());
-app.use(cors());
-app.use(cookieParser());
+// import Product from "./models/product.model.js";
 
 // Database connection with mongoDB
 connect(process.env.MONGODB)

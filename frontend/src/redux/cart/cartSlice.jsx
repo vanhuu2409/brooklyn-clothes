@@ -17,8 +17,7 @@ export const fetchCartItem = createAsyncThunk(
     try {
       // Otherwise, fetch products with the provided productId
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/cart`,
-        { user: useSelector((state) => state.user.currentUser) }
+        `${import.meta.env.VITE_API_URL}/api/cart`
       );
       return response.data;
     } catch (error) {

@@ -55,7 +55,10 @@ const DeliveryAddress = () => {
 
     if (userAddress) {
       try {
-        const res = await axios.post("/api/order/create", userAddress);
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/order/create`,
+          userAddress
+        );
         if (res.status === 200) {
           navigate(`/checkout?step=3&orderId=${res.data._id}`);
         }
