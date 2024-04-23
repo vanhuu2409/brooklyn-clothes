@@ -6,6 +6,8 @@ const http = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": true,
   },
   // credentials: "include",
   // withCredentials: true,
