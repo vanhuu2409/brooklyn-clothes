@@ -22,10 +22,9 @@ console.log(process.env.NODE_ENV);
 app.use(json());
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "dev"
-        ? "http://localhost:8080"
-        : "https://brooklyn-one.vercel.app/",
+    origin: process.env.NODE_ENV
+      ? "http://localhost:8080"
+      : "https://brooklyn-one.vercel.app",
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );
