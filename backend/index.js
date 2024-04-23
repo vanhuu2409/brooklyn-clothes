@@ -22,7 +22,16 @@ console.log(process.env);
 app.use(json());
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.URL,
+    // origin: (origin, callback) => {
+    //   if (
+    //     ["http://localhost:8080", "https://brooklyn-one.vercel.app"].includes(
+    //       origin
+    //     )
+    //   ) {
+    //     callback(null, origin);
+    //   }
+    // },
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     optionSuccessStatus: 200,
   })
@@ -74,7 +83,7 @@ app.use("/api/ratings", ratingsRouter);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", process.env.URL);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header(
     "Access-Control-Allow-Headers",
