@@ -22,10 +22,20 @@ console.log(process.env.NODE_ENV);
 app.use(json());
 app.use(
   cors({
-    origin: process.env.NODE_ENV
-      ? "http://localhost:8080"
-      : "https://brooklyn-one.vercel.app",
+    // origin: process.env.NODE_ENV
+    // ? "http://localhost:8080"
+    // : "https://brooklyn-one.vercel.app",
+    origin: (origin, callback) => {
+      if (
+        ["http://localhost:8080", "https://brooklyn-one.vercel.app/"].includes(
+          origin
+        )
+      ) {
+        callback(null, origin);
+      }
+    },
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    optionSuccessStatus: 200,
   })
 );
 app.use(cookieParser());
@@ -74,6 +84,12 @@ app.use("/api/ratings", ratingsRouter);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+  );
   return res.status(statusCode).json({ success: false, statusCode, message });
 });
 
