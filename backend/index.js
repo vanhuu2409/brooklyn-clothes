@@ -16,28 +16,33 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-console.log(process.env.NODE_ENV);
+console.log(process.env);
+
+// console.log({
+// origin: process.env.URL,
+// ? "http://localhost:8080"
+// : "https://brooklyn-one.vercel.app",
+// });
 
 // running app
 app.use(json());
 app.use(
   cors({
-    // origin: process.env.NODE_ENV
-    // ? "http://localhost:8080"
-    // : "https://brooklyn-one.vercel.app",
-    origin: (origin, callback) => {
-      if (
-        ["http://localhost:8080", "https://brooklyn-one.vercel.app"].includes(
-          origin
-        )
-      ) {
-        callback(null, origin);
-      }
-    },
+    origin: process.env.URL,
+    // origin: (origin, callback) => {
+    //   if (
+    //     ["http://localhost:8080", "https://brooklyn-one.vercel.app"].includes(
+    //       origin
+    //     )
+    //   ) {
+    //     callback(null, origin);
+    //   }
+    // },
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     optionSuccessStatus: 200,
   })
 );
+
 app.use(cookieParser());
 
 // use morgan to log requests to the console
@@ -84,7 +89,7 @@ app.use("/api/ratings", ratingsRouter);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
-  res.header("Access-Control-Allow-Origin", "https://brooklyn-one.vercel.app");
+  res.header("Access-Control-Allow-Origin", process.env.URL);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header(
     "Access-Control-Allow-Headers",
