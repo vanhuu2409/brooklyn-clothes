@@ -7,7 +7,7 @@ import {
   getProduct,
 } from "../controllers/product.controller.js";
 import { verifyToken } from "../ultils/verifyUser.js";
-import allowCors from "../ultils/allowCors";
+import allowCors from "../ultils/allowCors.js";
 const router = express.Router();
 
 router.get("/getall", allowCors(getProducts));
