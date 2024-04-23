@@ -7,9 +7,10 @@ import {
   getProduct,
 } from "../controllers/product.controller.js";
 import { verifyToken } from "../ultils/verifyUser.js";
+import allowCors from "../ultils/allowCors";
 const router = express.Router();
 
-router.get("/getall", getProducts);
+router.get("/getall", allowCors(getProducts));
 router.get("/getall/:id", getProduct);
 router.post("/create", verifyToken, createProduct);
 router.delete("/delete/:id", deleteProduct);
