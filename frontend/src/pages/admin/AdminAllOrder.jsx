@@ -12,6 +12,7 @@ const AdminAllOrder = () => {
   ];
 
   const [orders, setOrders] = useState([]);
+  console.log(orders);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -92,9 +93,9 @@ const AdminAllOrder = () => {
               <div key={i} className='border-y mt-4'>
                 <div className='flex flex-col gap-4 bg-white'>
                   <h3 className='flex flex-col mt-4 normal-case'>
-                    <span className='w-full'>User Id: {order.user._id}</span>
+                    <span className='w-full'>User Id: {order?.user?._id}</span>
                     <span className='w-full'>
-                      Username: {order.user.username}
+                      Username: {order?.user?.username}
                     </span>
                   </h3>
                   <div className='sm:flex-row flex flex-col items-start justify-start h-full gap-6 px-4 py-4 shadow-sm'>

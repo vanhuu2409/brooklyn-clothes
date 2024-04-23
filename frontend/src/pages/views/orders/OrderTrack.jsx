@@ -16,7 +16,7 @@ const OrderTrack = ({ activeStep }) => {
   return (
     <div className='w-full'>
       <Stepper
-        activeStep={activeStep === "Cancelled" ? 1 : activeStep}
+        activeStep={activeStep === "Cancelled" ? 1 : +activeStep}
         alternativeLabel
       >
         {steps.map((step, i) => (
