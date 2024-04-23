@@ -20,9 +20,6 @@ import {
 } from "../../../redux/product/productSlice.jsx";
 
 const sortOptions = [
-  // { name: "Most Popular", href: "#", current: true },
-  // { name: "Best Rating", href: "#", current: false },
-  // { name: "Newest", href: "#", current: false },
   { name: "Price: Low to High", value: "asc", current: false },
   { name: "Price: High to Low", value: "desc", current: false },
 ];

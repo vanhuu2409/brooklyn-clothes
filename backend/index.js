@@ -61,8 +61,6 @@ import ratingsRouter from "./routes/ratings.route.js";
 import reviewsRouter from "./routes/reviews.route.js";
 // mongoose server
 
-// import Product from "./models/product.model.js";
-
 // Database connection with mongoDB
 connect(process.env.MONGODB)
   .then(() => console.log("Connect to MongoDB"))
