@@ -102,9 +102,6 @@ const Products = () => {
   const totalPages = useSelector((state) => state.product.products.totalPages);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const searchParams = new URLSearchParams(location.search);
-  console.log(searchParams.get("search"));
-
-  console.log(location.search);
 
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.product.loading);
@@ -330,7 +327,7 @@ const Products = () => {
                                     ? "font-medium text-gray-900"
                                     : "text-gray-500",
                                   active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm"
+                                  "block px-4 w-full cursor-pointer py-2 text-sm"
                                 )}
                               >
                                 Price: {option.value.split("Price")}
@@ -362,7 +359,7 @@ const Products = () => {
                                     ? "font-medium text-gray-900"
                                     : "text-gray-500",
                                   active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm"
+                                  "block w-full cursor-pointer px-4 py-2 text-sm"
                                 )}
                               >
                                 {option.name}
@@ -546,6 +543,7 @@ const Products = () => {
                   name={`pageNumber`}
                   defaultValue={option}
                   type='radio'
+                  disabled={+searchParams.get("pageNumber") === option + 1}
                   checked={
                     searchParams
                       .get("pageNumber")
@@ -553,11 +551,11 @@ const Products = () => {
                       .includes(option) || false
                   }
                   // defaultChecked={option.checked}
-                  className='focus:ring-neutral-500 text-neutral-600 w-4 h-4 border-gray-300 rounded cursor-pointer sr-only'
+                  className='focus:ring-neutral-500 peer text-neutral-600 w-4 h-4 border-gray-300 rounded cursor-pointer sr-only'
                 />
                 <label
                   htmlFor={`filter-pageNumber-${optionIdx}`}
-                  className='bg-neutral-700 size-10 hover:opacity-80 flex items-center justify-center text-gray-100 border border-white cursor-pointer'
+                  className='bg-neutral-700 peer-disabled:bg-opacity-60 peer-disabled:cursor-default peer-disabled:hover:opacity-100 size-10 hover:opacity-80 flex items-center justify-center text-gray-100 border border-white cursor-pointer'
                 >
                   {option + 1}
                 </label>

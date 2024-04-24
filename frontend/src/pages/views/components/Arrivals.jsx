@@ -20,7 +20,7 @@ const Arrivals = () => {
               CHECK OUT OUR NEW ITEMS
             </h2>
             <Link
-              to='/'
+              to='/products'
               className='text-normal lg:after:h-[1px] lg:after:bg-black-3 hover:lg:after:w-0 lg:after:transition-all lg:after:duration-300 lg:after:w-[80%] lg:after:ml-auto lg:after:block p-4 -m-4 font-semibold tracking-tighter leading-tight underline underline-offset-4 lg:no-underline'
             >
               SHOP NEW ARRIVALS
