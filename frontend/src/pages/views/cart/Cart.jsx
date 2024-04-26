@@ -2,13 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatPrice } from "../../../services/custom";
 import { Link } from "react-router-dom";
 import ProductInCart from "./ProductInCart";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import http from "../../../services/api.jsx";
 
 const Cart = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const guestCart = useSelector((state) => state.cart.cart);
   const [cartData, setCartData] = useState([]);
+  console.log({ guestCart });
   // bag/cart flow
   const bagsTotal = cartData.reduce((acc, item) => {
     return acc + item.price;
@@ -20,7 +22,7 @@ const Cart = () => {
       const fetchCart = async () => {
         try {
           // Otherwise, fetch products with the provided productId
-          const response = await axios.get(
+          const response = await http.get(
             `${import.meta.env.VITE_API_URL}/api/cart`
           );
           setCartData(response.data.cartItem);
@@ -30,8 +32,8 @@ const Cart = () => {
         }
       };
       fetchCart();
-    }
-  }, []);
+    } else setCartData(guestCart);
+  }, [guestCart, currentUser]);
 
   return (
     <div className='sm:px-6 lg:max-w-[90%] lg:px-8 max-w-2xl px-4 mx-auto'>
@@ -186,4 +188,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default memo(Cart);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../services/custom.jsx";
+import http from "../../services/api.jsx";
 
 const AdminAllOrder = () => {
   const orderFilterOption = [
@@ -18,7 +18,7 @@ const AdminAllOrder = () => {
     const fetchOrders = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/`
         );
         setOrders(response.data);
@@ -31,14 +31,12 @@ const AdminAllOrder = () => {
     fetchOrders();
   }, []);
 
-  console.log(orders);
-
-  const handleCancelledOrder = async (orderId) => {
-    if (confirm("Are you sure you want to cancel this order?"))
+  const handleDeleteOrder = async (orderId) => {
+    if (confirm("Are you sure you want to delete this order?"))
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/order/${orderId}/cancelled`
+        const response = await http.delete(
+          `${import.meta.env.VITE_API_URL}/api/order/${orderId}/deleteOrders`
         );
         console.log(response);
         if (response.status === 200) {
@@ -181,6 +179,12 @@ const AdminAllOrder = () => {
                         >
                           Details
                         </Link>
+                        <button
+                          onClick={() => handleDeleteOrder(order._id)}
+                          className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full px-5 py-2 text-white transition-all translate-y-0 bg-red-800 border'
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </div>

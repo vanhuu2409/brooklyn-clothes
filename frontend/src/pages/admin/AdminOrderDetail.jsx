@@ -10,7 +10,6 @@ import http from "../../services/api.jsx";
 
 const AdminOrderDetail = () => {
   const [orders, setOrders] = useState([]);
-  console.log(orders);
 
   const statusTrack = [
     "Placed",
@@ -39,15 +38,13 @@ const AdminOrderDetail = () => {
       ? 3
       : "Cancelled";
 
-  console.log(activeStep);
-
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/${params.id}`
         );
         setOrders(response.data);
@@ -64,7 +61,7 @@ const AdminOrderDetail = () => {
     if (confirm(`Are you sure you want to ${item} this order?`)) {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(
+        const response = await http.put(
           `${import.meta.env.VITE_API_URL}/api/order/${
             params.id
           }/${item.toLowerCase()}`
@@ -79,6 +76,23 @@ const AdminOrderDetail = () => {
       }
     }
   });
+
+  const handleDeleteOrder = async (orderId) => {
+    if (confirm("Are you sure you want to delete this order?"))
+      try {
+        // Otherwise, fetch products with the provided productId
+        const response = await http.put(
+          `${import.meta.env.VITE_API_URL}/api/order/${orderId}/deleteOrders`
+        );
+        console.log(response);
+        if (response.status === 200) {
+          window.location.reload();
+        }
+        return response.data;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+  };
   return (
     <div className='sm:px-6 py-10 lg:max-w-[90%] min-h-screen lg:px-8 max-w-2xl px-4 mx-auto'>
       <div className='lg:col-span-1 h-max sticky top-0 p-8 rounded-md'>

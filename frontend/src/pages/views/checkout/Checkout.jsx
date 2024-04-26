@@ -21,7 +21,6 @@ const Checkout = () => {
   const location = useLocation();
   const querySearch = new URLSearchParams(location.search);
   const step = +querySearch.get("step");
-  console.log(step);
 
   return (
     <div className='sm:px-6 lg:max-w-[90%] min-h-screen lg:px-8 max-w-2xl px-4 mx-auto'>

@@ -145,7 +145,6 @@ const Products = () => {
     if (!searchParams) {
       dispatch(fetchProducts(""));
     } else {
-      console.log({ query });
       dispatch(fetchProducts(query)).then((result) => {
         if (result.meta.requestStatus === "fulfilled") {
           dispatch(updateProducts(result.payload));

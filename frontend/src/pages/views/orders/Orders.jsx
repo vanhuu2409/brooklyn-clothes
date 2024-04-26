@@ -18,7 +18,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/user`
         );
         setOrders(response.data);
@@ -37,7 +37,7 @@ const Orders = () => {
     if (confirm("Are you sure you want to cancel this order?"))
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(
+        const response = await http.put(
           `${import.meta.env.VITE_API_URL}/api/order/${orderId}/cancelled`
         );
         console.log(response);
@@ -140,12 +140,6 @@ const Orders = () => {
                           >
                             Details
                           </Link>
-                          {/* <button
-                            type='button'
-                            className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full px-5 py-2 text-white transition-all translate-y-0 bg-black border'
-                          >
-                            Rating
-                          </button> */}
                         </div>
                       </div>
                     </div>

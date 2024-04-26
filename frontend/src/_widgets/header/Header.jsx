@@ -1,6 +1,6 @@
 import { Logo } from "../Logo";
 import { memo, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   formatPrice,
   navbarCollectionsList,
@@ -18,7 +18,9 @@ const Header = () => {
   const [searchValue, setSearchValue] = useState("");
   // user handle
   const { currentUser } = useSelector((state) => state.user);
+  const guestCart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // mobile state
   const [toggleMobileNav, setToggleMobileNav] = useState(false);
@@ -37,21 +39,20 @@ const Header = () => {
 
   const [cartData, setCartData] = useState([]);
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        // Otherwise, fetch products with the provided productId
-        dispatch(fetchCartItem()).then((response) => {
-          console.log("====================================");
-          console.log(response);
-          console.log("====================================");
-          setCartData(response.payload.cartItem);
-        });
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    };
-    fetchCart();
-  }, []);
+    if (currentUser) {
+      const fetchCart = async () => {
+        try {
+          // Otherwise, fetch products with the provided productId
+          dispatch(fetchCartItem()).then((response) => {
+            setCartData(response.payload.cartItem);
+          });
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      };
+      fetchCart();
+    } else setCartData(guestCart);
+  }, [guestCart, currentUser]);
   // bags count
   const bagsCount = cartData?.length || 0;
   const bagsTotal = cartData.reduce((acc, curr) => {
@@ -59,6 +60,12 @@ const Header = () => {
   }, 0);
 
   const bagsTotalFormat = formatPrice(bagsTotal);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      navigate(`/products?search=${event.target.value}`);
+    }
+  };
 
   return (
     <>
@@ -132,7 +139,7 @@ const Header = () => {
                           (item, index) => (
                             <li key={index}>
                               <Link
-                                to={`/products/tops/${item}`}
+                                to={`/products?collections=tops&category=${item}`}
                                 className='hover:opacity-70 p-2 capitalize transition-all'
                               >
                                 {item}
@@ -156,7 +163,7 @@ const Header = () => {
                         {["pants", "shorts", "denims"].map((item, index) => (
                           <li key={index}>
                             <Link
-                              to={`/products/bottoms/${item}`}
+                              to={`/products?collections=bottoms&category=${item}`}
                               className='hover:opacity-70 p-2 capitalize transition-all'
                             >
                               {item}
@@ -179,7 +186,7 @@ const Header = () => {
                         {["hats", "bags"].map((item, index) => (
                           <li key={index}>
                             <Link
-                              to={`/products/other/${item}`}
+                              to={`/products?collections=other&category=${item}`}
                               className='hover:opacity-70 p-2 capitalize transition-all'
                             >
                               {item}
@@ -427,7 +434,14 @@ const Header = () => {
                 >
                   {shopListMobile.map((item) => (
                     <li key={item + "shopListMobile"} className=''>
-                      <Link to='/products' className=''>
+                      <Link
+                        to={`/products${
+                          item !== "Shop all" && item !== "Lookbook"
+                            ? "?collections=" + item.toLowerCase()
+                            : ""
+                        }`}
+                        className=''
+                      >
                         {item}
                       </Link>
                     </li>
@@ -646,6 +660,7 @@ const Header = () => {
                       onChange={(e) => {
                         setSearchValue(e.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                       name='search'
                       className='ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black-4 sm:text-sm sm:leading-6 text-black-1 block w-full px-5 py-4 pr-20 mt-4 transition-all bg-white border border-black outline-none'
                       placeholder='Search something...'

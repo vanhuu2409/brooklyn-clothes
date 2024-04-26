@@ -8,6 +8,7 @@ import {
 } from "firebase/storage";
 import { app } from "../../firebase/firebase";
 import { toast } from "react-toastify";
+import http from "../../services/api.jsx";
 
 const Dashboard = () => {
   const fileIputRef = useRef();
@@ -152,21 +153,30 @@ const Dashboard = () => {
       //   );
       setLoading(true);
       setError(false);
-      const res = await fetch(
+      // const res = await fetch(
+      //   `${import.meta.env.VITE_API_URL}/api/product/create`,
+      //   {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({
+      //       ...productDetail,
+      //       colors: [...formatColorsAndSizes(productDetail.colors, "color")],
+      //       sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
+      //       details: [...formatColorsAndSizes(productDetail.details, "detail")],
+      //     }),
+      //   }
+      // );
+      const res = await http.post(
         `${import.meta.env.VITE_API_URL}/api/product/create`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...productDetail,
-            colors: [...formatColorsAndSizes(productDetail.colors, "color")],
-            sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
-            details: [...formatColorsAndSizes(productDetail.details, "detail")],
-          }),
+          ...productDetail,
+          colors: [...formatColorsAndSizes(productDetail.colors, "color")],
+          sizes: [...formatColorsAndSizes(productDetail.sizes, "size")],
+          details: [...formatColorsAndSizes(productDetail.details, "detail")],
         }
       );
-      const data =
-        (await res.json()) & toast.success("Add product successfully");
+      console.log(res);
+      const data = res.data & toast.success("Add product successfully");
       if (data.success === false) {
         setLoading(false);
         setError(data.message);

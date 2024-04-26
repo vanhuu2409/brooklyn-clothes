@@ -140,7 +140,9 @@ export const getProducts = async (req, res, next) => {
 // getProduct
 export const getProduct = async (req, res, next) => {
   try {
-    const product = await Product.findOne({ _id: req.params.id });
+    const product = await Product.findOne({ _id: req.params.id }).populate(
+      "ratings"
+    );
     return res.status(200).json(product);
   } catch (error) {
     next(error);

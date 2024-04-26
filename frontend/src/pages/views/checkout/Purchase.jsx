@@ -3,18 +3,19 @@ import { useSelector } from "react-redux";
 import { formatPrice } from "../../../services/custom";
 import OrderCard from "./OrderCard";
 import AddressCard from "./AddressCard";
-import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import http from "../../../services/api.jsx";
+import { sendOrderEmail } from "../../../services/emailjs.jsx";
 
 const Purchase = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [orderData, setOrderData] = useState([]);
   const [addressData, setAddressData] = useState({});
+  console.log({ orderData, addressData });
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const orderId = searchParams.get("orderId");
-  console.log(orderId);
 
   // useEffect(() => {
   //   const fetchCart = async () => {
@@ -33,7 +34,7 @@ const Purchase = () => {
     const fetchOrder = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/${orderId}`
         );
         setAddressData(response.data.shippingAddress);
@@ -49,7 +50,7 @@ const Purchase = () => {
   const handleCancelledOrder = async () => {
     try {
       // Otherwise, fetch products with the provided productId
-      const response = await axios.delete(
+      const response = await http.delete(
         `${import.meta.env.VITE_API_URL}/api/order/${orderId}/deleteOrders`
       );
       if (response.status === 200) {
@@ -60,11 +61,32 @@ const Purchase = () => {
       throw new Error(error.message);
     }
   };
+
   // bag/cart flow
   const bagsTotal = orderData.reduce((acc, item) => {
     return acc + item.price;
   }, 0);
   const bagsTotalFormat = formatPrice(bagsTotal);
+
+  const handleEmailOrder = async () => {
+    const data = {
+      email: currentUser.email,
+      username: currentUser.username + " | " + addressData.mobile,
+      address: `Street: ${addressData.street} | Ward: ${addressData.ward} | District: ${addressData.district} | City: ${addressData.city}`,
+      orderItems: orderData.map((item, i) => {
+        let str = "";
+        str += `
+        ${item.product.name} | ${item.size} | ${item.color} | ${
+          item.quantity
+        } | ${item.product.price * item.quantity}
+        \n\n`;
+        return str;
+      }),
+      quantity: orderData?.length,
+      total: bagsTotalFormat,
+    };
+    sendOrderEmail(data);
+  };
 
   return (
     <div className='h-screen'>
@@ -112,6 +134,7 @@ const Purchase = () => {
               <div className='flex gap-4 mt-4'>
                 <Link
                   to={"/profile/orders"}
+                  onClick={handleEmailOrder}
                   className='hover:bg-opacity-100 hover:border-black-4 hover:opacity-90 disabled:opacity-50 inline-flex items-center justify-center w-full gap-2 px-5 py-4 mt-4 text-white transition-all translate-y-0 bg-black border'
                 >
                   Complete Purchase

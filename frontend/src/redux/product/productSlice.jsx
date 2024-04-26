@@ -17,13 +17,13 @@ export const fetchProducts = createAsyncThunk(
     try {
       // If the query is empty, fetch all products
       if (!query) {
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/product/getall`
         );
         return response.data;
       }
       // Otherwise, fetch products with the provided query
-      const response = await axios.get(
+      const response = await http.get(
         `${import.meta.env.VITE_API_URL}/api/product/getall?${query}`
       );
       return response.data;

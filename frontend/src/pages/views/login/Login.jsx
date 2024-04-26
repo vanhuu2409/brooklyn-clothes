@@ -44,7 +44,8 @@ const Login = () => {
         dispatch(loginFailure(data.message)) & toast.error(data.message);
         return;
       }
-      dispatch(loginSuccess(data)) & toast.success("Successfully logged in!");
+      dispatch(loginSuccess(data.user)) &
+        toast.success("Successfully logged in!");
       navigate("/");
     } catch (error) {
       dispatch(loginFailure(error.message)) & toast.error(error);

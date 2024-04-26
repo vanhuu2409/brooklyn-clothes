@@ -15,16 +15,6 @@ const OAuth = () => {
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
       const { user } = result;
-      // const res = await fetch("/api/auth/google", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     name: user.displayName,
-      //     email: user.email,
-      //     photo: user.photoURL,
-      //   }),
-      // });
-      // const data = await res.json();
       const data = await handleUserApiPost(
         `${import.meta.env.VITE_API_URL}/api/auth/google`,
         {

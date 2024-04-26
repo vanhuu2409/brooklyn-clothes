@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create", verifyToken, createRating);
-router.put("/product/:productId", verifyToken, getProductRatings);
+router.post("/create/:productId", verifyToken, createRating);
+router.get("/product/:productId", getProductRatings);
 
 export default router;

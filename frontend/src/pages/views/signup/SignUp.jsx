@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../../_widgets/OAuth";
 import { ToastContainer, toast } from "react-toastify";
 import { handleUserApiPost } from "../../../services/api.jsx";
+import { sendRegisterEmail } from "../../../services/emailjs";
 
 const SignUp = () => {
   const [userDetail, setUserDetail] = useState({});
@@ -52,6 +53,10 @@ const SignUp = () => {
         return;
       }
       setLoading(false);
+      sendRegisterEmail({
+        email: userDetail.email,
+        username: userDetail.username,
+      });
       navigate("/login") & toast.success("Sign in successfully!");
     } catch (error) {
       console.log(error);
