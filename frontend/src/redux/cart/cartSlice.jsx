@@ -16,7 +16,7 @@ export const fetchCartItem = createAsyncThunk(
   async () => {
     try {
       // Otherwise, fetch products with the provided productId
-      const response = await axios.get(
+      const response = await http.get(
         `${import.meta.env.VITE_API_URL}/api/cart`
       );
       return response.data;
@@ -46,9 +46,13 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart: (state, action) => {
-      state.cart = state.cart.filter(
-        (item) => item.cartId !== action.payload.cartId
-      );
+      state.cart = state.cart.filter((item) => {
+        return item.cartId !== action.payload.cartId;
+      });
+    },
+    userLogoutClearCart: (state, action) => {
+      state.cart.cart = null;
+      state.cart.cartItems = null;
     },
     increaseQuantity: (state, action) => {
       let item = state.cart.find(

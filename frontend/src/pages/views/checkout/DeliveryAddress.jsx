@@ -9,6 +9,7 @@ import { fetchCartItem } from "../../../redux/cart/cartSlice.jsx";
 import http from "../../../services/api.jsx";
 
 const DeliveryAddress = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cartItems);
@@ -18,7 +19,7 @@ const DeliveryAddress = () => {
     const fetchAddress = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/userAddress`
         );
         setAddressData(response.data);
@@ -36,7 +37,9 @@ const DeliveryAddress = () => {
   }, 0);
   const bagsTotalFormat = formatPrice(bagsTotal);
 
-  const userAddress = {};
+  const userAddress = {
+    fullName: currentUser.username,
+  };
   const handleOnChange = (e) => {
     userAddress[e.target.name] = e.target.value;
   };
@@ -55,7 +58,7 @@ const DeliveryAddress = () => {
 
     if (userAddress) {
       try {
-        const res = await axios.post(
+        const res = await http.post(
           `${import.meta.env.VITE_API_URL}/api/order/create`,
           userAddress
         );
@@ -130,6 +133,7 @@ const DeliveryAddress = () => {
                     <input
                       type='text'
                       name='fullName'
+                      defaultValue={currentUser?.username}
                       onChange={(e) => handleOnChange(e)}
                       placeholder='First & Last Name'
                       onBlur={handleOnBlur}

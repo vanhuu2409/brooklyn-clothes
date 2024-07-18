@@ -1,5 +1,7 @@
 import Product from "../models/product.model.js";
 import Ratings from "../models/ratings.model.js";
+import User from "../models/user.model.js";
+import { findUserById } from "./user.controller.js";
 
 // createRating
 export const createRating = async (req, res, next) => {
@@ -9,8 +11,9 @@ export const createRating = async (req, res, next) => {
 
     const rating = new Ratings({
       product: product._id,
-      user: user._id,
-      rating: req.rating,
+      user: req.user.id,
+      rating: req.body.rating,
+      comment: req.body.comment,
     });
     await product.save();
     await rating.save();
@@ -25,7 +28,11 @@ export const getProductRatings = async (req, res, next) => {
   try {
     const productRating = await Ratings.find({
       product: req.params.productId,
-    });
+    })
+      .populate({
+        path: "user",
+      })
+      .lean();
     res.status(200).json(productRating);
   } catch (error) {
     next(error);

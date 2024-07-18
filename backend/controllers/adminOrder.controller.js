@@ -111,6 +111,7 @@ export const cancelOrders = async (req, res, next) => {
       .populate({ path: "orderItem", populate: { path: "product" } })
       .populate("shippingAddress");
     order.orderStatus = "Cancelled";
+    order.paymentDetails.paymentStatus = "Cancelled";
     await order.save();
     res.status(200).json(order);
   } catch (error) {

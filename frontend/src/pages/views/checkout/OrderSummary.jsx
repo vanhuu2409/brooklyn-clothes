@@ -15,7 +15,6 @@ const OrderSummary = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const orderId = searchParams.get("orderId");
-  console.log(orderId);
 
   // useEffect(() => {
   //   const fetchCart = async () => {
@@ -34,7 +33,7 @@ const OrderSummary = () => {
     const fetchOrder = async () => {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.get(
+        const response = await http.get(
           `${import.meta.env.VITE_API_URL}/api/order/${orderId}`
         );
         setAddressData(response.data.shippingAddress);
@@ -50,7 +49,7 @@ const OrderSummary = () => {
   const handleCancelledOrder = async () => {
     try {
       // Otherwise, fetch products with the provided productId
-      const response = await axios.delete(
+      const response = await http.delete(
         `${import.meta.env.VITE_API_URL}/api/order/${orderId}/deleteOrders`
       );
       if (response.status === 200) {

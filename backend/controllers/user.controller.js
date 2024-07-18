@@ -20,7 +20,7 @@ export const findUserById = async (userId) => {
 
 export const findUserProfile = async (req, res, next) => {
   try {
-    const userProfile = await User.findById(req.user.id).populate("cart");
+    const userProfile = await User.findById(req.user.id);
     res.status(200).json({ userProfile });
   } catch (error) {
     next(error);

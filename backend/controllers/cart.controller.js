@@ -43,12 +43,9 @@ export const findUserCart = async (req, res, next) => {
 // add cart item
 export const addCartItem = async (req, res, next) => {
   try {
-    console.log(req.user);
-
     const cart = await Cart.findOne({ user: req.user.id });
 
     const product = await Product.findById(req.body.productId);
-    console.log(cart);
 
     const { _id, price, discountPrice } = product;
 
@@ -73,7 +70,6 @@ export const addCartItem = async (req, res, next) => {
       });
       const createCartItem = await cartItem.save();
       cart.cartItem.push(createCartItem);
-      console.log(cart);
       await cart.save();
       res.status(200).json(cartItem);
     }
@@ -98,10 +94,7 @@ export const updateCartItem = async (req, res, next) => {
     })
       .populate("user")
       .populate("product");
-    console.log(item);
     if (!item) throw new Error("CartItem not found: ", req.body);
-
-    console.log(req.body);
 
     const user = await findUserById(req.user.id);
     if (!user) throw new Error("User not found: ", req.user.id);
@@ -131,6 +124,7 @@ export const updateCartItem = async (req, res, next) => {
 
 // delete cart item
 export const deleteCartItem = async (req, res, next) => {
+  console.log(req.params.id);
   try {
     const { sizeSelected, colorSelected } = req.body;
     const item = await CartItem.findOne({
@@ -140,10 +134,10 @@ export const deleteCartItem = async (req, res, next) => {
     })
       .populate("user")
       .populate("product");
-    console.log(req.body, req.params.id);
     if (!item) throw new Error("CartItem not found: ", req.params.id);
 
     const user = await findUserById(req.user.id);
+    console.log(user._id);
     if (!user) throw new Error("User not found: ", req.user.id);
 
     const isUserCart = user._id.toString() === item.user.id.toString();

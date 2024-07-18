@@ -16,7 +16,10 @@ import {
   fetchProductStart,
   fetchProductSuccess,
 } from "../../../redux/product/productSlice.jsx";
-import http from "../../../services/api.jsx";
+import http, {
+  handleProductApiGetById,
+  handleRatingApiGetByProductId,
+} from "../../../services/api.jsx";
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -25,6 +28,7 @@ const ProductDetail = () => {
   const breadcrumbData = location.pathname.split("/").splice(1, 3);
   const product = useSelector((state) => state.product.productDetail);
   const cartLength = useSelector((state) => state.cart.cart)?.length;
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   const [selectSize, setSelectSize] = useState(product && product?.sizes[0]);
   const [selectColor, setSelectColor] = useState(
@@ -34,42 +38,47 @@ const ProductDetail = () => {
     product && product?.imageUrls[0]
   );
 
+  const [ratings, setRatings] = useState([]);
+  console.log({ ratings });
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         dispatch(fetchProductStart());
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/product/getall/${params._id}`
-        );
-        console.log(response);
-        dispatch(fetchProductSuccess(response.data));
-        // if (response.status === 200) {
-        setSelectSize(response.data.sizes[0]);
-        setSelectColor(response.data.colors[0].name);
-        setSelectPreviewImg(response.data.imageUrls[0]);
+        const response = await handleProductApiGetById(params?._id);
+        dispatch(fetchProductSuccess(response));
+        setSelectSize(response.sizes[0]);
+        setSelectColor(response.colors[0].name);
+        setSelectPreviewImg(response.imageUrls[0]);
         // }
       } catch (error) {
         dispatch(fetchProductFailure(error.message));
         throw new Error(error.message);
       }
     };
+    const fetchRating = async () => {
+      const ratingData = await handleRatingApiGetByProductId(params?._id);
+      setRatings(ratingData);
+    };
     fetchProduct();
+    fetchRating();
   }, []);
 
   const handleOnAddToBag = debounce(async () => {
-    try {
-      const productData = {
-        productId: product?._id,
-        sizeSelected: selectSize,
-        colorSelected: selectColor,
-      };
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/cart/add`,
-        productData
-      );
-      window.location.reload();
-    } catch (error) {
-      throw new Error(error.message);
+    if (currentUser) {
+      try {
+        const productData = {
+          productId: product?._id,
+          sizeSelected: selectSize,
+          colorSelected: selectColor,
+        };
+        const response = await http.put(
+          `${import.meta.env.VITE_API_URL}/api/cart/add`,
+          productData
+        );
+      } catch (error) {
+        throw new Error(error.message);
+      }
     }
     dispatch(
       addToCart({
@@ -80,6 +89,7 @@ const ProductDetail = () => {
       })
     ) & toast.success(`${product?.name} is added to Cart!`);
   }, 300);
+
   return (
     <section className='sm:py-16 py-12'>
       <div className='container px-4 mx-auto'>
@@ -194,6 +204,8 @@ const ProductDetail = () => {
             {/* star group */}
             <div className='flex mt-5'>
               <Rating
+                readonly
+                // onChange={(value) => console.log(value)}
                 emptySymbol={
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -210,7 +222,13 @@ const ProductDetail = () => {
                     />
                   </svg>
                 }
-                placeholderRating={3.5}
+                placeholderRating={
+                  ratings &&
+                  parseInt(
+                    ratings?.reduce((acc, curr) => acc + curr.rating, 0) /
+                      ratings.length
+                  )
+                }
                 placeholderSymbol={
                   <svg
                     className='block w-4 h-4 text-yellow-500 align-middle'
@@ -243,7 +261,7 @@ const ProductDetail = () => {
                 fractions={1}
               />
               <p className='ml-2 text-sm font-medium text-gray-500'>
-                1,209 Reviews
+                {ratings?.length} Reviews
               </p>
             </div>
 
@@ -405,7 +423,7 @@ const ProductDetail = () => {
                   Reviews
                   <span className='block px-2 py-px ml-2 text-xs font-bold text-gray-100 bg-gray-500 rounded-full'>
                     {" "}
-                    1,209{" "}
+                    {ratings?.length}{" "}
                   </span>
                 </a>
               </div>
@@ -492,295 +510,67 @@ const ProductDetail = () => {
                 </div>
               </div>
             </li>
-            <li className='px-4 py-8 m-2 text-left border'>
-              <div className='flex items-start'>
-                <img
-                  className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product && product?.imageUrls[0]}
-                  alt=''
-                />
+            {ratings &&
+              ratings?.map((item, i) => {
+                return (
+                  <li key={i} className='px-4 py-8 m-2 text-left border'>
+                    <div className='flex items-start'>
+                      <img
+                        className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
+                        src={item?.user?.avatar}
+                        alt=''
+                      />
 
-                <div className='ml-6'>
-                  <Rating
-                    initialRating={3}
-                    readonly
-                    emptySymbol={
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth={1.5}
-                        stroke='currentColor'
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z'
+                      <div className='ml-6'>
+                        <Rating
+                          initialRating={item?.rating}
+                          readonly
+                          emptySymbol={
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='block w-4 h-4 text-yellow-500 align-middle'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z'
+                              />
+                            </svg>
+                          }
+                          fullSymbol={
+                            <svg
+                              className='block w-4 h-4 text-yellow-500 align-middle'
+                              xmlns='http://www.w3.org/2000/svg'
+                              viewBox='0 0 20 20'
+                              fill='currentColor'
+                            >
+                              <path
+                                d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
+                                className=''
+                              ></path>
+                            </svg>
+                          }
+                          start={0}
+                          stop={5}
                         />
-                      </svg>
-                    }
-                    fullSymbol={
-                      <svg
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
-                          className=''
-                        ></path>
-                      </svg>
-                    }
-                    start={0}
-                    stop={5}
-                  />
-                  <p className='mt-5 text-base text-gray-900'>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Porro blanditiis sapiente ab dolores, ad dignissimos
-                    perspiciatis.
-                  </p>
-                  <p className='mt-5 text-sm font-bold text-gray-900'>
-                    John Lester
-                  </p>
-                  <p className='mt-1 text-sm text-gray-600'>March 01, 2022</p>
-                </div>
-              </div>
-            </li>
-            <li className='px-4 py-8 m-2 text-left border'>
-              <div className='flex items-start'>
-                <img
-                  className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product && product?.imageUrls[0]}
-                  alt=''
-                />
-
-                <div className='ml-6'>
-                  <Rating
-                    initialRating={3}
-                    readonly
-                    emptySymbol={
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth={1.5}
-                        stroke='currentColor'
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z'
-                        />
-                      </svg>
-                    }
-                    fullSymbol={
-                      <svg
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
-                          className=''
-                        ></path>
-                      </svg>
-                    }
-                    start={0}
-                    stop={5}
-                  />
-                  <p className='mt-5 text-base text-gray-900'>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Porro blanditiis sapiente ab dolores, ad dignissimos
-                    perspiciatis.
-                  </p>
-                  <p className='mt-5 text-sm font-bold text-gray-900'>
-                    John Lester
-                  </p>
-                  <p className='mt-1 text-sm text-gray-600'>March 01, 2022</p>
-                </div>
-              </div>
-            </li>
-            <li className='px-4 py-8 m-2 text-left border'>
-              <div className='flex items-start'>
-                <img
-                  className='flex-shrink-0 block w-10 h-10 max-w-full align-middle border rounded-full'
-                  src={product && product?.imageUrls[0]}
-                  alt=''
-                />
-
-                <div className='ml-6'>
-                  <Rating
-                    initialRating={3}
-                    readonly
-                    emptySymbol={
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth={1.5}
-                        stroke='currentColor'
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z'
-                        />
-                      </svg>
-                    }
-                    fullSymbol={
-                      <svg
-                        className='block w-4 h-4 text-yellow-500 align-middle'
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
-                          className=''
-                        ></path>
-                      </svg>
-                    }
-                    start={0}
-                    stop={5}
-                  />
-                  <p className='mt-5 text-base text-gray-900'>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Porro blanditiis sapiente ab dolores, ad dignissimos
-                    perspiciatis.
-                  </p>
-                  <p className='mt-5 text-sm font-bold text-gray-900'>
-                    John Lester
-                  </p>
-                  <p className='mt-1 text-sm text-gray-600'>March 01, 2022</p>
-                </div>
-              </div>
-            </li>
-            <li className='px-20 py-8 m-2 text-left border'>
-              <div className='w-full mx-auto'>
-                <div className='flex flex-col w-full'>
-                  <div className='sm:flex-row flex flex-col items-center justify-center'>
-                    <h1 className='text-black-2 max-w-sm text-3xl font-bold'>
-                      What people think <br />
-                      about this product
-                    </h1>
-                    <div className='sm:my-0 sm:ml-auto flex flex-col items-center justify-center px-4 py-2 my-4 bg-white'>
-                      <div className='text-black-2 flex items-center h-16 text-2xl font-bold'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='w-10 h-10 text-yellow-400'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'
-                        >
-                          <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                        </svg>
-                        4.7
+                        <p className='mt-5 text-base text-gray-900'>
+                          {item?.comment}
+                        </p>
+                        <p className='mt-5 text-sm font-bold text-gray-900'>
+                          {item?.user?.username}
+                        </p>
+                        <p className='mt-1 text-sm text-gray-600'>
+                          {item?.createdAt}
+                        </p>
                       </div>
-                      <p className='text-sm text-gray-500'>
-                        Average User Rating
-                      </p>
                     </div>
-                  </div>
-                  <div className='text-gray-700'>
-                    <p className='font-medium'>Reviews</p>
-                    <ul className='mt-2 mb-6 space-y-2'>
-                      <li className='flex items-center text-sm font-medium'>
-                        <span className='w-3'>5</span>
-                        <span className='mr-4 text-yellow-400'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='w-5 h-5'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                          >
-                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                          </svg>
-                        </span>
-                        <div className='w-96 h-2 mr-4 overflow-hidden bg-gray-300 rounded-full'>
-                          <div className='w-10/12 h-full bg-yellow-400'></div>
-                        </div>
-                        <span className='w-3'>56</span>
-                      </li>
-                      <li className='flex items-center text-sm font-medium'>
-                        <span className='w-3'>4</span>
-                        <span className='mr-4 text-yellow-400'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='w-5 h-5'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                          >
-                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                          </svg>
-                        </span>
-                        <div className='w-96 h-2 mr-4 overflow-hidden bg-gray-300 rounded-full'>
-                          <div className='w-8/12 h-full bg-yellow-400'></div>
-                        </div>
-                        <span className='w-3'>12</span>
-                      </li>
-                      <li className='flex items-center text-sm font-medium'>
-                        <span className='w-3'>3</span>
-                        <span className='mr-4 text-yellow-400'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='w-5 h-5'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                          >
-                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                          </svg>
-                        </span>
-                        <div className='w-96 h-2 mr-4 overflow-hidden bg-gray-300 rounded-full'>
-                          <div className='w-1/12 h-full bg-yellow-400'></div>
-                        </div>
-                        <span className='w-3'>4</span>
-                      </li>
-                      <li className='flex items-center text-sm font-medium'>
-                        <span className='w-3'>2</span>
-                        <span className='mr-4 text-yellow-400'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='w-5 h-5'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                          >
-                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                          </svg>
-                        </span>
-                        <div className='w-96 h-2 mr-4 overflow-hidden bg-gray-300 rounded-full'>
-                          <div className='w-0 h-full bg-yellow-400'></div>
-                        </div>
-                        <span className='w-3'>0</span>
-                      </li>
-                      <li className='flex items-center text-sm font-medium'>
-                        <span className='w-3'>1</span>
-                        <span className='mr-4 text-yellow-400'>
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='w-5 h-5'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                          >
-                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                          </svg>
-                        </span>
-                        <div className='w-96 h-2 mr-4 overflow-hidden bg-gray-300 rounded-full'>
-                          <div className='w-1/12 h-full bg-yellow-400'></div>
-                        </div>
-                        <span className='w-3'>5</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <button className='w-36 bg-black-2 py-3 font-medium text-white rounded-full'>
-                    Write a review
-                  </button>
-                </div>
-              </div>
-            </li>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>

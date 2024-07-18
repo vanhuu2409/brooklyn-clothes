@@ -21,14 +21,13 @@ import {
 import LayoutView from "../../../_widgets/layout/LayoutView";
 import { ToastContainer, toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import http, {
+  handleDeleteUserApi,
+  handleSignoutApi,
+} from "../../../services/api.jsx";
 
 const Profile = () => {
-  const {
-    currentUser: user,
-    loading,
-    error,
-  } = useSelector((state) => state.user);
-  const currentUser = user.user ?? user;
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [userDetail, setUserDetail] = useState({});
   const { username, email } = currentUser;
   const [file, setFile] = useState(null);
@@ -80,18 +79,7 @@ const Profile = () => {
   const handleOnDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/user/delete/${currentUser._id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(deleteUserFailure(data.message)) &
-          toast.error(`Delete User Failure!`);
-        return;
-      }
+      const res = await handleDeleteUserApi(currentUser._id);
       dispatch(deleteUserSuccess()) &
         toast.success(`Delete User Successfully!`);
     } catch (error) {
@@ -100,24 +88,13 @@ const Profile = () => {
     }
   };
   const handleOnSignout = async () => {
+    dispatch(signOutSuccess());
     try {
       dispatch(signOutStart());
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/signout`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signOutFailure(data.message));
-        return;
-      }
-      dispatch(signOutSuccess(data.message)) &
-        toast.success(`User has been logged out!`);
+      const res =
+        handleSignoutApi() & toast.success(`User has been logged out!`);
+      dispatch(userLogoutClearCart());
+      dispatch(signOutSuccess()) & toast.success(`User has been logged out!`);
       navigate("/login");
     } catch (error) {
       dispatch(signOutFailure(error.message));
@@ -128,21 +105,12 @@ const Profile = () => {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(
+      const res = await http.post(
         `${import.meta.env.VITE_API_URL}/api/user/update/${currentUser._id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userDetail),
-        }
+        userDetail
       );
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(updateUserFailure(data.message)) &
-          toast.error(`Update User Failure!`);
-        return;
-      }
-      dispatch(updateUserSuccess(data)) &
+      // console.log(res);
+      dispatch(updateUserSuccess(res.data)) &
         toast.success(`Update User Successfully!`);
     } catch (error) {
       dispatch(updateUserFailure(error.message)) &

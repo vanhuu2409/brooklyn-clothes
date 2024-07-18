@@ -21,7 +21,7 @@ app.use(json());
 app.use(
   cors({
     // origin: "*",
-    origin: process.env.URL,
+    origin: ["http://localhost:8080", "https://brooklyn-one.vercel.app"],
     // origin: (origin, callback) => {
     //   if (
     //     ["http://localhost:8080", "https://brooklyn-one.vercel.app"].includes(
@@ -58,8 +58,6 @@ import cartRouter from "./routes/cart.route.js";
 import orderRouter from "./routes/order.route.js";
 // ratingsRouter
 import ratingsRouter from "./routes/ratings.route.js";
-// reviewsRouter
-import reviewsRouter from "./routes/reviews.route.js";
 // mongoose server
 
 // Database connection with mongoDB
@@ -74,18 +72,26 @@ app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/cart", cartRouter);
-app.use("/api/reviews", reviewsRouter);
 app.use("/api/ratings", ratingsRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
-  res.header("Access-Control-Allow-Origin", process.env.URL);
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080"); // Replace with your local web application URL
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Credentials", true);
+
+  // res.header("Access-Control-Allow-Origin", process.env.URL);
+  // res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+  // );
   return res.status(statusCode).json({ success: false, statusCode, message });
 });
 

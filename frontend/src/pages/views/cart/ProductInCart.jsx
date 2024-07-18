@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   decreaseQuantity,
@@ -10,12 +10,12 @@ import {
 } from "../../../redux/cart/cartSlice";
 import { debounce, formatPrice } from "../../../services/custom";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import http from "../../../services/api.jsx";
+import http, { handleDeleteCartItem } from "../../../services/api.jsx";
 const ProductInCart = (props) => {
+  console.log({ props });
+  const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
-  const { size, color } = props;
-  console.log(props);
+  const product = props?.product || props;
   // /api/cart/update/productId
   // colorSelected
   // sizeSelected
@@ -23,13 +23,11 @@ const ProductInCart = (props) => {
 
   const handleOnChangeQuantity = debounce(async (e) => {
     let value = parseInt(e.target.value);
-    if (props && props.quantity > 0) {
+    if (currentUser && props && props.quantity > 0) {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/cart/update/${
-            props?.product?._id
-          }`,
+        const response = await http.put(
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${product?._id}`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
@@ -37,73 +35,65 @@ const ProductInCart = (props) => {
           }
         );
         dispatch(quantityByAmount({ quantity: value, props }));
-        return response.data;
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message) & toast.error(error.message);
       }
-    }
+    } else dispatch(quantityByAmount({ quantity: value, props }));
   }, 300);
 
   const handleIncreaseQuantity = debounce(async () => {
-    if (props && props?.quantity > 0) {
+    if (currentUser && props && props?.quantity > 0) {
       try {
         // Otherwise, fetch products with the provided productId
-        console.log(colorSelected, sizeSelected);
-        const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/cart/update/${
-            props?.product?._id
-          }`,
+        const response = await http.put(
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${product?._id}`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
           }
         );
         dispatch(increaseQuantity(props));
-        return response.data;
+        // window.location.reload();
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message) & toast.error(error.message);
       }
-    }
+    } else dispatch(increaseQuantity(props));
   }, 300);
   const handleDecreaseQuantity = debounce(async () => {
-    if (props && props.quantity > 0) {
+    if (currentUser && props && props.quantity > 0) {
       try {
         // Otherwise, fetch products with the provided productId
-        const response = await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/cart/update/${
-            props?.product?._id
-          }`,
+        const response = await http.put(
+          `${import.meta.env.VITE_API_URL}/api/cart/update/${product?._id}`,
           {
             colorSelected: props?.color,
             sizeSelected: props?.size,
           }
         );
         dispatch(decreaseQuantity(props));
-        return response.data;
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message) & toast.error(error.message);
       }
-    }
+    } else dispatch(decreaseQuantity(props));
   }, 300);
 
   const handleRemoveFromCart = debounce(async () => {
-    try {
-      // Otherwise, fetch products with the provided productId
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/cart/delete/${
-          props?.product?._id
-        }`,
-        {
-          data: { colorSelected: props?.color, sizeSelected: props?.size },
-        }
-      );
+    if (currentUser) {
+      try {
+        // Otherwise, fetch products with the provided productId
+        const response = await handleDeleteCartItem(product._id, {
+          colorSelected: props?.color,
+          sizeSelected: props?.size,
+        });
+        dispatch(removeFromCart(props)) &
+          toast.success(`${product?.name} is remove success!`);
+        // window.location.reload();
+      } catch (error) {
+        throw new Error(error.message) & toast.error(error.message);
+      }
+    } else
       dispatch(removeFromCart(props)) &
         toast.success(`${props?.name} is remove success!`);
-      window.location.reload();
-      return response.data;
-    } catch (error) {
-      throw new Error(error.message);
-    }
   }, 300);
   return (
     // normal
@@ -112,11 +102,11 @@ const ProductInCart = (props) => {
         <div className='grid grid-cols-6 grid-rows-1 gap-4 px-6 py-4 text-black border-b'>
           {/* img */}
           <Link
-            to={`/products/${props?.product?.collections}/${props?.product?.category}/${props?.product?.name}/${props?.product?._id}`}
+            to={`/products/${product?.collections}/${product?.category}/${product?.name}/${product?._id}`}
             title='Product Detail'
           >
             <img
-              src={props?.product?.imageUrls[0]}
+              src={product?.imageUrls[0]}
               draggable={false}
               className='aspect-square hover:scale-110 object-contain w-full h-full max-w-full max-h-full col-span-2 transition-transform duration-300'
             />
@@ -129,20 +119,20 @@ const ProductInCart = (props) => {
                 berlin lifestyle
               </h4>
               <h2 className='text-black-2 sm:text-xl text-lg font-extrabold'>
-                {props?.product?.name}
+                {product?.name}
               </h2>
             </div>
             {/* center */}
             {/* size select */}
             <span className='text-black-3 flex-1 text-base font-extrabold normal-case'>
-              {props?.size} {" / "}
-              {props?.color}
+              {props?.size || props?.sizeSelected} {" / "}
+              {props?.color || props?.colorSelected}
             </span>
             {/* bottom body */}
             <div className='propss-cenpropster flex justify-between'>
               {/* left bottom */}
               <p className='text-black-3 sm:text-base flex gap-1 text-sm font-bold'>
-                {formatPrice(props?.product?.price)}
+                {formatPrice(product?.price)}
                 <span className='text-black-4 font-light'>/ </span>
               </p>
               {/* middle */}
@@ -200,23 +190,23 @@ const ProductInCart = (props) => {
           ></th> */}
           <th scope='row' className='whitespace-nowrap text-black-2 font-bold'>
             <Link
-              to={`/products/${props?.product?.collections}/${props?.product?.category}/${props?.product?.name}/${props?.product?._id}`}
+              to={`/products/${product?.collections}/${product?.category}/${product?.name}/${product?._id}`}
               title='Product Detail'
               className='flex flex-col items-center gap-2 px-6 py-4'
             >
               <img
-                src={props?.product?.imageUrls[0]}
-                alt={props?.product?.name}
+                src={product?.imageUrls[0]}
+                alt={product?.name}
                 draggable={false}
                 className='spect-square hover:scale-110 size-20 max-w-20 max-h-20 object-contain col-span-2 transition-transform duration-300'
               />
-              {props?.product?.name}
+              {product?.name}
             </Link>
           </th>
           <td>
             <span className='text-black-3 flex-1 text-base font-extrabold normal-case'>
-              {props?.size} {" / "}
-              {props?.color}
+              {props?.size || props?.sizeSelected} {" / "}
+              {props?.color || props?.colorSelected}
             </span>
           </td>
           <td className='px-6 py-4'>
@@ -244,7 +234,7 @@ const ProductInCart = (props) => {
             </div>
           </td>
           <td className='px-6 py-4 min-w-[7.5rem]'>
-            {formatPrice(props?.product?.price)}
+            {formatPrice(product?.price)}
           </td>
           <td className='px-2 py-4'>
             <button className='p-2' onClick={() => handleRemoveFromCart()}>
